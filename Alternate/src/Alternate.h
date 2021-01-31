@@ -2,8 +2,8 @@
 
 // For use by Alternate applications
 
-#include <stdio.h>
 #include "Alternate/Application.h"
+#include "Alternate/Log.h"
 
 //Entry Point
 #include "Alternate/EntryPoint.h"

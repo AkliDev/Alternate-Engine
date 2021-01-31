@@ -16,8 +16,10 @@
     <ClInclude Include="src\Alternate\Application.h" />
     <ClInclude Include="src\Alternate.h" />
     <ClInclude Include="src\Alternate\EntryPoint.h" />
+    <ClInclude Include="src\Alternate\Log.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Alternate\Application.cpp" />
+    <ClCompile Include="src\Alternate\Log.cpp" />
   </ItemGroup>
 </Project>
