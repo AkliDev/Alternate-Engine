@@ -1,25 +1,48 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{c0d2e9b5-3c4c-4ad5-8b17-b714bd525b87}</UniqueIdentifier>
+    <Filter Include="Alternate">
+      <UniqueIdentifier>{E580C406-51EB-787D-9A29-2A2306D356D2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{8d339681-992c-49a9-af6a-d7bd11854c71}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{7a11d9a8-78f3-43e0-bc70-5bb02335e9b4}</UniqueIdentifier>
+    <Filter Include="Alternate\Events">
+      <UniqueIdentifier>{29990D4F-1592-2CA1-3EC4-11262A1C0CAD}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Alternate\Core.h" />
-    <ClInclude Include="src\Alternate\Application.h" />
     <ClInclude Include="src\Alternate.h" />
-    <ClInclude Include="src\Alternate\EntryPoint.h" />
-    <ClInclude Include="src\Alternate\Log.h" />
+    <ClInclude Include="src\Alternate\Application.h">
+      <Filter>Alternate</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Alternate\Core.h">
+      <Filter>Alternate</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Alternate\EntryPoint.h">
+      <Filter>Alternate</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Alternate\Events\ApplicationEvent.h">
+      <Filter>Alternate\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Alternate\Events\Event.h">
+      <Filter>Alternate\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Alternate\Events\KeyEvent.h">
+      <Filter>Alternate\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Alternate\Events\MouseEvent.h">
+      <Filter>Alternate\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Alternate\Log.h">
+      <Filter>Alternate</Filter>
+    </ClInclude>
+    <ClInclude Include="src\altpch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Alternate\Application.cpp" />
-    <ClCompile Include="src\Alternate\Log.cpp" />
+    <ClCompile Include="src\Alternate\Application.cpp">
+      <Filter>Alternate</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Alternate\Log.cpp">
+      <Filter>Alternate</Filter>
+    </ClCompile>
+    <ClCompile Include="src\altpch.cpp" />
   </ItemGroup>
 </Project>
