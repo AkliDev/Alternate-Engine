@@ -18,6 +18,9 @@ project "Alternate"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+	pchheader "altpch.h"
+	pchsource "Alternate/src/altpch.cpp"
+
 	files
 	{
 		"%{prj.name}/src/**.h",
@@ -26,13 +29,14 @@ project "Alternate"
 
 	includedirs
 	{
-		"%{prj.name}/vendor/spdlog/include"
+		"%{prj.name}/src",
+		"%{prj.name}/vendor/spdlog/include"	
 	}
 
 	
 	cppdialect "C++17"
 	staticruntime "on"
-	systemversion "10.0.17763.0"
+	systemversion "latest"
 
 	defines
 	{
@@ -85,7 +89,7 @@ project "Sandbox"
 	filter "system:windows"
 		cppdialect "C++17"
 		staticruntime "on"
-		systemversion "10.0.17763.0"
+		systemversion "latest"
 
 		defines
 		{

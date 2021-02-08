@@ -4,6 +4,9 @@
     <Filter Include="Alternate">
       <UniqueIdentifier>{E580C406-51EB-787D-9A29-2A2306D356D2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Alternate\Events">
+      <UniqueIdentifier>{29990D4F-1592-2CA1-3EC4-11262A1C0CAD}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Alternate.h" />
@@ -16,13 +19,22 @@
     <ClInclude Include="src\Alternate\EntryPoint.h">
       <Filter>Alternate</Filter>
     </ClInclude>
+    <ClInclude Include="src\Alternate\Events\ApplicationEvent.h">
+      <Filter>Alternate\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Alternate\Events\Event.h">
+      <Filter>Alternate\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Alternate\Events\KeyEvent.h">
+      <Filter>Alternate\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Alternate\Events\MouseEvent.h">
+      <Filter>Alternate\Events</Filter>
+    </ClInclude>
     <ClInclude Include="src\Alternate\Log.h">
       <Filter>Alternate</Filter>
     </ClInclude>
-    <ClInclude Include="src\Alternate\Events\Event.h" />
-    <ClInclude Include="src\Alternate\Events\ApplicationEvent.h" />
-    <ClInclude Include="src\Alternate\Events\KeyEvent.h" />
-    <ClInclude Include="src\Alternate\Events\MouseEvent.h" />
+    <ClInclude Include="src\altpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Alternate\Application.cpp">
@@ -31,5 +43,6 @@
     <ClCompile Include="src\Alternate\Log.cpp">
       <Filter>Alternate</Filter>
     </ClCompile>
+    <ClCompile Include="src\altpch.cpp" />
   </ItemGroup>
 </Project>
