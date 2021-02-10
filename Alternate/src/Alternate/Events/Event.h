@@ -1,4 +1,5 @@
 #pragma once
+#include "altpch.h"
 
 #include "Alternate/Core.h"
 
