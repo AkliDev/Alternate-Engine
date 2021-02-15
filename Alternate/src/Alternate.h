@@ -3,6 +3,7 @@
 // For use by Alternate applications
 
 #include "Alternate/Application.h"
+#include "Alternate/Layer.h"
 #include "Alternate/Log.h"
 
 //Entry Point

@@ -2,7 +2,7 @@
 
 #include "Alternate/Window.h"
 
-#include "SDL.h"
+#include <SDL.h>
 
 namespace Alternate {
 
@@ -28,6 +28,7 @@ namespace Alternate {
 		virtual void Shutdown();
 	private:
 		SDL_Window* m_Window;
+		SDL_GLContext m_gl_context;
 
 		struct WindowData
 		{

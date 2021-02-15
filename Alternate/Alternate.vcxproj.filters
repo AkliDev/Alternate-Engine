@@ -7,11 +7,11 @@
     <Filter Include="Alternate\Events">
       <UniqueIdentifier>{29990D4F-1592-2CA1-3EC4-11262A1C0CAD}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Alternate\Platfrom">
-      <UniqueIdentifier>{399BF664-257F-B7BA-8EDF-B10D7AE2A13C}</UniqueIdentifier>
+    <Filter Include="Platfrom">
+      <UniqueIdentifier>{8AD388B4-76A0-E3BF-9FB9-D1678BE5184E}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Alternate\Platfrom\Windows">
-      <UniqueIdentifier>{736E24C9-5F7E-D099-C837-35B8B466BF32}</UniqueIdentifier>
+    <Filter Include="Platfrom\Windows">
+      <UniqueIdentifier>{C467CE9E-B060-EDF0-D992-D275C5EACCFC}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -37,14 +37,20 @@
     <ClInclude Include="src\Alternate\Events\MouseEvent.h">
       <Filter>Alternate\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Alternate\Layer.h">
+      <Filter>Alternate</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Alternate\LayerStack.h">
+      <Filter>Alternate</Filter>
+    </ClInclude>
     <ClInclude Include="src\Alternate\Log.h">
       <Filter>Alternate</Filter>
     </ClInclude>
-    <ClInclude Include="src\Alternate\Platfrom\Windows\WindowsWindow.h">
-      <Filter>Alternate\Platfrom\Windows</Filter>
-    </ClInclude>
     <ClInclude Include="src\Alternate\Window.h">
       <Filter>Alternate</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platfrom\Windows\WindowsWindow.h">
+      <Filter>Platfrom\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\altpch.h" />
   </ItemGroup>
@@ -52,11 +58,17 @@
     <ClCompile Include="src\Alternate\Application.cpp">
       <Filter>Alternate</Filter>
     </ClCompile>
+    <ClCompile Include="src\Alternate\Layer.cpp">
+      <Filter>Alternate</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Alternate\LayerStack.cpp">
+      <Filter>Alternate</Filter>
+    </ClCompile>
     <ClCompile Include="src\Alternate\Log.cpp">
       <Filter>Alternate</Filter>
     </ClCompile>
-    <ClCompile Include="src\Alternate\Platfrom\Windows\WindowsWindow.cpp">
-      <Filter>Alternate\Platfrom\Windows</Filter>
+    <ClCompile Include="src\Platfrom\Windows\WindowsWindow.cpp">
+      <Filter>Platfrom\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\altpch.cpp" />
   </ItemGroup>

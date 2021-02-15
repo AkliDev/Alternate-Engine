@@ -10,6 +10,11 @@ workspace "Alternate"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+IncludeDir = {}
+IncludeDir["Glad"] = "Alternate/vendor/Glad/include"
+
+include "Alternate/vendor/Glad"
+
 project "Alternate"
 	location "Alternate"
 	kind "SharedLib"
@@ -32,7 +37,8 @@ project "Alternate"
 		
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
-		"%{prj.name}/vendor/SDL2/include"	
+		"%{prj.name}/vendor/SDL2/include",	
+		"%{IncludeDir.Glad}"
 	}
 
 	libdirs 
@@ -43,6 +49,7 @@ project "Alternate"
 	links
 	{
 		"SDL2.lib",
+		"Glad",
 		"opengl32.lib"
 	}
 
@@ -65,14 +72,17 @@ project "Alternate"
 
 	filter "configurations:Debug"
 		defines "ALT_DEBUG"
+		buildoptions "/MDd"
 		symbols "On" 
 
 	filter "configurations:Release"
 		defines "ALT_RELEASE"
+		buildoptions "/MD"
 		optimize "On" 
 
 	filter "configurations:Dist"
 		defines "ALT_DIST"
+		buildoptions "/MD"
 		optimize "On" 	
 
 project "Sandbox"
@@ -112,12 +122,15 @@ project "Sandbox"
 
 	filter "configurations:Debug"
 		defines "ALT_DEBUG"
+		buildoptions "/MDd"
 		symbols "On" 
 
 	filter "configurations:Release"
 		defines "ALT_RELEASE"
+		buildoptions "/MD"
 		optimize "On" 
 
 	filter "configurations:Dist"
 		defines "ALT_DIST"
+		buildoptions "/MD"
 		optimize "On" 

@@ -6,6 +6,7 @@
 #include "Alternate/Events/KeyEvent.h"
 #include "Alternate/Events/MouseEvent.h"
 
+#include <glad/glad.h>
 
 namespace Alternate {
 
@@ -43,13 +44,30 @@ namespace Alternate {
 			}
 			s_SDLInitialized = true;
 		}
+		SDL_GL_LoadLibrary(NULL); // Default OpenGL is fine.
+
+		 // Request an OpenGL 4.6 context (should be core)
+		SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
+		// Also request a depth buffer
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+		//enable debug context
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
 
 		m_Window = SDL_CreateWindow(props.Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, props.Width, props.Height, SDL_WINDOW_OPENGL);
-		SDL_GL_MakeCurrent(m_Window, NULL);
-		SDL_SetWindowData(m_Window, "data", &m_Data);
-		SetVSync(true);
-
 		SDL_SetWindowResizable(m_Window, SDL_TRUE);
+		m_gl_context = SDL_GL_CreateContext(m_Window);
+		SDL_GL_MakeCurrent(m_Window, m_gl_context);
+
+		int status = gladLoadGLLoader(SDL_GL_GetProcAddress);
+		ALT_CORE_ASSERT(status, "failed to initialize Glad!");
+
+		SDL_SetWindowData(m_Window, "data", &m_Data);
+
+		SetVSync(true);	
 	}
 
 	void WindowsWindow::Shutdown()
