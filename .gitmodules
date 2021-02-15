@@ -1,3 +1,6 @@
 [submodule "Alternate/vendor/spdlog"]
 	path = Alternate/vendor/spdlog
 	url = https://github.com/gabime/spdlog.git
+[submodule "Alternate/vendor/SDL2"]
+	path = Alternate/vendor/SDL2
+	url = https://github.com/AkliDev/SDL2-Development-Libraries

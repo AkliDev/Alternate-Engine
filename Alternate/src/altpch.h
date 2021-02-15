@@ -12,6 +12,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "Alternate/Log.h"
+
 #ifdef ALT_PLATFORM_WINDOWS
 	#include <Windows.h>
 #endif

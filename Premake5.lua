@@ -29,11 +29,23 @@ project "Alternate"
 
 	includedirs
 	{
+		
 		"%{prj.name}/src",
-		"%{prj.name}/vendor/spdlog/include"	
+		"%{prj.name}/vendor/spdlog/include",
+		"%{prj.name}/vendor/SDL2/include"	
 	}
 
-	
+	libdirs 
+	{
+		"%{prj.name}/vendor/SDL2/lib/x64"
+	}
+
+	links
+	{
+		"SDL2.lib",
+		"opengl32.lib"
+	}
+
 	cppdialect "C++17"
 	staticruntime "on"
 	systemversion "latest"
@@ -41,12 +53,14 @@ project "Alternate"
 	defines
 	{
 		"ALT_PLATFORM_WINDOWS",
-		"ALT_BUILD_DLL"
+		"ALT_BUILD_DLL",
+		"ALT_ENABLE_ASSERTS"
 	}
 
 	postbuildcommands
 	{
-		("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+		"{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox",
+		--"{COPY} %{prj.name}/vendor/SDL2/lib/x64/SDL2.dll ../bin/" .. outputdir .. "/Sandbox"
 	}
 
 	filter "configurations:Debug"
