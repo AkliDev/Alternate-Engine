@@ -24,7 +24,8 @@ class Sandbox : public Alternate::Application
 public:
 	Sandbox()
 	{
-		PushOverlay(new ExampleLayer());
+		PushLayer(new ExampleLayer());
+		PushOverlay(new Alternate::ImGuiLayer());
 	}
 
 	~Sandbox()

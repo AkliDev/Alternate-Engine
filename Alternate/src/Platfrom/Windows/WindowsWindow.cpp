@@ -72,7 +72,9 @@ namespace Alternate {
 
 	void WindowsWindow::Shutdown()
 	{
+		SDL_GL_DeleteContext(m_gl_context);
 		SDL_DestroyWindow(m_Window);
+		SDL_Quit();
 	}
 
 	void WindowsWindow::OnUpdate()

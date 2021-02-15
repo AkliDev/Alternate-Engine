@@ -6,7 +6,7 @@
 
 namespace Alternate {
 
-	class WindowsWindow : public Window
+	class ALTERNATE_API WindowsWindow : public Window
 	{
 	public:
 		WindowsWindow(const WindowProps& props);
@@ -23,6 +23,7 @@ namespace Alternate {
 		bool IsVSync() const override;
 
 		virtual void* GetNativeWindow() const { return m_Window; }
+		virtual SDL_GLContext& GetGLWindow() { return m_gl_context; }
 	private:
 		virtual void Init(const WindowProps& props);
 		virtual void Shutdown();

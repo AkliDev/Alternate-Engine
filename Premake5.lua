@@ -12,8 +12,10 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["Glad"] = "Alternate/vendor/Glad/include"
+IncludeDir["ImGui"] = "Alternate/vendor/imgui"
 
 include "Alternate/vendor/Glad"
+include	"Alternate/vendor/imgui"
 
 project "Alternate"
 	location "Alternate"
@@ -38,7 +40,8 @@ project "Alternate"
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
 		"%{prj.name}/vendor/SDL2/include",	
-		"%{IncludeDir.Glad}"
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.ImGui}"
 	}
 
 	libdirs 
@@ -50,6 +53,7 @@ project "Alternate"
 	{
 		"SDL2.lib",
 		"Glad",
+		"ImGui",
 		"opengl32.lib"
 	}
 
