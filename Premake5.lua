@@ -17,6 +17,8 @@ IncludeDir["ImGui"] = "Alternate/vendor/imgui"
 include "Alternate/vendor/Glad"
 include	"Alternate/vendor/imgui"
 
+startproject "Sandbox"
+
 project "Alternate"
 	location "Alternate"
 	kind "SharedLib"

@@ -10,12 +10,12 @@ public:
 
 	void OnUpdate() override
 	{
-		ALT_INFO("ExampleLayer::Update");
+		//ALT_INFO("ExampleLayer::Update");
 	}
 
 	void OnEvent(Alternate::Event& event) override
 	{
-		ALT_TRACE("{0}", event);
+		//ALT_TRACE("{0}", event);
 	}
 };
 

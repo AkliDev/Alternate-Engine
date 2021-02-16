@@ -124,23 +124,28 @@ namespace Alternate {
 			}
 			case SDL_KEYDOWN:
 			{
+				
 				WindowData& data = *(WindowData*)SDL_GetWindowData(m_Window, "data");
+
 				if (event.key.repeat != 0)
 				{
-					KeyPressedEvent ALT_event(event.key.keysym.sym, event.key.repeat);
+					KeyPressedEvent ALT_event(event.key.keysym.scancode, event.key.repeat);
 					data.EventCallback(ALT_event);
 				}
 				else
 				{
-					KeyPressedEvent ALT_event(event.key.keysym.sym, 0);
+					KeyPressedEvent ALT_event(event.key.keysym.scancode, 0);
 					data.EventCallback(ALT_event);
 				}
+
+				KeyTypedEvent ALT_event(event.key.keysym.sym);
+				data.EventCallback(ALT_event);
 				break;
 			}
 			case SDL_KEYUP:
 			{
 				WindowData& data = *(WindowData*)SDL_GetWindowData(m_Window, "data");
-				KeyReleasedEvent ALT_event(event.key.keysym.sym);
+				KeyReleasedEvent ALT_event(event.key.keysym.scancode);
 				data.EventCallback(ALT_event);
 				break;
 			}
