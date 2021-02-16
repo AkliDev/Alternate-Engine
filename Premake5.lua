@@ -1,5 +1,6 @@
 workspace "Alternate"
 	architecture "x64"
+	startproject "Sandbox"
 
 	configurations
 	{
@@ -14,15 +15,16 @@ IncludeDir = {}
 IncludeDir["Glad"] = "Alternate/vendor/Glad/include"
 IncludeDir["ImGui"] = "Alternate/vendor/imgui"
 
-include "Alternate/vendor/Glad"
-include	"Alternate/vendor/imgui"
-
-startproject "Sandbox"
+group "Dependencies"
+	include "Alternate/vendor/Glad"
+	include	"Alternate/vendor/imgui"
+group ""
 
 project "Alternate"
 	location "Alternate"
 	kind "SharedLib"
 	language "C++"
+	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -60,41 +62,40 @@ project "Alternate"
 	}
 
 	cppdialect "C++17"
-	staticruntime "on"
 	systemversion "latest"
 
 	defines
 	{
 		"ALT_PLATFORM_WINDOWS",
-		"ALT_BUILD_DLL",
-		"ALT_ENABLE_ASSERTS"
+		"ALT_BUILD_DLL"
 	}
 
 	postbuildcommands
 	{
-		"{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox",
-		--"{COPY} %{prj.name}/vendor/SDL2/lib/x64/SDL2.dll ../bin/" .. outputdir .. "/Sandbox"
+		"{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"",
+		"{COPY} ../%{prj.name}/vendor/SDL2/lib/x64/SDL2.dll  \"../bin/" .. outputdir .. "/Sandbox/\"",
 	}
 
 	filter "configurations:Debug"
 		defines "ALT_DEBUG"
-		buildoptions "/MDd"
+		runtime "Debug"
 		symbols "On" 
 
 	filter "configurations:Release"
 		defines "ALT_RELEASE"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On" 
 
 	filter "configurations:Dist"
 		defines "ALT_DIST"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On" 	
 
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
+	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -118,7 +119,6 @@ project "Sandbox"
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "on"
 		systemversion "latest"
 
 		defines
@@ -128,15 +128,15 @@ project "Sandbox"
 
 	filter "configurations:Debug"
 		defines "ALT_DEBUG"
-		buildoptions "/MDd"
+		runtime "Debug"
 		symbols "On" 
 
 	filter "configurations:Release"
 		defines "ALT_RELEASE"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On" 
 
 	filter "configurations:Dist"
 		defines "ALT_DIST"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On" 
