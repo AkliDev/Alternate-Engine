@@ -164,13 +164,17 @@ IF EXIST ..\$(ProjectName)\vendor\SDL2\lib\x64\SDL2.dll\ (xcopy /Q /E /Y /I ..\$
     <ClInclude Include="src\Alternate\Events\KeyEvent.h" />
     <ClInclude Include="src\Alternate\Events\MouseEvent.h" />
     <ClInclude Include="src\Alternate\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\Alternate\Input.h" />
+    <ClInclude Include="src\Alternate\KeyCodes.h" />
     <ClInclude Include="src\Alternate\Layer.h" />
     <ClInclude Include="src\Alternate\LayerStack.h" />
     <ClInclude Include="src\Alternate\Log.h" />
+    <ClInclude Include="src\Alternate\MouseButtonCodes.h" />
     <ClInclude Include="src\Alternate\Window.h" />
     <ClInclude Include="src\Platfrom\OpenGL\ImGuiOpenGLRenderer.h" />
     <ClInclude Include="src\Platfrom\Windows\WindowsWindow.h" />
     <ClInclude Include="src\altpch.h" />
+    <ClInclude Include="src\Platfrom\Windows\WindowsInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Alternate\Application.cpp" />
@@ -183,6 +187,7 @@ IF EXIST ..\$(ProjectName)\vendor\SDL2\lib\x64\SDL2.dll\ (xcopy /Q /E /Y /I ..\$
     <ClCompile Include="src\altpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\Platfrom\Windows\WindowsInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="vendor\Glad\GLAD.vcxproj">

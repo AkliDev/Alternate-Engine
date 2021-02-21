@@ -65,6 +65,10 @@
       <Filter>Platfrom\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\altpch.h" />
+    <ClInclude Include="src\Alternate\Input.h" />
+    <ClInclude Include="src\Platfrom\Windows\WindowsInput.h" />
+    <ClInclude Include="src\Alternate\KeyCodes.h" />
+    <ClInclude Include="src\Alternate\MouseButtonCodes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Alternate\Application.cpp">
@@ -89,5 +93,6 @@
       <Filter>Platfrom\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\altpch.cpp" />
+    <ClCompile Include="src\Platfrom\Windows\WindowsInput.cpp" />
   </ItemGroup>
 </Project>
