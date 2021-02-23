@@ -4,6 +4,8 @@
 
 #include <SDL.h>
 
+#include "Alternate/Renderer/GraphicsContext.h"
+
 namespace Alternate {
 
 	class ALTERNATE_API WindowsWindow : public Window
@@ -23,13 +25,13 @@ namespace Alternate {
 		bool IsVSync() const override;
 
 		virtual void* GetNativeWindow() const { return m_Window; }
-		virtual void* GetGLContext() const { return m_gl_context; }
+		virtual void* GetGLContext() const { return m_Context->GetRenderContext(); }
 	private:
 		virtual void Init(const WindowProps& props);
 		virtual void Shutdown();
 	private:
 		SDL_Window* m_Window;
-		SDL_GLContext m_gl_context;
+		GraphicsContext* m_Context;
 
 		struct WindowData
 		{
