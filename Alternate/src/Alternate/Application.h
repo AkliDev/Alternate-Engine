@@ -7,7 +7,7 @@
 #include "Alternate/Events/Event.h"
 #include "Alternate/Events/ApplicationEvent.h"
 
-
+#include "Alternate/ImGui/ImGuiLayer.h"
 
 namespace Alternate 
 {
@@ -31,6 +31,7 @@ namespace Alternate
 		bool OnWindowClose(WindowCloseEvent& e);
 
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 

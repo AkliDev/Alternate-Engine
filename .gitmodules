@@ -7,3 +7,6 @@
 [submodule "Alternate/vendor/imgui"]
 	path = Alternate/vendor/imgui
 	url = https://github.com/AkliDev/imgui.git
+[submodule "Alternate/vendor/glm"]
+	path = Alternate/vendor/glm
+	url = https://github.com/g-truc/glm.git

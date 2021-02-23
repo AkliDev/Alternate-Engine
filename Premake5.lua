@@ -14,6 +14,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["Glad"] = "Alternate/vendor/Glad/include"
 IncludeDir["ImGui"] = "Alternate/vendor/imgui"
+IncludeDir["glm"] = "Alternate/vendor/glm/glm"
 
 group "Dependencies"
 	include "Alternate/vendor/Glad"
@@ -22,9 +23,10 @@ group ""
 
 project "Alternate"
 	location "Alternate"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
-	staticruntime "off"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -35,7 +37,14 @@ project "Alternate"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/glm/glm/**.hpp",
+		"%{prj.name}/vendor/glm/glm/**.inl"
+	}
+
+	defines
+	{
+		"_CRT_SECURE_NO_WARNINGS"
 	}
 
 	includedirs
@@ -45,7 +54,8 @@ project "Alternate"
 		"%{prj.name}/vendor/spdlog/include",
 		"%{prj.name}/vendor/SDL2/include",	
 		"%{IncludeDir.Glad}",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.glm}"
 	}
 
 	libdirs 
@@ -55,47 +65,47 @@ project "Alternate"
 
 	links
 	{
-		"SDL2.lib",
 		"Glad",
 		"ImGui",
-		"opengl32.lib"
+		"SDL2.lib",
+		--"opengl32.lib"
 	}
 
-	cppdialect "C++17"
-	systemversion "latest"
+	filter "system:windows"
+		systemversion "latest"
 
-	defines
-	{
-		"ALT_PLATFORM_WINDOWS",
-		"ALT_BUILD_DLL"
-	}
+		defines
+		{
+			"ALT_PLATFORM_WINDOWS",
+			"ALT_BUILD_DLL"
+		}
 
-	postbuildcommands
-	{
-		"{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"",
-		"{COPY} ../%{prj.name}/vendor/SDL2/lib/x64/SDL2.dll  \"../bin/" .. outputdir .. "/Sandbox/\"",
-	}
+		postbuildcommands
+		{
+			"{COPY} ../%{prj.name}/vendor/SDL2/lib/x64/SDL2.dll  \"../bin/" .. outputdir .. "/Sandbox/\"",
+		}
 
 	filter "configurations:Debug"
 		defines "ALT_DEBUG"
 		runtime "Debug"
-		symbols "On" 
+		symbols "on" 
 
 	filter "configurations:Release"
 		defines "ALT_RELEASE"
 		runtime "Release"
-		optimize "On" 
+		optimize "on" 
 
 	filter "configurations:Dist"
 		defines "ALT_DIST"
 		runtime "Release"
-		optimize "On" 	
+		optimize "on" 	
 
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
-	staticruntime "off"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -109,7 +119,8 @@ project "Sandbox"
 	includedirs
 	{
 		"Alternate/vendor/spdlog/include",
-		"Alternate/src"
+		"Alternate/src",
+		"%{IncludeDir.glm}"
 	}
 
 	links
@@ -118,7 +129,6 @@ project "Sandbox"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
 		systemversion "latest"
 
 		defines
@@ -129,14 +139,14 @@ project "Sandbox"
 	filter "configurations:Debug"
 		defines "ALT_DEBUG"
 		runtime "Debug"
-		symbols "On" 
+		symbols "on" 
 
 	filter "configurations:Release"
 		defines "ALT_RELEASE"
 		runtime "Release"
-		optimize "On" 
+		optimize "on" 
 
 	filter "configurations:Dist"
 		defines "ALT_DIST"
 		runtime "Release"
-		optimize "On" 
+		optimize "on" 
