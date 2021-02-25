@@ -24,7 +24,7 @@ class Sandbox : public Alternate::Application
 public:
 	Sandbox()
 	{
-		//PushLayer(new ExampleLayer());
+		PushLayer(new ExampleLayer());
 	}
 
 	~Sandbox()

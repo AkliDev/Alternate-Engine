@@ -33,18 +33,20 @@ namespace Alternate
 
         int status = gladLoadGLLoader(SDL_GL_GetProcAddress);
         ALT_CORE_ASSERT(status, "failed to initialize Glad!");
+
+        ALT_CORE_INFO("OpenGL Info:");
+        ALT_CORE_INFO("  Vendor:    {0}", glGetString(GL_VENDOR));
+        ALT_CORE_INFO("  Renderer:  {0}", glGetString(GL_RENDERER));
+        ALT_CORE_INFO("  Version:   {0}", glGetString(GL_VERSION));
     }
 
     void OpenGLContext::SwapBuffer()
     {
         SDL_GL_SwapWindow(m_WindowHandle);      
-        glClearColor(0, 0, 0, 1);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
     void OpenGLContext::DeleteRenderContext()
     {
         SDL_GL_DeleteContext(m_Context);
     }
-
 }

@@ -16,6 +16,57 @@ namespace Alternate
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
+
+		glGenVertexArrays(1, &m_VertexArray);
+		glBindVertexArray(m_VertexArray);
+
+		glGenBuffers(1, &m_VertexBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
+
+		float vertices[3 * 3] =
+		{
+			-0.5f, -0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f,
+			 0.0f,  0.5f, 0.0f
+		};
+
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+
+		glGenBuffers(1, &m_IndexBuffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
+
+		unsigned int indices[3] = { 0, 1, 2 };
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+		std::string vertexSrc = R"(
+			#version 330 core
+			layout (location = 0) in vec3 aPos; // the position variable has attribute position 0
+			  
+			out vec4 vertexColor; // specify a color output to the fragment shader
+			
+			void main()
+			{
+			    gl_Position = vec4(aPos, 1.0); // see how we directly give a vec3 to vec4's constructor
+			    vertexColor = vec4(aPos, 1.0); // set the output variable to a dark-red color
+			}
+		)";
+
+		std::string fragmentSrc = R"(
+			#version 330 core
+			out vec4 FragColor;
+			  
+			in vec4 vertexColor; // the input variable from the vertex shader (same name and same type)  
+			
+			void main()
+			{
+			    FragColor = vertexColor * 0.5 + 0.5;
+			} 
+		)";
+
+		m_Shader.reset(new Shader(vertexSrc, fragmentSrc));
 	}
 
 	Application::~Application()
@@ -27,6 +78,13 @@ namespace Alternate
 	{
 		while (m_Running)
 		{		
+            glClearColor(0.1, 0.1, 0.1, 1);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			m_Shader->Bind();
+			glBindVertexArray(m_VertexArray);
+			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+
 			for (Layer* layer : m_LayerStack)
 			{
 				layer->OnUpdate();
