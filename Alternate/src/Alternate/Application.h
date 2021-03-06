@@ -9,10 +9,6 @@
 
 #include "Alternate/ImGui/ImGuiLayer.h"
 
-#include "Alternate/Renderer/Shader.h"
-#include "Alternate/Renderer/VertexArray.h"
-#include "Alternate/Renderer/Buffer.h"
-
 namespace Alternate 
 {
 	class ALTERNATE_API Application
@@ -39,11 +35,6 @@ namespace Alternate
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 
-		std::shared_ptr<Shader> m_Shader;
-		std::shared_ptr<VertexArray> m_VertexArray;
-
-		std::shared_ptr<Shader> m_BlueShader;
-		std::shared_ptr<VertexArray> m_SquareVA;
 	private:
 		static Application* s_instance;
 	};
