@@ -14,7 +14,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["Glad"] = "Alternate/vendor/Glad/include"
 IncludeDir["ImGui"] = "Alternate/vendor/imgui"
-IncludeDir["glm"] = "Alternate/vendor/glm/glm"
+IncludeDir["glm"] = "Alternate/vendor/glm"
 
 group "Dependencies"
 	include "Alternate/vendor/Glad"
@@ -120,6 +120,7 @@ project "Sandbox"
 	{
 		"Alternate/vendor/spdlog/include",
 		"Alternate/src",
+		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}"
 	}
 

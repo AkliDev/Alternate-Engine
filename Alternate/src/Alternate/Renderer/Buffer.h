@@ -30,11 +30,11 @@ namespace Alternate
 
 	struct BufferElement
 	{
-		std::string Name = "";
-		ShaderDataType Type = ShaderDataType::Noone;
-		uint32_t Size = 0;
-		uint32_t Offset = 0;
-		bool Normalized = false;
+		std::string Name;
+		ShaderDataType Type;
+		uint32_t Size;
+		uint32_t Offset;
+		bool Normalized;
 
 		BufferElement() {}
 		BufferElement(ShaderDataType type, const std::string& name, bool normalized = false)
@@ -95,7 +95,7 @@ namespace Alternate
 		}
 	private:
 		std::vector<BufferElement> m_Elements;
-		uint32_t m_Stride = 0;
+		uint32_t m_Stride;
 	};
 	class VertexBuffer
 	{
