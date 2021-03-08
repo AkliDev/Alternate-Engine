@@ -1380,6 +1380,7 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\Alternate\Events\TextEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Alternate\Application.cpp">

@@ -4,6 +4,7 @@
 
 #include "Alternate/Events/ApplicationEvent.h"
 #include "Alternate/Events/KeyEvent.h"
+#include "Alternate/Events/TextEvent.h"
 #include "Alternate/Events/MouseEvent.h"
 
 #include "Platfrom/OpenGL/OpenGLContext.h"
@@ -105,6 +106,13 @@ namespace Alternate {
 					}
 					}
 				}
+				break;
+			}
+			case SDL_TEXTINPUT:
+			{
+				WindowData& data = *(WindowData*)SDL_GetWindowData(m_Window, "data");
+				TextInputEvent ALT_event(event.text.text);
+				data.EventCallback(ALT_event);
 				break;
 			}
 			case SDL_KEYDOWN:

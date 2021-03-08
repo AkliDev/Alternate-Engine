@@ -160,6 +160,7 @@
     <ClInclude Include="src\Alternate\Events\Event.h" />
     <ClInclude Include="src\Alternate\Events\KeyEvent.h" />
     <ClInclude Include="src\Alternate\Events\MouseEvent.h" />
+    <ClInclude Include="src\Alternate\Events\TextEvent.h" />
     <ClInclude Include="src\Alternate\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Alternate\Input.h" />
     <ClInclude Include="src\Alternate\KeyCodes.h" />

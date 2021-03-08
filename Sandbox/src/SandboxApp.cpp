@@ -1,6 +1,6 @@
 #include <Alternate.h>
 
-//#include "imgui.h"
+#include "imgui.h"
 
 #include "Alternate/Renderer/Renderer.h"
 #include "Alternate/Renderer/Shader.h"
@@ -32,7 +32,7 @@ public:
 		Alternate::Renderer::EndScene();
 	}
 
-	/*virtual void OnImGuiRender() override
+	virtual void OnImGuiRender() override
 	{
 		glm::vec3 cameraPosition = m_Camara.GetPosition();
 		float cameraRotation = m_Camara.GetRotation();
@@ -44,11 +44,11 @@ public:
 
 		m_Camara.SetPosition(cameraPosition);
 		m_Camara.SetRotation(cameraRotation);
-	}*/
+	}
 
 	void OnEvent(Alternate::Event& event) override
 	{
-		ALT_TRACE("{0}", event);
+		//ALT_TRACE("{0}", event);
 	}
 private:
 
