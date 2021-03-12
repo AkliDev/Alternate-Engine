@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Alternate/Core.h"
+#include "Alternate/Core/Timestep.h"
 #include "Alternate/Events/Event.h"
 
 namespace Alternate {
@@ -13,7 +14,7 @@ namespace Alternate {
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(Timestep ts) {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& event) {}
 

@@ -2,27 +2,32 @@
 
 #include "imgui.h"
 
-#include "Alternate/Renderer/Renderer.h"
-#include "Alternate/Renderer/Shader.h"
-#include "Alternate/Renderer/VertexArray.h"
-#include "Alternate/Renderer/Buffer.h"
-#include "Alternate/Renderer/Camera.h"
-
 class ExampleLayer : public Alternate::Layer
 {
 public:
 	ExampleLayer()
-		:Layer("Example"), m_Camara(-1.6f, 1.6f,-0.9f, 0.9f)
+		:Layer("Example"), m_Camara(-0.8f, 0.8f,-0.6f, 0.6f)
 	{
 		CreateExampleRenderData();
 	}
 
-	void OnUpdate() override
+	void OnUpdate(Alternate::Timestep ts) override
 	{
-		//ALT_INFO("ExampleLayer::Update");
+		//ALT_INFO("Delta time: {0}s ({1}ms)", ts.GetSeconds(), ts.GetMilliseconds());
+		if (Alternate::Input::IsKeyPressed(ALT_KEY_W)) { m_CameraPostion.y -= m_CameraMoveSpeed * ts; }
+		if (Alternate::Input::IsKeyPressed(ALT_KEY_S)) { m_CameraPostion.y += m_CameraMoveSpeed * ts; }
+		if (Alternate::Input::IsKeyPressed(ALT_KEY_A)) { m_CameraPostion.x += m_CameraMoveSpeed * ts; }
+		if (Alternate::Input::IsKeyPressed(ALT_KEY_D)) { m_CameraPostion.x -= m_CameraMoveSpeed * ts; }
+
+		if (Alternate::Input::IsKeyPressed(ALT_KEY_Q)) { m_CameraRotation += m_CameraRotationSpeed * ts; }
+		if (Alternate::Input::IsKeyPressed(ALT_KEY_E)) { m_CameraRotation -= m_CameraRotationSpeed * ts; }
+
 
 		Alternate::RenderCommand::SetClearColor({ 0.1, 0.1, 0.1, 1 });
 		Alternate::RenderCommand::Clear();
+
+		m_Camara.SetPosition(m_CameraPostion);
+		m_Camara.SetRotation(m_CameraRotation);
 
 		Alternate::Renderer::BeginScene(m_Camara);
 
@@ -34,22 +39,12 @@ public:
 
 	virtual void OnImGuiRender() override
 	{
-		glm::vec3 cameraPosition = m_Camara.GetPosition();
-		float cameraRotation = m_Camara.GetRotation();
-
-		ImGui::Begin("Camera");
-		ImGui::DragFloat3("Position", (float*)&cameraPosition.x, 0.01f);
-		ImGui::DragFloat("Rotation", (float*)&cameraRotation, 0.10f);
-		ImGui::End();
-
-		m_Camara.SetPosition(cameraPosition);
-		m_Camara.SetRotation(cameraRotation);
 	}
 
 	void OnEvent(Alternate::Event& event) override
 	{
-		//ALT_TRACE("{0}", event);
 	}
+
 private:
 
 	void CreateExampleRenderData()
@@ -161,6 +156,10 @@ private:
 	std::shared_ptr<Alternate::VertexArray> m_SquareVA;
 
 	Alternate::OrthographicCamera m_Camara;
+	glm::vec3 m_CameraPostion = { 0.0f,0.0f,0.0f };
+	float m_CameraRotation = 0.0f;
+	float m_CameraMoveSpeed = 5.0f;
+	float m_CameraRotationSpeed = 180.0f;
 };
 
 class Sandbox : public Alternate::Application

@@ -7,6 +7,8 @@
 #include "Alternate/Events/Event.h"
 #include "Alternate/Events/ApplicationEvent.h"
 
+#include "Alternate/Core/Timestep.h"
+
 #include "Alternate/ImGui/ImGuiLayer.h"
 
 namespace Alternate 
@@ -28,12 +30,16 @@ namespace Alternate
 		inline Window& GetWindow() { return *m_Window; }
 
 	private:
+		bool OnKeyPressedEvent(KeyPressedEvent& e);
 		bool OnWindowClose(WindowCloseEvent& e);
+		void CloseWindow();
 
+	private:
 		std::unique_ptr<Window> m_Window;
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
+		uint32_t  m_LastFrameTime = 0;
 
 	private:
 		static Application* s_instance;

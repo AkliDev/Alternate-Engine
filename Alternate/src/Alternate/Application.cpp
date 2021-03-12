@@ -1,6 +1,10 @@
 #include "altpch.h"
 #include "Application.h"
 
+#include "Alternate/KeyCodes.h"
+
+#include <SDL.h>
+
 namespace Alternate
 {
 	Application* Application::s_instance = nullptr;
@@ -12,6 +16,7 @@ namespace Alternate
 
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(ALT_BIND_EVENT_FN(Application::OnEvent));
+		m_Window->SetVSync(false);
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
@@ -26,16 +31,15 @@ namespace Alternate
 	{
 		while (m_Running)
 		{
-			for (Layer* layer : m_LayerStack)
-			{
-				layer->OnUpdate();
-			}
+			
+			uint32_t  time = SDL_GetTicks(); // TODO make platform independent 
+			Timestep timestep = time - m_LastFrameTime;
+			m_LastFrameTime = time;
+
+			for (Layer* layer : m_LayerStack){layer->OnUpdate(timestep);}
 
 			m_ImGuiLayer->Begin();
-			for (Layer* layer : m_LayerStack)
-			{
-				layer->OnImGuiRender();
-			}
+			for (Layer* layer : m_LayerStack){layer->OnImGuiRender();}
 			m_ImGuiLayer->End();
 
 			m_Window->OnUpdate();
@@ -46,6 +50,7 @@ namespace Alternate
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(ALT_BIND_EVENT_FN(Application::OnWindowClose));
+		dispatcher.Dispatch<KeyPressedEvent>(ALT_BIND_EVENT_FN(Application::OnKeyPressedEvent));
 
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
 		{
@@ -70,9 +75,21 @@ namespace Alternate
 		layer->OnAttach();
 	}
 
-	bool Application::OnWindowClose(WindowCloseEvent& e)
+	bool Application::OnKeyPressedEvent(KeyPressedEvent& e)
 	{
-		m_Running = false;
+		if (e.GetKeyCode() == ALT_KEY_ESCAPE) { CloseWindow(); }
 		return true;
 	}
+
+	bool Application::OnWindowClose(WindowCloseEvent& e)
+	{
+		CloseWindow();
+		return true;
+	}
+
+	void Application::CloseWindow()
+	{
+		m_Running = false;
+	}
+
 }

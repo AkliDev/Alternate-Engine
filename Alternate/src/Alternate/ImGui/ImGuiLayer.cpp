@@ -94,7 +94,6 @@ namespace Alternate
 		ImGuiIO& io = ImGui::GetIO();
 		io.AddInputCharactersUTF8(e.GetText().c_str());
 		return false;
-		return false;
 	}
 
 	bool ImGuiLayer::OnKeyPressedEvent(KeyPressedEvent& e)
@@ -162,7 +161,7 @@ namespace Alternate
 	bool ImGuiLayer::OnWindowResizeEvent(WindowResizeEvent& e)
 	{
 		ImGuiIO& io = ImGui::GetIO();
-		io.DisplaySize = ImVec2(e.GetWidth(), e.GetHeight());
+		io.DisplaySize = ImVec2((float)e.GetWidth(), (float)e.GetHeight());
 		io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
 		glViewport(0, 0, e.GetWidth(), e.GetHeight());
 		return false;

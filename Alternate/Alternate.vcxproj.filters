@@ -1381,6 +1381,7 @@
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
     <ClInclude Include="src\Alternate\Events\TextEvent.h" />
+    <ClInclude Include="src\Alternate\Core\Timestep.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Alternate\Application.cpp">
