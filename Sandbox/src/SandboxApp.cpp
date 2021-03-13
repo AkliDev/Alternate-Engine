@@ -51,6 +51,7 @@ public:
 		}
 		
 		m_TextureShader->Bind();
+		m_Texture->Bind(0);
 		Alternate::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		//triangle
@@ -198,26 +199,32 @@ private:
 
 			in vec2 v_TexCoord;
 
-			uniform vec3 u_Color;
+			uniform sampler2D u_Texture;
 
 			void main()
 			{
-			    FragColor = vec4(v_TexCoord, 0,1);
+			    FragColor = texture(u_Texture, v_TexCoord);
 			} 
 		)";
 	
 		m_Shader.reset(Alternate::Shader::Create(vertexSrc, fragmentSrc));
 		m_FlatColorShader.reset(Alternate::Shader::Create(flatColorVertexSrc, flatColorFragmentSrc));
 		m_TextureShader.reset(Alternate::Shader::Create(textureVertexSrc, textureFragmentSrc));
+
+		m_Texture = Alternate::Texture2D::Create("assets/textures/Test.png");
+
+		m_TextureShader->Bind();
+		std::dynamic_pointer_cast<Alternate::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
 	}
 
-	Alternate::Ref<Alternate::Shader> m_Shader;
 	Alternate::Ref<Alternate::VertexArray> m_VertexArray;
-
-	Alternate::Ref<Alternate::Shader> m_FlatColorShader;
 	Alternate::Ref<Alternate::VertexArray> m_SquareVA;
 
+	Alternate::Ref<Alternate::Shader> m_Shader;
+	Alternate::Ref<Alternate::Shader> m_FlatColorShader;
 	Alternate::Ref<Alternate::Shader> m_TextureShader;
+
+	Alternate::Ref<Alternate::Texture2D> m_Texture;
 
 	Alternate::OrthographicCamera m_Camara;
 	glm::vec3 m_CameraPostion = { 0.0f,0.0f,0.0f };

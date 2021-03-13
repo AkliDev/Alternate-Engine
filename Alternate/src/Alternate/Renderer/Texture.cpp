@@ -12,7 +12,7 @@ namespace Alternate
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::None:	ALT_CORE_ASSERT(false, "RendererAPI::None is currently not supported!") return nullptr;
-			//case RendererAPI::API::OpenGL:	return std::make_shared<Texture2D>(path);
+			case RendererAPI::API::OpenGL:	return std::make_shared<OpenGLTexture2D>(path);
 		}
 
 		ALT_CORE_ASSERT(false, "Unkown RendererAPI!")
