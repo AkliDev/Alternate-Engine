@@ -1,12 +1,17 @@
 #include <Alternate.h>
 
+#include "Platfrom/OpenGL/OpenGLShader.h"
+
 #include "imgui.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class ExampleLayer : public Alternate::Layer
 {
 public:
 	ExampleLayer()
-		:Layer("Example"), m_Camara(-0.8f, 0.8f,-0.6f, 0.6f)
+		:Layer("Example"), m_Camara(-1.6f, 1.6f,-0.9f, 0.9f)
 	{
 		CreateExampleRenderData();
 	}
@@ -14,14 +19,13 @@ public:
 	void OnUpdate(Alternate::Timestep ts) override
 	{
 		//ALT_INFO("Delta time: {0}s ({1}ms)", ts.GetSeconds(), ts.GetMilliseconds());
-		if (Alternate::Input::IsKeyPressed(ALT_KEY_W)) { m_CameraPostion.y -= m_CameraMoveSpeed * ts; }
-		if (Alternate::Input::IsKeyPressed(ALT_KEY_S)) { m_CameraPostion.y += m_CameraMoveSpeed * ts; }
-		if (Alternate::Input::IsKeyPressed(ALT_KEY_A)) { m_CameraPostion.x += m_CameraMoveSpeed * ts; }
-		if (Alternate::Input::IsKeyPressed(ALT_KEY_D)) { m_CameraPostion.x -= m_CameraMoveSpeed * ts; }
+		if (Alternate::Input::IsKeyPressed(ALT_KEY_W)) { m_CameraPostion.y += m_CameraMoveSpeed * ts; }
+		if (Alternate::Input::IsKeyPressed(ALT_KEY_S)) { m_CameraPostion.y -= m_CameraMoveSpeed * ts; }
+		if (Alternate::Input::IsKeyPressed(ALT_KEY_A)) { m_CameraPostion.x -= m_CameraMoveSpeed * ts; }
+		if (Alternate::Input::IsKeyPressed(ALT_KEY_D)) { m_CameraPostion.x += m_CameraMoveSpeed * ts; }
 
 		if (Alternate::Input::IsKeyPressed(ALT_KEY_Q)) { m_CameraRotation += m_CameraRotationSpeed * ts; }
 		if (Alternate::Input::IsKeyPressed(ALT_KEY_E)) { m_CameraRotation -= m_CameraRotationSpeed * ts; }
-
 
 		Alternate::RenderCommand::SetClearColor({ 0.1, 0.1, 0.1, 1 });
 		Alternate::RenderCommand::Clear();
@@ -31,14 +35,35 @@ public:
 
 		Alternate::Renderer::BeginScene(m_Camara);
 
-		Alternate::Renderer::Submit(m_BlueShader,m_SquareVA);
-		Alternate::Renderer::Submit(m_Shader, m_VertexArray);
+		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(.1f));
+
+		m_FlatColorShader->Bind();
+		std::dynamic_pointer_cast<Alternate::OpenGLShader>(m_FlatColorShader) -> UploadUniformFloat3("u_Color", m_SquareColor);
+
+		for ( int x = 0; x < 20; x++)
+		{
+			for (int y = 0; y < 20; y++)
+			{
+				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+				Alternate::Renderer::Submit(m_FlatColorShader, m_SquareVA, transform);
+			}
+		}
+		
+		m_TextureShader->Bind();
+		Alternate::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+
+		//triangle
+		//Alternate::Renderer::Submit(m_Shader, m_VertexArray);
 
 		Alternate::Renderer::EndScene();
 	}
 
 	virtual void OnImGuiRender() override
 	{
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
+		ImGui::End();
 	}
 
 	void OnEvent(Alternate::Event& event) override
@@ -46,7 +71,6 @@ public:
 	}
 
 private:
-
 	void CreateExampleRenderData()
 	{
 		m_VertexArray.reset(Alternate::VertexArray::Create());
@@ -55,41 +79,44 @@ private:
 		{
 			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
 			 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-			 0.0f,  0.5f, 0.0f,	0.0f, 1.0f, 0.0f, 1.0f
+			 0.0f,  0.35f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
 		};
 
-		std::shared_ptr<Alternate::VertexBuffer> vertexBuffer;
+		Alternate::Ref<Alternate::VertexBuffer> vertexBuffer;
 		vertexBuffer.reset(Alternate::VertexBuffer::Create(vertices, sizeof(vertices)));
 		Alternate::BufferLayout layout =
 		{
-			{ Alternate::ShaderDataType::FLoat3, "a_Pos" },
-			{ Alternate::ShaderDataType::FLoat4, "a_Col" }
+			{ Alternate::ShaderDataType::FLoat3, "a_Position" },
+			{ Alternate::ShaderDataType::FLoat4, "a_Color" }
 		};
 		vertexBuffer->SetLayout(layout);
 		m_VertexArray->AddVertexBuffer(vertexBuffer);
 
 		uint32_t indices[3] = { 0, 1, 2 };
-		std::shared_ptr<Alternate::IndexBuffer> indexBuffer;
+		Alternate::Ref<Alternate::IndexBuffer> indexBuffer;
 		indexBuffer.reset(Alternate::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 
 		m_SquareVA.reset(Alternate::VertexArray::Create());
 
-		float squarVertices[3 * 4] =
+		float squarVertices[5 * 4] =
 		{
-			-0.75f, -0.75f, 0.0f,
-			 0.75f, -0.75f, 0.0f,
-			 0.75f,  0.75f, 0.0f,
-			-0.75f,  0.75f, 0.0f
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 
-		std::shared_ptr<Alternate::VertexBuffer> squarVB;
+		Alternate::Ref<Alternate::VertexBuffer> squarVB;
 		squarVB.reset(Alternate::VertexBuffer::Create(squarVertices, sizeof(squarVertices)));
-		squarVB->SetLayout({ { Alternate::ShaderDataType::FLoat3, "a_Pos" } });
+		squarVB->SetLayout({ 
+			{ Alternate::ShaderDataType::FLoat3, "a_Position" },
+			{ Alternate::ShaderDataType::FLoat2, "a_TexCoord" },
+		});
 		m_SquareVA->AddVertexBuffer(squarVB);
 
 		uint32_t squarIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		std::shared_ptr<Alternate::IndexBuffer> squarIB;
+		Alternate::Ref<Alternate::IndexBuffer> squarIB;
 		squarIB.reset(Alternate::IndexBuffer::Create(squarIndices, sizeof(squarIndices) / sizeof(uint32_t)));
 		m_SquareVA->SetIndexBuffer(squarIB);
 
@@ -99,12 +126,13 @@ private:
 			layout (location = 1) in vec4 a_Color;
 
 			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
 			  
 			out vec4 v_VertexColor; // specify a color output to the fragment shader
 			
 			void main()
 			{
-			    gl_Position = u_ViewProjection * vec4(a_Position, 1.0); 
+			    gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0); 
 			    v_VertexColor = a_Color; 
 			}
 		)";
@@ -121,45 +149,83 @@ private:
 			} 
 		)";
 
-		std::string vertexSrc2 = R"(
+		std::string flatColorVertexSrc = R"(
 			#version 330 core
-			layout (location = 0) in vec3 aPos; // the position variable has attribute position 0
-
+			layout (location = 0) in vec3 a_Position; 
 			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
 			  
 			out vec4 vertexColor; // specify a color output to the fragment shader
 			
 			void main()
 			{
-			    gl_Position = u_ViewProjection * vec4(aPos, 1.0); // see how we directly give a vec3 to vec4's constructor
+			    gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0); 
 			}
 		)";
 
-		std::string fragmentSrc2 = R"(
+		std::string flatColorFragmentSrc = R"(
 			#version 330 core
 			out vec4 FragColor;
-			  		
+
+			uniform vec3 u_Color;
+
 			void main()
 			{
-			    FragColor = vec4(0,0,1,1) * 0.5 + 0.5;
+			    FragColor = vec4(u_Color,1);
 			} 
 		)";
 
-		m_Shader.reset(new Alternate::Shader(vertexSrc, fragmentSrc));
-		m_BlueShader.reset(new Alternate::Shader(vertexSrc2, fragmentSrc2));
+		std::string textureVertexSrc = R"(
+			#version 330 core
+			layout (location = 0) in vec3 a_Position;
+			layout (location = 1) in vec2 a_TexCoord;
+
+			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
+
+			out vec2 v_TexCoord;
+
+			void main()
+			{
+				v_TexCoord = a_TexCoord;
+			    gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+			}
+		)";
+
+		std::string textureFragmentSrc = R"(
+			#version 330 core
+			out vec4 FragColor;
+
+			in vec2 v_TexCoord;
+
+			uniform vec3 u_Color;
+
+			void main()
+			{
+			    FragColor = vec4(v_TexCoord, 0,1);
+			} 
+		)";
+	
+		m_Shader.reset(Alternate::Shader::Create(vertexSrc, fragmentSrc));
+		m_FlatColorShader.reset(Alternate::Shader::Create(flatColorVertexSrc, flatColorFragmentSrc));
+		m_TextureShader.reset(Alternate::Shader::Create(textureVertexSrc, textureFragmentSrc));
 	}
 
-	std::shared_ptr<Alternate::Shader> m_Shader;
-	std::shared_ptr<Alternate::VertexArray> m_VertexArray;
+	Alternate::Ref<Alternate::Shader> m_Shader;
+	Alternate::Ref<Alternate::VertexArray> m_VertexArray;
 
-	std::shared_ptr<Alternate::Shader> m_BlueShader;
-	std::shared_ptr<Alternate::VertexArray> m_SquareVA;
+	Alternate::Ref<Alternate::Shader> m_FlatColorShader;
+	Alternate::Ref<Alternate::VertexArray> m_SquareVA;
+
+	Alternate::Ref<Alternate::Shader> m_TextureShader;
 
 	Alternate::OrthographicCamera m_Camara;
 	glm::vec3 m_CameraPostion = { 0.0f,0.0f,0.0f };
 	float m_CameraRotation = 0.0f;
 	float m_CameraMoveSpeed = 5.0f;
 	float m_CameraRotationSpeed = 180.0f;
+
+	glm::vec3 m_SquareColor = {0.2f, 0.3f, 0.8f};
 };
 
 class Sandbox : public Alternate::Application

@@ -18,5 +18,4 @@ namespace Alternate
 		ALT_CORE_ASSERT(false, "Unkown RendererAPI!")
 			return nullptr;
 	}
-
 }

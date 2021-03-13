@@ -7,6 +7,9 @@
     <Filter Include="src\Alternate">
       <UniqueIdentifier>{BCE27E46-28A3-FA7C-F1DD-43FA5D5D3F59}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Alternate\Core">
+      <UniqueIdentifier>{941C1FED-8000-E042-E960-DA95D563CAC4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Alternate\Events">
       <UniqueIdentifier>{20A37AB6-0C32-0480-B550-187BA1BE1426}</UniqueIdentifier>
     </Filter>
@@ -46,6 +49,9 @@
     <Filter Include="vendor\glm\glm\gtx">
       <UniqueIdentifier>{B3A6A76B-9F8A-68C1-08EB-6214F4ED5243}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vendor\stb_image">
+      <UniqueIdentifier>{0DA0BA59-F998-D9AB-22CB-BE300E23B9B7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Alternate.h">
@@ -56,6 +62,9 @@
     </ClInclude>
     <ClInclude Include="src\Alternate\Core.h">
       <Filter>src\Alternate</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Alternate\Core\Timestep.h">
+      <Filter>src\Alternate\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Alternate\EntryPoint.h">
       <Filter>src\Alternate</Filter>
@@ -70,6 +79,9 @@
       <Filter>src\Alternate\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Alternate\Events\MouseEvent.h">
+      <Filter>src\Alternate\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Alternate\Events\TextEvent.h">
       <Filter>src\Alternate\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Alternate\ImGui\ImGuiLayer.h">
@@ -114,6 +126,9 @@
     <ClInclude Include="src\Alternate\Renderer\Shader.h">
       <Filter>src\Alternate\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Alternate\Renderer\Texture.h">
+      <Filter>src\Alternate\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Alternate\Renderer\VertexArray.h">
       <Filter>src\Alternate\Renderer</Filter>
     </ClInclude>
@@ -127,6 +142,12 @@
       <Filter>src\Platfrom\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platfrom\OpenGL\OpenGLRendererAPI.h">
+      <Filter>src\Platfrom\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platfrom\OpenGL\OpenGLShader.h">
+      <Filter>src\Platfrom\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platfrom\OpenGL\OpenGLTexture.h">
       <Filter>src\Platfrom\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platfrom\OpenGL\OpenGLVertexArray.h">
@@ -1380,8 +1401,9 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Alternate\Events\TextEvent.h" />
-    <ClInclude Include="src\Alternate\Core\Timestep.h" />
+    <ClInclude Include="vendor\stb_image\stb_image.h">
+      <Filter>vendor\stb_image</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Alternate\Application.cpp">
@@ -1420,6 +1442,9 @@
     <ClCompile Include="src\Alternate\Renderer\Shader.cpp">
       <Filter>src\Alternate\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Alternate\Renderer\Texture.cpp">
+      <Filter>src\Alternate\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Alternate\Renderer\VertexArray.cpp">
       <Filter>src\Alternate\Renderer</Filter>
     </ClCompile>
@@ -1430,6 +1455,12 @@
       <Filter>src\Platfrom\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platfrom\OpenGL\OpenGLRendererAPI.cpp">
+      <Filter>src\Platfrom\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platfrom\OpenGL\OpenGLShader.cpp">
+      <Filter>src\Platfrom\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platfrom\OpenGL\OpenGLTexture.cpp">
       <Filter>src\Platfrom\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platfrom\OpenGL\OpenGLVertexArray.cpp">
@@ -1443,6 +1474,9 @@
     </ClCompile>
     <ClCompile Include="src\altpch.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\stb_image\stb_image.cpp">
+      <Filter>vendor\stb_image</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
