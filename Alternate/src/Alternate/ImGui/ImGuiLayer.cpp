@@ -187,17 +187,17 @@ namespace Alternate
 		
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
-            SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
-            SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
-            ImGui::UpdatePlatformWindows();
-            ImGui::RenderPlatformWindowsDefault();
-            SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
+			SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
+			SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
 		}
 	}
 
 	void ImGuiLayer::OnImGuiRender()
 	{
-		static bool show = true;
-		ImGui::ShowDemoWindow(&show);
+		//static bool show = false;
+		//ImGui::ShowDemoWindow(&show);
 	}
 }

@@ -24,14 +24,19 @@ public:
 		if (Alternate::Input::IsKeyPressed(ALT_KEY_A)) { m_CameraPostion.x -= m_CameraMoveSpeed * ts; }
 		if (Alternate::Input::IsKeyPressed(ALT_KEY_D)) { m_CameraPostion.x += m_CameraMoveSpeed * ts; }
 
-		if (Alternate::Input::IsKeyPressed(ALT_KEY_Q)) { m_CameraRotation += m_CameraRotationSpeed * ts; }
-		if (Alternate::Input::IsKeyPressed(ALT_KEY_E)) { m_CameraRotation -= m_CameraRotationSpeed * ts; }
+		if (Alternate::Input::IsKeyPressed(ALT_KEY_1)) { m_CameraRotation += m_CameraRotationSpeed * ts; }
+		if (Alternate::Input::IsKeyPressed(ALT_KEY_3)) { m_CameraRotation -= m_CameraRotationSpeed * ts; }
+
+		if (Alternate::Input::IsKeyPressed(ALT_KEY_Q)) { m_CameraZoom += m_CameraZoomSpeed * ts; }
+		if (Alternate::Input::IsKeyPressed(ALT_KEY_E)) { m_CameraZoom -= m_CameraZoomSpeed * ts; }
+		if (m_CameraZoom < 0.01f) { m_CameraZoom = 0.01f; }
 
 		Alternate::RenderCommand::SetClearColor({ 0.1, 0.1, 0.1, 1 });
 		Alternate::RenderCommand::Clear();
 
 		m_Camara.SetPosition(m_CameraPostion);
 		m_Camara.SetRotation(m_CameraRotation);
+		m_Camara.SetZoom(m_CameraZoom);
 
 		Alternate::Renderer::BeginScene(m_Camara);
 
@@ -51,7 +56,10 @@ public:
 		}
 		
 		m_TextureShader->Bind();
-		m_Texture->Bind(0);
+		m_CheckerBoardTexture->Bind(0);
+		Alternate::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+
+		m_TransparantTexture->Bind(0);
 		Alternate::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		//triangle
@@ -175,43 +183,13 @@ private:
 			    FragColor = vec4(u_Color,1);
 			} 
 		)";
-
-		std::string textureVertexSrc = R"(
-			#version 330 core
-			layout (location = 0) in vec3 a_Position;
-			layout (location = 1) in vec2 a_TexCoord;
-
-			uniform mat4 u_ViewProjection;
-			uniform mat4 u_Transform;
-
-			out vec2 v_TexCoord;
-
-			void main()
-			{
-				v_TexCoord = a_TexCoord;
-			    gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-			}
-		)";
-
-		std::string textureFragmentSrc = R"(
-			#version 330 core
-			out vec4 FragColor;
-
-			in vec2 v_TexCoord;
-
-			uniform sampler2D u_Texture;
-
-			void main()
-			{
-			    FragColor = texture(u_Texture, v_TexCoord);
-			} 
-		)";
 	
 		m_Shader.reset(Alternate::Shader::Create(vertexSrc, fragmentSrc));
 		m_FlatColorShader.reset(Alternate::Shader::Create(flatColorVertexSrc, flatColorFragmentSrc));
-		m_TextureShader.reset(Alternate::Shader::Create(textureVertexSrc, textureFragmentSrc));
+		m_TextureShader.reset(Alternate::Shader::Create("assets/shaders/Texture.glsl"));
 
-		m_Texture = Alternate::Texture2D::Create("assets/textures/Test.png");
+		m_CheckerBoardTexture = Alternate::Texture2D::Create("assets/textures/Test.png");
+		m_TransparantTexture = Alternate::Texture2D::Create("assets/textures/Goombah.png");
 
 		m_TextureShader->Bind();
 		std::dynamic_pointer_cast<Alternate::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
@@ -224,13 +202,17 @@ private:
 	Alternate::Ref<Alternate::Shader> m_FlatColorShader;
 	Alternate::Ref<Alternate::Shader> m_TextureShader;
 
-	Alternate::Ref<Alternate::Texture2D> m_Texture;
+	Alternate::Ref<Alternate::Texture2D> m_CheckerBoardTexture;
+	Alternate::Ref<Alternate::Texture2D> m_TransparantTexture;
 
 	Alternate::OrthographicCamera m_Camara;
 	glm::vec3 m_CameraPostion = { 0.0f,0.0f,0.0f };
 	float m_CameraRotation = 0.0f;
+	float m_CameraZoom = 1.0f;
+
 	float m_CameraMoveSpeed = 5.0f;
 	float m_CameraRotationSpeed = 180.0f;
+	float m_CameraZoomSpeed = 2.0f;
 
 	glm::vec3 m_SquareColor = {0.2f, 0.3f, 0.8f};
 };

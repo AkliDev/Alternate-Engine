@@ -1,6 +1,7 @@
 #include "altpch.h"
 #include "Application.h"
 
+#include "Alternate/Renderer/Renderer.h"
 #include "Alternate/KeyCodes.h"
 
 #include <SDL.h>
@@ -18,6 +19,7 @@ namespace Alternate
 		m_Window->SetEventCallback(ALT_BIND_EVENT_FN(Application::OnEvent));
 		m_Window->SetVSync(false);
 
+		Renderer::Init();
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
 	}
