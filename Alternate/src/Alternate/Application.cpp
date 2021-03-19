@@ -51,8 +51,9 @@ namespace Alternate
 	void Application::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<WindowCloseEvent>(ALT_BIND_EVENT_FN(Application::OnWindowClose));
+		dispatcher.Dispatch<WindowCloseEvent>(ALT_BIND_EVENT_FN(Application::OnWindowClosed));
 		dispatcher.Dispatch<KeyPressedEvent>(ALT_BIND_EVENT_FN(Application::OnKeyPressedEvent));
+		dispatcher.Dispatch<WindowResizeEvent>(ALT_BIND_EVENT_FN(Application::OnWindowResized));
 
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
 		{
@@ -83,7 +84,13 @@ namespace Alternate
 		return true;
 	}
 
-	bool Application::OnWindowClose(WindowCloseEvent& e)
+	bool Application::OnWindowResized(WindowResizeEvent& e)
+	{
+
+		return false;
+	}
+
+	bool Application::OnWindowClosed(WindowCloseEvent& e)
 	{
 		CloseWindow();
 		return true;

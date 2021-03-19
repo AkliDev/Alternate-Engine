@@ -64,7 +64,7 @@ namespace Alternate
 		ImGui::DestroyContext();
 	}
 
-	void ImGuiLayer::OnEvent(Event& event)
+	void ImGuiLayer::OnEvent(Event& e)
 	{
 		//if (m_BlockEvents)
 		//{
@@ -73,7 +73,7 @@ namespace Alternate
 		//	event.Handled |= event.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
 		//}
 
-		EventDispatcher dispatcher(event);
+		EventDispatcher dispatcher(e);
 
 		dispatcher.Dispatch<TextInputEvent>(ALT_BIND_EVENT_FN(ImGuiLayer::OnTextInputEvent));
 

@@ -11,34 +11,20 @@ class ExampleLayer : public Alternate::Layer
 {
 public:
 	ExampleLayer()
-		:Layer("Example"), m_Camara(-1.6f, 1.6f,-0.9f, 0.9f)
+		:Layer("Example"), m_CamaraController(1280.0f / 720.0f, true)
 	{
 		CreateExampleRenderData();
 	}
 
 	void OnUpdate(Alternate::Timestep ts) override
 	{
-		//ALT_INFO("Delta time: {0}s ({1}ms)", ts.GetSeconds(), ts.GetMilliseconds());
-		if (Alternate::Input::IsKeyPressed(ALT_KEY_W)) { m_CameraPostion.y += m_CameraMoveSpeed * ts; }
-		if (Alternate::Input::IsKeyPressed(ALT_KEY_S)) { m_CameraPostion.y -= m_CameraMoveSpeed * ts; }
-		if (Alternate::Input::IsKeyPressed(ALT_KEY_A)) { m_CameraPostion.x -= m_CameraMoveSpeed * ts; }
-		if (Alternate::Input::IsKeyPressed(ALT_KEY_D)) { m_CameraPostion.x += m_CameraMoveSpeed * ts; }
-
-		if (Alternate::Input::IsKeyPressed(ALT_KEY_1)) { m_CameraRotation += m_CameraRotationSpeed * ts; }
-		if (Alternate::Input::IsKeyPressed(ALT_KEY_3)) { m_CameraRotation -= m_CameraRotationSpeed * ts; }
-
-		if (Alternate::Input::IsKeyPressed(ALT_KEY_Q)) { m_CameraZoom += m_CameraZoomSpeed * ts; }
-		if (Alternate::Input::IsKeyPressed(ALT_KEY_E)) { m_CameraZoom -= m_CameraZoomSpeed * ts; }
-		if (m_CameraZoom < 0.01f) { m_CameraZoom = 0.01f; }
+		//Update
+		m_CamaraController.OnUpdate(ts);
 
 		Alternate::RenderCommand::SetClearColor({ 0.1, 0.1, 0.1, 1 });
 		Alternate::RenderCommand::Clear();
 
-		m_Camara.SetPosition(m_CameraPostion);
-		m_Camara.SetRotation(m_CameraRotation);
-		m_Camara.SetZoom(m_CameraZoom);
-
-		Alternate::Renderer::BeginScene(m_Camara);
+		Alternate::Renderer::BeginScene(m_CamaraController.GetCamera());
 
 		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(.1f));
 
@@ -76,8 +62,9 @@ public:
 		ImGui::End();
 	}
 
-	void OnEvent(Alternate::Event& event) override
+	void OnEvent(Alternate::Event& e) override
 	{
+		m_CamaraController.OnEvent(e);
 	}
 
 private:
@@ -206,14 +193,7 @@ private:
 	Alternate::Ref<Alternate::Texture2D> m_CheckerBoardTexture;
 	Alternate::Ref<Alternate::Texture2D> m_TransparantTexture;
 
-	Alternate::OrthographicCamera m_Camara;
-	glm::vec3 m_CameraPostion = { 0.0f,0.0f,0.0f };
-	float m_CameraRotation = 0.0f;
-	float m_CameraZoom = 1.0f;
-
-	float m_CameraMoveSpeed = 5.0f;
-	float m_CameraRotationSpeed = 180.0f;
-	float m_CameraZoomSpeed = 2.0f;
+	Alternate::OrthographicCameraController m_CamaraController;
 
 	glm::vec3 m_SquareColor = {0.2f, 0.3f, 0.8f};
 };

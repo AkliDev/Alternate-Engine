@@ -31,13 +31,15 @@ namespace Alternate
 
 	private:
 		bool OnKeyPressedEvent(KeyPressedEvent& e);
-		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowResized(WindowResizeEvent& e);
+		bool OnWindowClosed(WindowCloseEvent& e);
 		void CloseWindow();
 
 	private:
 		std::unique_ptr<Window> m_Window;
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
+		bool m_Minimized = false;
 		LayerStack m_LayerStack;
 		uint32_t  m_LastFrameTime = 0;
 

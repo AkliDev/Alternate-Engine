@@ -8,14 +8,13 @@ namespace Alternate
 	public:
 		OrthographicCamera(float left, float right, float bottom, float top);
 
+		void SetProjection(float left, float right, float bottom, float top);
+
 		const glm::vec3 GetPosition() const { return m_Postion; }
 		void SetPosition(const glm::vec3 postion) { m_Postion = postion; RecalcualteViewMatrix(); }
 
 		const float GetRotation() const { return m_Rotation; }		
 		void SetRotation(const float rotation) { m_Rotation = rotation; RecalcualteViewMatrix(); }
-
-		const float GetZoom() const { return m_Zoom; }
-		void SetZoom(const float zoom) { m_Zoom = zoom; RecalcualteViewMatrix(); }
 
 		const glm::mat4 GetProjectionMatrix() const { return m_ProjectionMatrix; }
 		const glm::mat4 GetViewMatrix() const { return m_ViewMatrix; }
@@ -31,6 +30,5 @@ namespace Alternate
 
 		glm::vec3 m_Postion;
 		float m_Rotation;
-		float m_Zoom;
 	};
 }
