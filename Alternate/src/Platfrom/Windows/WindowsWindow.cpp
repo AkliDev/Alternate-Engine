@@ -104,6 +104,20 @@ namespace Alternate {
 						data.EventCallback(ALT_event);
 						break;
 					}
+					case SDL_WINDOWEVENT_MINIMIZED:
+					{
+						WindowData& data = *(WindowData*)SDL_GetWindowData(m_Window, "data");
+						WindowMinimizedEvent ALT_event;
+						data.EventCallback(ALT_event);
+						break;
+					}
+					case SDL_WINDOWEVENT_RESTORED:
+					{
+						WindowData& data = *(WindowData*)SDL_GetWindowData(m_Window, "data");
+						WindowRestoredEvent ALT_event;
+						data.EventCallback(ALT_event);
+						break;
+					}
 					}
 				}
 				break;

@@ -163,7 +163,6 @@ namespace Alternate
 		ImGuiIO& io = ImGui::GetIO();
 		io.DisplaySize = ImVec2((float)e.GetWidth(), (float)e.GetHeight());
 		io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
-		glViewport(0, 0, e.GetWidth(), e.GetHeight());
 		return false;
 	}
 

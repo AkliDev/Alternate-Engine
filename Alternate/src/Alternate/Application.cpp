@@ -38,10 +38,13 @@ namespace Alternate
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
-			for (Layer* layer : m_LayerStack){layer->OnUpdate(timestep);}
+			if (!m_Minimized)
+			{
+				for (Layer* layer : m_LayerStack) { layer->OnUpdate(timestep); }			
+			}
 
 			m_ImGuiLayer->Begin();
-			for (Layer* layer : m_LayerStack){layer->OnImGuiRender();}
+			for (Layer* layer : m_LayerStack) { layer->OnImGuiRender(); }
 			m_ImGuiLayer->End();
 
 			m_Window->OnUpdate();
@@ -54,6 +57,8 @@ namespace Alternate
 		dispatcher.Dispatch<WindowCloseEvent>(ALT_BIND_EVENT_FN(Application::OnWindowClosed));
 		dispatcher.Dispatch<KeyPressedEvent>(ALT_BIND_EVENT_FN(Application::OnKeyPressedEvent));
 		dispatcher.Dispatch<WindowResizeEvent>(ALT_BIND_EVENT_FN(Application::OnWindowResized));
+		dispatcher.Dispatch<WindowMinimizedEvent>(ALT_BIND_EVENT_FN(Application::OnWindowMinimized));
+		dispatcher.Dispatch<WindowRestoredEvent>(ALT_BIND_EVENT_FN(Application::OnWindowRestored));
 
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
 		{
@@ -78,6 +83,12 @@ namespace Alternate
 		layer->OnAttach();
 	}
 
+	bool Application::OnWindowClosed(WindowCloseEvent& e)
+	{
+		CloseWindow();
+		return true;
+	}
+
 	bool Application::OnKeyPressedEvent(KeyPressedEvent& e)
 	{
 		if (e.GetKeyCode() == ALT_KEY_ESCAPE) { CloseWindow(); }
@@ -86,14 +97,20 @@ namespace Alternate
 
 	bool Application::OnWindowResized(WindowResizeEvent& e)
 	{
-
+		Renderer::OnWindowResized(e.GetWidth(), e.GetHeight());
 		return false;
 	}
 
-	bool Application::OnWindowClosed(WindowCloseEvent& e)
+	bool Application::OnWindowMinimized(WindowMinimizedEvent& e)
 	{
-		CloseWindow();
-		return true;
+		m_Minimized = true;
+		return false;
+	}
+
+	bool Application::OnWindowRestored(WindowRestoredEvent& e)
+	{
+		m_Minimized = false;
+		return false;
 	}
 
 	void Application::CloseWindow()

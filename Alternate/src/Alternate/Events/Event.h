@@ -14,7 +14,7 @@ namespace Alternate
 	enum class EventType
 	{
 		None = 0,
-		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
+		WindowClose, WindowResize, WindowMinimize, WindowRestore, WindowFocus, WindowLostFocus, WindowMoved,
 		AppTick, AppUpdate, AppRender,
 		TextInput,
 		KeyPressed, KeyReleased, KeyTyped,

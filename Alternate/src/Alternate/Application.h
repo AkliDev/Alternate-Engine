@@ -30,9 +30,12 @@ namespace Alternate
 		inline Window& GetWindow() { return *m_Window; }
 
 	private:
+		bool OnWindowClosed(WindowCloseEvent& e);
 		bool OnKeyPressedEvent(KeyPressedEvent& e);
 		bool OnWindowResized(WindowResizeEvent& e);
-		bool OnWindowClosed(WindowCloseEvent& e);
+		bool OnWindowMinimized(WindowMinimizedEvent& e);
+		bool OnWindowRestored(WindowRestoredEvent& e);
+		
 		void CloseWindow();
 
 	private:

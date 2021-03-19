@@ -4,7 +4,7 @@
 
 namespace Alternate {
 
-	class ALTERNATE_API WindowResizeEvent : public Event
+	class WindowResizeEvent : public Event
 	{
 	public:
 		WindowResizeEvent(unsigned int width, unsigned int height)
@@ -26,7 +26,39 @@ namespace Alternate {
 		unsigned int m_Width, m_Height;
 	};
 
-	class ALTERNATE_API WindowCloseEvent : public Event
+	class WindowMinimizedEvent : public Event
+	{
+	public:
+		WindowMinimizedEvent() = default;
+
+		std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << "WindowMinimizeEvent";
+			return ss.str();
+		}
+
+		EVENT_CLASS_TYPE(WindowMinimize)
+			EVENT_CLASS_CATEGORY(EventCategoryApplication)
+	};
+
+	class WindowRestoredEvent : public Event
+	{
+	public:
+		WindowRestoredEvent() = default;
+
+		std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << "WindowRestoreEvent";
+			return ss.str();
+		}
+
+		EVENT_CLASS_TYPE(WindowRestore)
+			EVENT_CLASS_CATEGORY(EventCategoryApplication)
+	};
+
+	class WindowCloseEvent : public Event
 	{
 	public:
 		WindowCloseEvent() = default;
@@ -35,7 +67,7 @@ namespace Alternate {
 			EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class ALTERNATE_API AppTickEvent : public Event
+	class AppTickEvent : public Event
 	{
 	public:
 		AppTickEvent() = default;
@@ -44,7 +76,7 @@ namespace Alternate {
 			EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class ALTERNATE_API AppUpdateEvent : public Event
+	class AppUpdateEvent : public Event
 	{
 	public:
 		AppUpdateEvent() = default;
@@ -53,7 +85,7 @@ namespace Alternate {
 			EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class ALTERNATE_API AppRenderEvent : public Event
+	class AppRenderEvent : public Event
 	{
 	public:
 		AppRenderEvent() = default;
