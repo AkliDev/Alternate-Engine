@@ -55,12 +55,13 @@ public:
 			}
 		}
 		
-		m_TextureShader->Bind();
+		auto textureShader = m_ShaderLibrary.Get("Texture");
+		textureShader->Bind();
 		m_CheckerBoardTexture->Bind(0);
-		Alternate::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		Alternate::Renderer::Submit(textureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		m_TransparantTexture->Bind(0);
-		Alternate::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		Alternate::Renderer::Submit(textureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		//triangle
 		//Alternate::Renderer::Submit(m_Shader, m_VertexArray);
@@ -184,23 +185,23 @@ private:
 			} 
 		)";
 	
-		m_Shader.reset(Alternate::Shader::Create(vertexSrc, fragmentSrc));
-		m_FlatColorShader.reset(Alternate::Shader::Create(flatColorVertexSrc, flatColorFragmentSrc));
-		m_TextureShader.reset(Alternate::Shader::Create("assets/shaders/Texture.glsl"));
+		m_VertexPositionColorShader = Alternate::Shader::Create("VertexPositionColor", vertexSrc, fragmentSrc);
+		m_FlatColorShader = Alternate::Shader::Create("FlatColor", flatColorVertexSrc, flatColorFragmentSrc);
+		auto textureShader = m_ShaderLibrary.Load("assets/shaders/Texture.glsl");
 
 		m_CheckerBoardTexture = Alternate::Texture2D::Create("assets/textures/Test.png");
 		m_TransparantTexture = Alternate::Texture2D::Create("assets/textures/Goombah.png");
 
-		m_TextureShader->Bind();
-		std::dynamic_pointer_cast<Alternate::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
+		textureShader->Bind();
+		std::dynamic_pointer_cast<Alternate::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
 	}
 
+	Alternate::ShaderLibrary m_ShaderLibrary;
 	Alternate::Ref<Alternate::VertexArray> m_VertexArray;
 	Alternate::Ref<Alternate::VertexArray> m_SquareVA;
 
-	Alternate::Ref<Alternate::Shader> m_Shader;
+	Alternate::Ref<Alternate::Shader> m_VertexPositionColorShader;
 	Alternate::Ref<Alternate::Shader> m_FlatColorShader;
-	Alternate::Ref<Alternate::Shader> m_TextureShader;
 
 	Alternate::Ref<Alternate::Texture2D> m_CheckerBoardTexture;
 	Alternate::Ref<Alternate::Texture2D> m_TransparantTexture;

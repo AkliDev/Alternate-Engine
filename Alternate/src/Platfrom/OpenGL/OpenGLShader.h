@@ -11,12 +11,14 @@ namespace Alternate
 	{
 
 	public:
-		OpenGLShader(const std::string& filePath);
-		OpenGLShader(const std::string& vertexSrc, const std::string& fragemntSrc);
+		OpenGLShader(const std::string& filepath);
+		OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragemntSrc);
 		virtual ~OpenGLShader();
 
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
+
+		virtual const std::string& GetName() const override { return m_Name; };
 
 		void UploadUniformInt(const std::string& name, int value);
 
@@ -34,5 +36,6 @@ namespace Alternate
 		void Compile(const std::unordered_map<GLenum, std::string>& shaderSources );
 	private:
 		uint32_t m_RendererID = 0;
+		std::string m_Name;
 	};
 }
