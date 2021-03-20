@@ -1,8 +1,8 @@
 #include "altpch.h"
 #include "OrthographicCameraController.h"
 
-#include "Alternate/Input.h"
-#include "Alternate/KeyCodes.h"
+#include "Alternate/Core/Input.h"
+#include "Alternate/Core/KeyCodes.h"
 namespace Alternate
 {
 	OrthographicCameraController::OrthographicCameraController(float aspectRatio, bool rotation)
@@ -51,5 +51,4 @@ namespace Alternate
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 		return false;
 	}
-
 }

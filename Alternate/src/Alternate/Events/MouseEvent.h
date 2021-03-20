@@ -4,7 +4,7 @@
 
 namespace Alternate {
 
-	class ALTERNATE_API MouseMovedEvent: public Event
+	class MouseMovedEvent: public Event
 	{
 	public:
 		MouseMovedEvent(const float x, const float y)
@@ -26,7 +26,7 @@ namespace Alternate {
 		float m_MouseX, m_MouseY;
 	};
 
-	class ALTERNATE_API MouseScrolledEvent : public Event
+	class MouseScrolledEvent : public Event
 	{
 	public:
 		MouseScrolledEvent(const float xOffset, const float yOffset)
@@ -48,7 +48,7 @@ namespace Alternate {
 		float m_XOffset, m_YOffset;
 	};
 
-	class ALTERNATE_API MouseButtonEvent : public Event
+	class MouseButtonEvent : public Event
 	{
 	public:
 		int GetMouseButton() const { return m_Button; }
@@ -61,7 +61,7 @@ namespace Alternate {
 		int m_Button;
 	};
 
-	class ALTERNATE_API MouseButtonPressedEvent : public MouseButtonEvent
+	class MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
 		MouseButtonPressedEvent(const int button)
@@ -77,7 +77,7 @@ namespace Alternate {
 		EVENT_CLASS_TYPE(MouseButtonPressed)
 	};
 
-	class ALTERNATE_API MouseButtonReleasedEvent : public MouseButtonEvent
+	class MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
 		MouseButtonReleasedEvent(const int button)

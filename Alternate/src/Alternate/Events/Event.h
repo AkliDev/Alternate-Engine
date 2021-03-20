@@ -1,7 +1,7 @@
 #pragma once
 #include "altpch.h"
 
-#include "Alternate/Core.h"
+#include "Alternate/Core/Core.h"
 
 namespace Alternate
 {
@@ -37,7 +37,7 @@ namespace Alternate
 
 #define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
 
-	class ALTERNATE_API Event
+	class Event
 	{
 	public:
 		virtual ~Event() = default;
@@ -55,7 +55,7 @@ namespace Alternate
 		}
 	};
 
-	class ALTERNATE_API EventDispatcher
+	class EventDispatcher
 	{
 		template<typename T>
 		using EventFn = std::function<bool(T&)>;

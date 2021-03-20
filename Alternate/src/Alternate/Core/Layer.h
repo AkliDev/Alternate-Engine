@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Alternate/Core.h"
+#include "Alternate/Core/Core.h"
 #include "Alternate/Core/Timestep.h"
 #include "Alternate/Events/Event.h"
 
 namespace Alternate {
 
-	class ALTERNATE_API Layer
+	class Layer
 	{
 	public:
 		Layer(const std::string& name = "Layer");

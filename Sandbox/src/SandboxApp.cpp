@@ -65,6 +65,7 @@ public:
 	void OnEvent(Alternate::Event& e) override
 	{
 		m_CamaraController.OnEvent(e);
+		ALT_TRACE(e);
 	}
 
 private:

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Alternate/Core.h"
+#include "Alternate/Core/Core.h"
 
 namespace Alternate
 {
-	class ALTERNATE_API Input
+	class  Input
 	{
 	public:
 		inline static bool IsKeyPressed(int keycode) { return s_Instance->IsKeyPressedImpl(keycode); }

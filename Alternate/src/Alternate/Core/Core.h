@@ -2,15 +2,6 @@
 #include <memory>
 
 #ifdef ALT_PLATFORM_WINDOWS
-#if ALT_DYNAMIC_LINK
-	#ifdef ALT_BUILD_DLL
-		#define ALTERNATE_API _declspec(dllexport)
-	#else
-		#define ALTERNATE_API _declspec(dllimport)
-	#endif
-#else
-	#define ALTERNATE_API
-#endif
 #else
 	#error Alternate only supports Windows!
 #endif

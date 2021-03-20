@@ -1,16 +1,16 @@
 #pragma once
 
 // For use by Alternate applications
-#include "Alternate/Application.h"
-#include "Alternate/Layer.h"
-#include "Alternate/Log.h"
+#include "Alternate/Core/Application.h"
+#include "Alternate/Core/Layer.h"
+#include "Alternate/Core/Log.h"
 
 #include "Alternate/Core/Timestep.h"
 
-#include "Alternate/Input.h"
-#include "Alternate/KeyCodes.h"
-#include "Alternate/MouseButtonCodes.h"
-#include "Alternate/OrthographicCameraController.h"
+#include "Alternate/Core/Input.h"
+#include "Alternate/Core/KeyCodes.h"
+#include "Alternate/Core/MouseButtonCodes.h"
+#include "Alternate/Renderer/OrthographicCameraController.h"
 
 #include "Alternate/ImGui/ImGuiLayer.h"
 
@@ -26,4 +26,4 @@
 #include "Alternate/Renderer/Camera.h"
 
 //Entry Point
-#include "Alternate/EntryPoint.h"
+#include "Alternate/Core/EntryPoint.h"

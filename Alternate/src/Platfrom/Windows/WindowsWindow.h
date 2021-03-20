@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Alternate/Window.h"
+#include "Alternate/Core/Window.h"
 
 #include <SDL.h>
 
@@ -8,7 +8,7 @@
 
 namespace Alternate {
 
-	class ALTERNATE_API WindowsWindow : public Window
+	class WindowsWindow : public Window
 	{
 	public:
 		WindowsWindow(const WindowProps& props);

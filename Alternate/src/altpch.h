@@ -13,7 +13,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "Alternate/Log.h"
+#include "Alternate/Core/Log.h"
 
 #ifdef ALT_PLATFORM_WINDOWS
 	#include <Windows.h>

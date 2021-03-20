@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Alternate/Input.h"
+#include "Alternate/Core/Input.h"
 
 namespace Alternate
 {

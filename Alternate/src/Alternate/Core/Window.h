@@ -2,7 +2,7 @@
 
 #include "altpch.h"
 
-#include "Alternate/Core.h"
+#include "Alternate/Core/Core.h"
 #include "Alternate/Events/Event.h"
 
 namespace Alternate
@@ -22,7 +22,7 @@ namespace Alternate
 	};
 
 	//// Interface representing a desktop system based Window
-	//class ALTERNATE_API  Window
+	//class   Window
 	//{
 	//public:
 	//	using EventCallbackFn = std::function<void(Event&)>;
@@ -59,7 +59,7 @@ namespace Alternate
 	//};
 
 	// Interface representing a desktop system based Window
-	class ALTERNATE_API Window
+	class Window
 	{
 	public:
 		using EventCallbackFn = std::function<void(Event&)>;

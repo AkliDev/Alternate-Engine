@@ -6,7 +6,7 @@
 
 namespace Alternate
 {
-	class ALTERNATE_API TextEvent : public Event
+	class TextEvent : public Event
 	{
 	public:
 		inline std::string GetText() const { return m_Text; }
@@ -19,7 +19,7 @@ namespace Alternate
 		std::string m_Text;
 	};
 
-	class ALTERNATE_API TextInputEvent : public TextEvent
+	class TextInputEvent : public TextEvent
 	{
 	public:
 		TextInputEvent(const std::string text)

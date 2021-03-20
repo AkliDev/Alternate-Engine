@@ -5,7 +5,7 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_sdl.h"
 
-#include "Alternate/Application.h"
+#include "Alternate/Core/Application.h"
 
 #include <SDL.h>
 #include <glad/glad.h>

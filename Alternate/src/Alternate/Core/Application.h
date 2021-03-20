@@ -13,7 +13,7 @@
 
 namespace Alternate 
 {
-	class ALTERNATE_API Application
+	class Application
 	{
 	public:
 		Application();

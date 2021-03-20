@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Alternate/Layer.h"
+#include "Alternate/Core/Layer.h"
 
 #include <vector>
 
-namespace Alternate {
-
-	class ALTERNATE_API LayerStack
+namespace Alternate 
+{
+	class LayerStack
 	{
 	public:
 		LayerStack();
@@ -24,5 +24,4 @@ namespace Alternate {
 		std::vector<Layer*> m_Layers;
 		unsigned int m_LayerInsertIndex = 0;
 	};
-
 }

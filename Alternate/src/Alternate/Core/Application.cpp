@@ -2,7 +2,7 @@
 #include "Application.h"
 
 #include "Alternate/Renderer/Renderer.h"
-#include "Alternate/KeyCodes.h"
+#include "Alternate/Core/KeyCodes.h"
 
 #include <SDL.h>
 
@@ -32,8 +32,7 @@ namespace Alternate
 	void Application::Run()
 	{
 		while (m_Running)
-		{
-			
+		{		
 			uint32_t  time = SDL_GetTicks(); // TODO make platform independent 
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;

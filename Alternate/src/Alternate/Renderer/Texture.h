@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "Alternate/Core.h"
+#include "Alternate/Core/Core.h"
 namespace Alternate
 {
 	class Texture

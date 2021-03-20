@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Alternate/Layer.h"
+#include "Alternate/Core/Layer.h"
 
 #include "Alternate/Events/TextEvent.h"
 #include "Alternate/Events/KeyEvent.h"
@@ -8,7 +8,7 @@
 #include "Alternate/Events/ApplicationEvent.h"
 namespace Alternate
 {
-	class ALTERNATE_API ImGuiLayer : public Layer
+	class ImGuiLayer : public Layer
 	{
 	public:
 		ImGuiLayer();

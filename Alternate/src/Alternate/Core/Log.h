@@ -6,7 +6,7 @@
 
 namespace Alternate
 {
-	class ALTERNATE_API Log
+	class Log
 	{
 	public: 
 		static void Init();
