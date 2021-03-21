@@ -6,7 +6,6 @@
 
 namespace Alternate
 {
- 
     OpenGLContext::OpenGLContext(SDL_Window* windowHandle)
         :m_WindowHandle(windowHandle)
     {
@@ -38,6 +37,8 @@ namespace Alternate
         ALT_CORE_INFO("  Vendor:    {0}", glGetString(GL_VENDOR));
         ALT_CORE_INFO("  Renderer:  {0}", glGetString(GL_RENDERER));
         ALT_CORE_INFO("  Version:   {0}", glGetString(GL_VERSION));
+
+        ALT_CORE_ASSERT(GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 5), "Alternate requires at least OpenGL version 4.5!");
     }
 
     void OpenGLContext::SwapBuffer()

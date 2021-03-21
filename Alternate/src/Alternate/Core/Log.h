@@ -24,11 +24,11 @@ namespace Alternate
 #define ALT_CORE_WARN(...)	::Alternate::Log::GetCoreLogger()->warn(__VA_ARGS__)
 #define ALT_CORE_INFO(...)	::Alternate::Log::GetCoreLogger()->info(__VA_ARGS__)
 #define ALT_CORE_ERROR(...)	::Alternate::Log::GetCoreLogger()->error(__VA_ARGS__)
-#define ALT_CORE_FATEL(...)	::Alternate::Log::GetCoreLogger()->fatal(__VA_ARGS__)
+#define ALT_CORE_CRITICAL(...)	::Alternate::Log::GetCoreLogger()->critical(__VA_ARGS__)
 
 //Client log macros
 #define ALT_TRACE(...)		::Alternate::Log::GetClientLogger()->trace(__VA_ARGS__)
 #define ALT_WARN(...)		::Alternate::Log::GetClientLogger()->warn(__VA_ARGS__)
 #define ALT_INFO(...)		::Alternate::Log::GetClientLogger()->info(__VA_ARGS__)
 #define ALT_ERROR(...)		::Alternate::Log::GetClientLogger()->error(__VA_ARGS__)
-#define ALT_FATEL(...)		::Alternate::Log::GetClientLogger()->fatal(__VA_ARGS__)
+#define ALT_CRITICAL(...)		::Alternate::Log::GetClientLogger()->critical(__VA_ARGS__)

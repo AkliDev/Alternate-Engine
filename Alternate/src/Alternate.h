@@ -24,6 +24,3 @@
 #include "Alternate/Renderer/VertexArray.h"
 
 #include "Alternate/Renderer/Camera.h"
-
-//Entry Point
-#include "Alternate/Core/EntryPoint.h"

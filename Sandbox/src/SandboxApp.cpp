@@ -1,11 +1,13 @@
 #include <Alternate.h>
-
+#include <Alternate/Core/EntryPoint.h>
 #include "Platfrom/OpenGL/OpenGLShader.h"
 
 #include "imgui.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "Sandbox2D.h"
 
 class ExampleLayer : public Alternate::Layer
 {
@@ -65,13 +67,12 @@ public:
 	void OnEvent(Alternate::Event& e) override
 	{
 		m_CamaraController.OnEvent(e);
-		ALT_TRACE(e);
 	}
 
 private:
 	void CreateExampleRenderData()
 	{
-		m_VertexArray.reset(Alternate::VertexArray::Create());
+		m_VertexArray = Alternate::VertexArray::Create();
 
 		float vertices[3 * 7] =
 		{
@@ -95,7 +96,7 @@ private:
 		indexBuffer.reset(Alternate::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 
-		m_SquareVA.reset(Alternate::VertexArray::Create());
+		m_SquareVA = Alternate::VertexArray::Create();
 
 		float squarVertices[5 * 4] =
 		{
@@ -205,11 +206,11 @@ public:
 	Sandbox()
 	{
 		PushLayer(new ExampleLayer());
+		PushLayer(new Sandbox2D());
 	}
 
 	~Sandbox()
 	{
-
 	}
 };
 
