@@ -1,6 +1,8 @@
 #include "altpch.h"
 #include "Renderer.h"
 
+#include "Alternate/Renderer/Renderer2D.h"
+
 #include "Platfrom/OpenGL/OpenGLShader.h"
 
 namespace Alternate
@@ -10,6 +12,12 @@ namespace Alternate
 	void Renderer::Init()
 	{
 		RenderCommand::Init();
+		Renderer2D::Init();
+	}
+
+	void Renderer::Shutdown()
+	{
+		Renderer2D::ShutDown();
 	}
 
 	void Renderer::OnWindowResized(uint32_t width, uint32_t height)

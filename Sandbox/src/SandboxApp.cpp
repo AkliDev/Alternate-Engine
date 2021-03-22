@@ -1,8 +1,9 @@
 #include <Alternate.h>
 #include <Alternate/Core/EntryPoint.h>
+
 #include "Platfrom/OpenGL/OpenGLShader.h"
 
-#include "imgui.h"
+#include <imgui.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -205,7 +206,7 @@ class Sandbox : public Alternate::Application
 public:
 	Sandbox()
 	{
-		PushLayer(new ExampleLayer());
+		//PushLayer(new ExampleLayer());
 		PushLayer(new Sandbox2D());
 	}
 

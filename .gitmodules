@@ -1,12 +1,16 @@
 [submodule "Alternate/vendor/spdlog"]
 	path = Alternate/vendor/spdlog
 	url = https://github.com/gabime/spdlog.git
+	branch = v1.x
 [submodule "Alternate/vendor/SDL2"]
 	path = Alternate/vendor/SDL2
 	url = https://github.com/AkliDev/SDL2-Development-Libraries
+	branch = master
 [submodule "Alternate/vendor/imgui"]
 	path = Alternate/vendor/imgui
 	url = https://github.com/AkliDev/imgui.git
+	branch = docking
 [submodule "Alternate/vendor/glm"]
 	path = Alternate/vendor/glm
 	url = https://github.com/g-truc/glm.git
+	branch = master

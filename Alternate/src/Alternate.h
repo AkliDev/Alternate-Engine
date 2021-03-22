@@ -16,6 +16,7 @@
 
 //Renderer
 #include "Alternate/Renderer/Renderer.h"
+#include "Alternate/Renderer/Renderer2D.h"
 #include "Alternate/Renderer/RenderCommand.h"
 
 #include "Alternate/Renderer/Buffer.h"
