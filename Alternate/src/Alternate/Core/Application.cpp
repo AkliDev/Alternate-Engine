@@ -10,12 +10,14 @@ namespace Alternate
 {
 	Application* Application::s_instance = nullptr;
 
-	Application::Application()
+	Application::Application(const std::string& name)
 	{
+		ALT_PROFILE_FUNCTION();
+
 		ALT_CORE_ASSERT(!s_instance, "Appliaction already exisits!");
 		s_instance = this;
 
-		m_Window = std::unique_ptr<Window>(Window::Create());
+		m_Window = Window::Create(WindowProps(name));
 		m_Window->SetEventCallback(ALT_BIND_EVENT_FN(Application::OnEvent));
 		m_Window->SetVSync(false);
 
@@ -26,32 +28,47 @@ namespace Alternate
 
 	Application::~Application()
 	{
+		ALT_PROFILE_FUNCTION();
 
+		Renderer::Shutdown();
 	}
 
 	void Application::Run()
 	{
+		ALT_PROFILE_FUNCTION();
+
 		while (m_Running)
-		{		
+		{
+			ALT_PROFILE_SCOPE("RunLoop");
+
 			uint32_t  time = SDL_GetTicks(); // TODO make platform independent 
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
 			if (!m_Minimized)
 			{
-				for (Layer* layer : m_LayerStack) { layer->OnUpdate(timestep); }			
+				{
+					ALT_PROFILE_SCOPE("LayerStack OnUpdate");
+
+					for (Layer* layer : m_LayerStack) { layer->OnUpdate(timestep); }
+				}
+
+				m_ImGuiLayer->Begin();
+				{
+					ALT_PROFILE_SCOPE("LayerStack OnImGuiRender");
+				
+					for (Layer* layer : m_LayerStack) { layer->OnImGuiRender(); }
+				}
+				m_ImGuiLayer->End();
 			}
-
-			m_ImGuiLayer->Begin();
-			for (Layer* layer : m_LayerStack) { layer->OnImGuiRender(); }
-			m_ImGuiLayer->End();
-
 			m_Window->OnUpdate();
 		}
 	}
 
 	void Application::OnEvent(Event& e)
 	{
+		ALT_PROFILE_FUNCTION();
+
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(ALT_BIND_EVENT_FN(Application::OnWindowClosed));
 		dispatcher.Dispatch<KeyPressedEvent>(ALT_BIND_EVENT_FN(Application::OnKeyPressedEvent));
@@ -72,12 +89,16 @@ namespace Alternate
 
 	void Application::PushLayer(Layer* layer)
 	{
+		ALT_PROFILE_FUNCTION();
+
 		m_LayerStack.PushLayer(layer);
 		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer* layer)
 	{
+		ALT_PROFILE_FUNCTION();
+
 		m_LayerStack.PushOverlay(layer);
 		layer->OnAttach();
 	}
@@ -96,6 +117,8 @@ namespace Alternate
 
 	bool Application::OnWindowResized(WindowResizeEvent& e)
 	{
+		ALT_PROFILE_FUNCTION();
+
 		Renderer::OnWindowResized(e.GetWidth(), e.GetHeight());
 		return false;
 	}

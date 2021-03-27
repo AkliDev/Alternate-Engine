@@ -79,6 +79,6 @@ namespace Alternate
 		virtual void* GetNativeWindow() const = 0;
 		virtual void* GetGLContext() const = 0;
 
-		static Window* Create(const WindowProps& props = WindowProps());
+		static Scope<Window> Create(const WindowProps& props = WindowProps());
 	};
 }

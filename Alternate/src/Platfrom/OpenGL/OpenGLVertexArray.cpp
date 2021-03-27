@@ -28,38 +28,47 @@ namespace Alternate
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
+		ALT_PROFILE_FUNCTION();
+
 		glCreateVertexArrays(1, &m_RenderID);
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
+		ALT_PROFILE_FUNCTION();
+
 		glDeleteVertexArrays(1, &m_RenderID);
 	}
 
 	void OpenGLVertexArray::Bind() const
-	{	 
+	{
+		ALT_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_RenderID);
 	}	 
 		 
 	void OpenGLVertexArray::Unbind() const
 	{	 
+		ALT_PROFILE_FUNCTION();
+
 		glBindVertexArray(0);
 	}	 
 		 
 	void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer)
 	{	 
+		ALT_PROFILE_FUNCTION();
+
 		ALT_CORE_ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!")
 
 		glBindVertexArray(m_RenderID);
 		vertexBuffer->Bind();
 		
-		uint32_t index = 0;
 		const auto& layout = vertexBuffer->GetLayout();
 		for (const auto& element : layout)
 		{
-			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index, element.GetComponentCount(), ShaderDataTypeToOpenGLBaseType(element.Type), element.Normalized ? GL_TRUE : GL_FALSE, layout.GetStride(), (const void*)(intptr_t)element.Offset);
-			index++;
+			glEnableVertexAttribArray(m_VertexBufferIndex);
+			glVertexAttribPointer(m_VertexBufferIndex, element.GetComponentCount(), ShaderDataTypeToOpenGLBaseType(element.Type), element.Normalized ? GL_TRUE : GL_FALSE, layout.GetStride(), (const void*)(intptr_t)element.Offset);
+			m_VertexBufferIndex++;
 		}
 		
 		m_VertexBuffers.push_back(vertexBuffer);
@@ -67,6 +76,8 @@ namespace Alternate
 		 
 	void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer)
 	{	 
+		ALT_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_RenderID);
 		indexBuffer->Bind();
 

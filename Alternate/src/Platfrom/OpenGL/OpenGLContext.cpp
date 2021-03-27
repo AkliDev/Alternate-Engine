@@ -14,6 +14,8 @@ namespace Alternate
 
     void OpenGLContext::Init()
     {
+        ALT_PROFILE_FUNCTION();
+
         SDL_GL_LoadLibrary(NULL); // Default OpenGL is fine.
 
         // Request an OpenGL 4.6 context (should be core)
@@ -43,6 +45,8 @@ namespace Alternate
 
     void OpenGLContext::SwapBuffer()
     {
+        ALT_PROFILE_FUNCTION();
+
         SDL_GL_SwapWindow(m_WindowHandle);      
     }
 

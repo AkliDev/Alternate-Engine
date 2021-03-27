@@ -15,6 +15,8 @@
 
 #include "Alternate/Core/Log.h"
 
+#include "Alternate/Debug/Instrumentor.h"
+
 #ifdef ALT_PLATFORM_WINDOWS
 	#include <Windows.h>
 #endif

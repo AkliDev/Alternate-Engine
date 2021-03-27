@@ -13,6 +13,8 @@ namespace Alternate
 
 	void OrthographicCameraController::OnUpdate(Timestep ts)
 	{
+		ALT_PROFILE_FUNCTION();
+
 		m_CameraTranslationSpeed = m_ZoomLevel;
 		if (Input::IsKeyPressed(ALT_KEY_W)) { m_CameraPostion.y += m_CameraTranslationSpeed * ts; }
 		if (Input::IsKeyPressed(ALT_KEY_S)) { m_CameraPostion.y -= m_CameraTranslationSpeed * ts; }
@@ -31,6 +33,8 @@ namespace Alternate
 
 	void OrthographicCameraController::OnEvent(Event& e)
 	{
+		ALT_PROFILE_FUNCTION();
+
 		EventDispatcher dispatcher(e);
 
 		dispatcher.Dispatch<MouseScrolledEvent>(ALT_BIND_EVENT_FN(OrthographicCameraController::OnMouseScrollEvent));
@@ -39,6 +43,8 @@ namespace Alternate
 
 	bool OrthographicCameraController::OnMouseScrollEvent(MouseScrolledEvent& e)
 	{
+		ALT_PROFILE_FUNCTION();
+
 		m_ZoomLevel -= e.GetYOffset() * 0.1f;
 		m_ZoomLevel = std::max(m_ZoomLevel, 0.25f);
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
@@ -47,6 +53,8 @@ namespace Alternate
 
 	bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e)
 	{
+		ALT_PROFILE_FUNCTION();
+
 		m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 		return false;

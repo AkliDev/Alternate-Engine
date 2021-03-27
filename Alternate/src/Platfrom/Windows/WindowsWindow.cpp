@@ -7,16 +7,13 @@
 #include "Alternate/Events/TextEvent.h"
 #include "Alternate/Events/MouseEvent.h"
 
+#include "Alternate/Renderer/Renderer.h"
+
 #include "Platfrom/OpenGL/OpenGLContext.h"
 
 namespace Alternate {
 
-	static bool s_SDLInitialized = false;
-
-	Window* Window::Create(const WindowProps& props)
-	{
-		return new WindowsWindow(props);
-	}
+	static uint8_t s_SDLWindowCount = 0;
 
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
@@ -25,46 +22,71 @@ namespace Alternate {
 
 	WindowsWindow::~WindowsWindow()
 	{
+		ALT_PROFILE_FUNCTION();
+
 		Shutdown();
 	}
 
 	void WindowsWindow::Init(const WindowProps& props)
 	{
+		ALT_PROFILE_FUNCTION();
+
 		m_Data.Title = props.Title;
 		m_Data.Width = props.Width;
 		m_Data.Height = props.Height;
 
 		ALT_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
 
-		if (s_SDLInitialized == 0)
+		if (s_SDLWindowCount == 0)
 		{
+			ALT_PROFILE_SCOPE("SDL_Init");
+
+			ALT_CORE_INFO("Initializing SDL");
 			int success = SDL_Init(SDL_INIT_VIDEO);
 			if (success != 0)
 			{
 				ALT_CORE_ASSERT(success, "Could not initialize SDL!");
 			}
-			s_SDLInitialized = true;
 		}
-		
-		m_Window = SDL_CreateWindow(props.Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, props.Width, props.Height, SDL_WINDOW_OPENGL);
-		SDL_SetWindowResizable(m_Window, SDL_TRUE);
 
-        m_Context = new OpenGLContext(m_Window);
+		{
+			ALT_PROFILE_SCOPE("SDLCreateWindow");
+#if defined(ALT_DEBUG)
+			//if (Renderer::GetAPI() == RendererAPI::API::OpenGL)
+			//{
+			//	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+			//}
+#endif
+			m_Window = SDL_CreateWindow(props.Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, props.Width, props.Height, SDL_WINDOW_OPENGL);
+			SDL_SetWindowResizable(m_Window, SDL_TRUE);
+			++s_SDLWindowCount;
+		}
+
+		m_Context = CreateScope<OpenGLContext>(m_Window);
 		m_Context->Init();
 
 		SDL_SetWindowData(m_Window, "data", &m_Data);
-		SetVSync(true);	
+		SetVSync(false);
 	}
 
 	void WindowsWindow::Shutdown()
 	{
+		ALT_PROFILE_FUNCTION();
+
 		m_Context->DeleteRenderContext();
 		SDL_DestroyWindow(m_Window);
-		SDL_Quit();
+		s_SDLWindowCount--;
+
+		if (s_SDLWindowCount == 0)
+		{
+			SDL_Quit();
+		}
 	}
 
 	void WindowsWindow::OnUpdate()
 	{
+		ALT_PROFILE_FUNCTION();
+
 		HandleEvents();
 		m_Context->SwapBuffer();
 	}
@@ -131,7 +153,7 @@ namespace Alternate {
 			}
 			case SDL_KEYDOWN:
 			{
-				
+
 				WindowData& data = *(WindowData*)SDL_GetWindowData(m_Window, "data");
 
 				if (event.key.repeat != 0)
@@ -190,6 +212,8 @@ namespace Alternate {
 
 	void WindowsWindow::SetVSync(bool enabled)
 	{
+		ALT_PROFILE_FUNCTION();
+
 		if (enabled)
 			SDL_GL_SetSwapInterval(1);
 		else
