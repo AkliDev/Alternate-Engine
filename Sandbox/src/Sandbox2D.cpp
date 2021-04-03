@@ -37,9 +37,8 @@ void Sandbox2D::OnUpdate(Alternate::Timestep ts)
 	{
 		ALT_PROFILE_SCOPE("Render Draw");
 		Alternate::Renderer2D::BeginScene(m_CamaraController.GetCamera());
-		Alternate::Renderer2D::DrawQuad({ 1.0f, 1.0f }, 0, { 1.0f, 1.0f }, m_SquareColor);
-		Alternate::Renderer2D::DrawQuad({ 0.0f, 0.0f }, 0, { 1.0f, 1.0f }, m_TransparantTexture);
-		Alternate::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, 0, { 10.0f, 10.0f }, m_CheckerBoardTexture);
+		Alternate::Renderer2D::DrawQuad({ 1.0f, 1.0f }, { 1.0f, 1.0f }, m_SquareColor);
+		Alternate::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_Square2Color);
 		Alternate::Renderer2D::EndScene();
 	}
 }
@@ -50,6 +49,7 @@ void Sandbox2D::OnImGuiRender()
 
 	ImGui::Begin("Settings");
 	ImGui::ColorEdit4("Square Color2D", glm::value_ptr(m_SquareColor));
+	ImGui::ColorEdit4("Square2 Color2D", glm::value_ptr(m_Square2Color));
 	ImGui::End();
 }
 

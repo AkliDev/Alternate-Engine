@@ -7,7 +7,7 @@
 
 namespace Alternate
 {
-	Alternate::Ref<Alternate::Texture2D> Texture2D::Create(const uint32_t width, const uint32_t height)
+	Ref<Texture2D> Texture2D::Create(const uint32_t width, const uint32_t height)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -19,7 +19,7 @@ namespace Alternate
 		return nullptr;
 	}
 
-	Ref<Alternate::Texture2D> Texture2D::Create(const std::string& path)
+	Ref<Texture2D> Texture2D::Create(const std::string& path)
 	{
 		switch (Renderer::GetAPI())
 		{
