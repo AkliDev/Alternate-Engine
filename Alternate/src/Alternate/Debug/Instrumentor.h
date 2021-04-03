@@ -123,7 +123,7 @@ namespace Alternate
 	};
 }
 
-#define ALT_PROFILE 1
+#define ALT_PROFILE 0
 #if ALT_PROFILE
 #define ALT_PROFILE_BEGIN_SESSION(name, filepath)	::Alternate::Instrumentor::Get().BeginSession(name, filepath)
 #define ALT_PROFILE_END_SESSION()					::Alternate::Instrumentor::Get().EndSession()
