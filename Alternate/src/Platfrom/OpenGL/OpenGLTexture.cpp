@@ -94,4 +94,4 @@ namespace Alternate
 
 		glBindTextureUnit(slot, m_RendererID);
 	}
-}  
+}
