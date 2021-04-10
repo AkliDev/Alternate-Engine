@@ -2,6 +2,8 @@
 
 #include "Alternate.h"
 
+#include "ParticleSystem.h"
+
 class Sandbox2D : public Alternate::Layer
 {
 public:
@@ -15,7 +17,7 @@ public:
 	virtual void OnImGuiRender() override;
 	void OnEvent(Alternate::Event& e) override;
 private:
-	Alternate::OrthographicCameraController m_CamaraController;
+	Alternate::OrthographicCameraController m_CameraController;
 
 	Alternate::Ref<Alternate::VertexArray> m_SquareVA;
 	Alternate::Ref<Alternate::Shader> m_FlatColorShader;
@@ -25,4 +27,9 @@ private:
 
 	Alternate::Ref<Alternate::Texture2D> m_CheckerBoardTexture;
 	Alternate::Ref<Alternate::Texture2D> m_TransparantTexture;
+	Alternate::Ref<Alternate::Texture2D> m_SpriteSheet;
+	Alternate::Ref<Alternate::SubTexture2D> m_TextureStairs, m_TextureBarrel, m_TextureTree;
+
+	ParticleSystem m_ParticleSystem;
+	ParticleProps m_Particle;
 };

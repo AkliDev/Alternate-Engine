@@ -7,6 +7,15 @@
 
 namespace Alternate
 {
+	struct OrthographicCameraBounds
+	{
+		float Left, Right;
+		float Bottom, Top;
+
+		float GetWidth() { return Right - Left; }
+		float GetHeight() { return Top - Bottom; }
+	};
+
 	class OrthographicCameraController
 	{
 	public:
@@ -17,12 +26,15 @@ namespace Alternate
 
 		OrthographicCamera& GetCamera() { return m_Camera; }
 		const OrthographicCamera& GetCamera() const { return m_Camera; }
+
+		const OrthographicCameraBounds& GetBounds() const { return m_Bounds; }
 	private:
 		bool OnMouseScrollEvent(MouseScrolledEvent& e);
 		bool OnWindowResized(WindowResizeEvent& e);
 	private:
 		float m_AspectRatio;
 		float m_ZoomLevel = 1.0f;
+		OrthographicCameraBounds m_Bounds;
 		OrthographicCamera m_Camera;
 
 		bool m_Rotation = false;

@@ -6,7 +6,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 Sandbox2D::Sandbox2D()
-	:Layer("Sandbox2D"), m_CamaraController(1280.0f / 720.0f, true)
+	:Layer("Sandbox2D"), m_CameraController(1280.0f / 720.0f, true)
 {
 }
 
@@ -15,6 +15,19 @@ void Sandbox2D::OnAttach()
 	ALT_PROFILE_FUNCTION();
 	m_CheckerBoardTexture = Alternate::Texture2D::Create("assets/textures/Test.png");
 	m_TransparantTexture = Alternate::Texture2D::Create("assets/textures/Goombah.png");
+	m_SpriteSheet = Alternate::Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png");
+
+	m_TextureStairs = Alternate::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 7, 6 }, { 128, 128 });
+	m_TextureBarrel = Alternate::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 9, 2 }, { 128, 128 });
+	m_TextureTree = Alternate::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 4, 1 }, { 128, 128 }, { 1, 2 });
+
+	m_Particle.ColorBegin = { 0 / 255.0f, 127 / 255.0f, 255 / 255.0f, 1.0f };
+	m_Particle.ColorEnd = { 142 / 255.0f, 182 / 255.0f, 255 / 255.0f, 1.0f };
+	m_Particle.SizeBegin = 0.5f, m_Particle.SizeVariation = 0.3f, m_Particle.SizeEnd = 0.0f;
+	m_Particle.LifeTime = 5.0f;
+	m_Particle.Velocity = { 0.0f, 0.0f };
+	m_Particle.VelocityVariation = { 3.0f, 1.0f };
+	m_Particle.Position = { 0.0f, 0.0f };
 }
 
 void Sandbox2D::OnDetach()
@@ -26,7 +39,7 @@ void Sandbox2D::OnUpdate(Alternate::Timestep ts)
 {
 	ALT_PROFILE_FUNCTION();
 
-	m_CamaraController.OnUpdate(ts);
+	m_CameraController.OnUpdate(ts);
 
 	Alternate::Renderer2D::ResetStats();
 	{
@@ -35,19 +48,20 @@ void Sandbox2D::OnUpdate(Alternate::Timestep ts)
 		Alternate::RenderCommand::Clear();
 	}
 
+#if 0
 	{
 		static float rotation = 0.0f;
 		rotation += ts * 500.0f;
 		ALT_PROFILE_SCOPE("Render Draw");
-		Alternate::Renderer2D::BeginScene(m_CamaraController.GetCamera());
+		Alternate::Renderer2D::BeginScene(m_CameraController.GetCamera());
 		Alternate::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 20.0f, 20.0f }, m_CheckerBoardTexture, 10.0f);
-		Alternate::Renderer2D::DrawRotatedQuad({ 0.0f, -2.0f , 0.2f }, { 1.0f, 1.5f }, glm::radians(45.0f), m_Square2Color);
-		Alternate::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f , 0.2f }, { 2.0f, 0.5f }, glm::radians(20.0f), m_SquareColor);
-		Alternate::Renderer2D::DrawRotatedQuad({ 2.0f, 2.5f, 0.2f }, { 3.0f, 3.0f }, glm::radians(rotation), m_TransparantTexture);
-		Alternate::Renderer2D::DrawRotatedQuad({ -2.0f, 2.5f , 0.2f }, { 3.0f, 3.0f }, glm::radians(-rotation), m_TransparantTexture);
+		Alternate::Renderer2D::DrawRotatedQuad({ 0.0f, -2.0f , 0.15f }, { 1.0f, 1.5f }, glm::radians(45.0f), m_Square2Color);
+		Alternate::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f , 0.15f }, { 2.0f, 0.5f }, glm::radians(20.0f), m_SquareColor);
+		Alternate::Renderer2D::DrawRotatedQuad({ 2.0f, 2.5f, 0.15f }, { 3.0f, 3.0f }, glm::radians(rotation), m_TransparantTexture);
+		Alternate::Renderer2D::DrawRotatedQuad({ -2.0f, 2.5f , 0.15f }, { 3.0f, 3.0f }, glm::radians(-rotation), m_TransparantTexture);
 		Alternate::Renderer2D::EndScene();
 
-		Alternate::Renderer2D::BeginScene(m_CamaraController.GetCamera());
+		Alternate::Renderer2D::BeginScene(m_CameraController.GetCamera());
 		for (float y = -5.0f; y < 5.0f; y += 0.5f)
 		{
 			for (float x = -5.0f; x < 5.0f; x += 0.5f)
@@ -58,6 +72,30 @@ void Sandbox2D::OnUpdate(Alternate::Timestep ts)
 		}
 		Alternate::Renderer2D::EndScene();
 	}
+#endif
+	if (Alternate::Input::IsMouseButtonPressed(1))
+	{
+		auto [x, y] = Alternate::Input::GetMousePosition();
+		auto width = Alternate::Application::Get().GetWindow().GetWidth();
+		auto height = Alternate::Application::Get().GetWindow().GetHeight();
+
+		auto bounds = m_CameraController.GetBounds();
+		auto pos = m_CameraController.GetCamera().GetPosition();
+		x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
+		y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
+		m_Particle.Position = { x + pos.x, y + pos.y };
+		for (int i = 0; i < 5; i++)
+			m_ParticleSystem.Emit(m_Particle);
+	}
+
+	m_ParticleSystem.OnUpdate(ts);
+	m_ParticleSystem.OnRender(m_CameraController.GetCamera());
+
+	Alternate::Renderer2D::BeginScene(m_CameraController.GetCamera());
+	Alternate::Renderer2D::DrawQuad({ 0.0f, 0.0f}, { 1.0f, 1.0f }, m_TextureStairs);
+	Alternate::Renderer2D::DrawQuad({ 0.0f, 1.0f}, { 1.0f, 1.0f }, m_TextureBarrel);
+	Alternate::Renderer2D::DrawQuad({ 1.0f, 0.0f }, { 1.0f, 2.0f }, m_TextureTree);
+	Alternate::Renderer2D::EndScene();
 }
 
 void Sandbox2D::OnImGuiRender()
@@ -81,5 +119,5 @@ void Sandbox2D::OnImGuiRender()
 
 void Sandbox2D::OnEvent(Alternate::Event& e)
 {
-	m_CamaraController.OnEvent(e);
+	m_CameraController.OnEvent(e);
 }

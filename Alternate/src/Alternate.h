@@ -22,6 +22,7 @@
 #include "Alternate/Renderer/Buffer.h"
 #include "Alternate/Renderer/Shader.h"
 #include "Alternate/Renderer/Texture.h"
+#include "Alternate/Renderer/SubTexture2D.h"
 #include "Alternate/Renderer/VertexArray.h"
 
 #include "Alternate/Renderer/Camera.h"
