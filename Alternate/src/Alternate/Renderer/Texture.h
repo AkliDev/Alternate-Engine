@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "Alternate/Core/Core.h"
+#include "Alternate/Core/Base.h"
 namespace Alternate
 {
 	class Texture
@@ -11,6 +11,7 @@ namespace Alternate
 
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
+		virtual uint32_t GetRenderID() const = 0;
 
 		virtual void SetData(void* data, uint32_t size) = 0;
 

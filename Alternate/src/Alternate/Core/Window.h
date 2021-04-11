@@ -2,7 +2,7 @@
 
 #include "altpch.h"
 
-#include "Alternate/Core/Core.h"
+#include "Alternate/Core/Base.h"
 #include "Alternate/Events/Event.h"
 
 namespace Alternate

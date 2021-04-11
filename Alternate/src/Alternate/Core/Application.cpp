@@ -105,13 +105,13 @@ namespace Alternate
 
 	bool Application::OnWindowClosed(WindowCloseEvent& e)
 	{
-		CloseWindow();
+		Close();
 		return true;
 	}
 
 	bool Application::OnKeyPressedEvent(KeyPressedEvent& e)
 	{
-		if (e.GetKeyCode() == ALT_KEY_ESCAPE) { CloseWindow(); }
+		if (e.GetKeyCode() == ALT_KEY_ESCAPE) { Close(); }
 		return true;
 	}
 
@@ -135,7 +135,7 @@ namespace Alternate
 		return false;
 	}
 
-	void Application::CloseWindow()
+	void Application::Close()
 	{
 		m_Running = false;
 	}

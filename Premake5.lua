@@ -92,6 +92,7 @@ project "Alternate"
 		postbuildcommands
 		{
 			"{COPY} ../%{prj.name}/vendor/SDL2/lib/x64/SDL2.dll  \"../bin/" .. outputdir .. "/Sandbox/\"",
+			"{COPY} ../%{prj.name}/vendor/SDL2/lib/x64/SDL2.dll  \"../bin/" .. outputdir .. "/Alternate-Editor/\"",
 		}
 
 	filter "configurations:Debug"
@@ -111,6 +112,58 @@ project "Alternate"
 
 project "Sandbox"
 	location "Sandbox"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"Alternate/vendor/spdlog/include",
+		"Alternate/src",
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.glm}"
+	}
+
+	links
+	{
+		"Alternate"
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+
+		defines
+		{
+			"ALT_PLATFORM_WINDOWS",
+		}
+
+	filter "configurations:Debug"
+		defines "ALT_DEBUG"
+		runtime "Debug"
+		symbols "on" 
+
+	filter "configurations:Release"
+		defines "ALT_RELEASE"
+		runtime "Release"
+		optimize "on" 
+
+	filter "configurations:Dist"
+		defines "ALT_DIST"
+		runtime "Release"
+		optimize "on" 
+
+project "Alternate-Editor"
+	location "Alternate-Editor"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"

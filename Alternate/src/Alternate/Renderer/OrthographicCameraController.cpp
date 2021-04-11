@@ -41,6 +41,12 @@ namespace Alternate
 		dispatcher.Dispatch<WindowResizeEvent>(ALT_BIND_EVENT_FN(OrthographicCameraController::OnWindowResized));
 	}
 
+	void OrthographicCameraController::OnResize(float width, float height)
+	{
+		m_AspectRatio = width / height;
+		CalculateView();
+	}
+
 	void OrthographicCameraController::CalculateView()
 	{
 		m_Bounds = { -m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel };
@@ -61,8 +67,8 @@ namespace Alternate
 	{
 		ALT_PROFILE_FUNCTION();
 
-		m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
-		CalculateView();
+		OnResize(e.GetWidth(), e.GetHeight());
+		
 		return false;
 	}
 }
