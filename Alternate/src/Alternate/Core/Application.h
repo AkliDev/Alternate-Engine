@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core.h"
+#include "Base.h"
 
 #include "Window.h"
 #include "LayerStack.h"
@@ -29,14 +29,14 @@ namespace Alternate
 		inline static Application& Get() { return *s_instance;  }
 		inline Window& GetWindow() { return *m_Window; }
 
+		void Close();
+
 	private:
 		bool OnWindowClosed(WindowCloseEvent& e);
 		bool OnKeyPressedEvent(KeyPressedEvent& e);
 		bool OnWindowResized(WindowResizeEvent& e);
 		bool OnWindowMinimized(WindowMinimizedEvent& e);
 		bool OnWindowRestored(WindowRestoredEvent& e);
-		
-		void CloseWindow();
 
 	private:
 		std::unique_ptr<Window> m_Window;

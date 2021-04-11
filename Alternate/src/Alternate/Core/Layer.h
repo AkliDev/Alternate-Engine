@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Alternate/Core/Core.h"
+#include "Alternate/Core/Base.h"
 #include "Alternate/Core/Timestep.h"
 #include "Alternate/Events/Event.h"
 

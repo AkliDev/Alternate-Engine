@@ -37,6 +37,7 @@ Sandbox2D::Sandbox2D()
 void Sandbox2D::OnAttach()
 {
 	ALT_PROFILE_FUNCTION();
+
 	m_CheckerBoardTexture = Alternate::Texture2D::Create("assets/textures/Test.png");
 	m_TransparantTexture = Alternate::Texture2D::Create("assets/textures/Goombah.png");
 	m_SpriteSheet = Alternate::Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png");
@@ -78,6 +79,7 @@ void Sandbox2D::OnUpdate(Alternate::Timestep ts)
 	Alternate::Renderer2D::ResetStats();
 	{
 		ALT_PROFILE_SCOPE("Render Prep");
+
 		Alternate::RenderCommand::SetClearColor({ 0.1, 0.1, 0.1, 1 });
 		Alternate::RenderCommand::Clear();
 	}
@@ -141,8 +143,8 @@ void Sandbox2D::OnUpdate(Alternate::Timestep ts)
 			{
 				texture = m_TextureBarrel;
 			}
-			
-			Alternate::Renderer2D::DrawQuad({ x - (m_MapWidth * 0.5f), m_MapHeight - y - (m_MapHeight *0.5f) }, { 1.0f, 1.0f }, texture);
+
+			Alternate::Renderer2D::DrawQuad({ x - (m_MapWidth * 0.5f), m_MapHeight - y - (m_MapHeight * 0.5f) }, { 1.0f, 1.0f }, texture);
 		}
 	}
 
@@ -157,14 +159,12 @@ void Sandbox2D::OnImGuiRender()
 	ALT_PROFILE_FUNCTION();
 
 	ImGui::Begin("Settings");
-
 	auto stats = Alternate::Renderer2D::GetStats();
 	ImGui::Text("Renderer2D Stats:");
 	ImGui::Text("Draw Calls: %d", stats.DrawCalls);
 	ImGui::Text("Quad Count: %d", stats.QuadCount);
 	ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
 	ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
-
 
 	ImGui::ColorEdit4("Square Color2D", glm::value_ptr(m_SquareColor));
 	ImGui::ColorEdit4("Square2 Color2D", glm::value_ptr(m_Square2Color));
