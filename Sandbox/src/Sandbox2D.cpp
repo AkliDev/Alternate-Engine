@@ -5,6 +5,30 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+static const uint32_t s_MathWidth = 20;
+static const char* s_MapTiles =
+"WDWWWWWWWWWWWWWWWWWW"
+"WWWWWWWWWWWWWWWWWWWW"
+"WWWWWWWWWWWWWWWWWWWW"
+"WWWWWWWWWWWWWWWWWWWW"
+"WWWWWWWWWWWWWWWWWWWW"
+"WWWWWWWWWWWWWWWWWWWW"
+"WWWWWWWWWWWWWWWWWWWW"
+"WWWWWWWWWWWWWWWWWWWW"
+"WWWWWWWWWWWWWWWWWWWW"
+"WWWWWWWWWWWWWWWWWWWW"
+"WWWWWWWWWWWWWWWWWWWW"
+"WWWWWWWWWWWWWWWWWWWW"
+"WWWWWWWWWWWWWWWWWWWW"
+"WWWWWWWWWWWWWWWWWWWW"
+"WWWWWWWWWWWWWWWWWWWW"
+"WWWWWWWWWWWWWWWWWWWW"
+"WWWWWWWWWWWAWWWWWWWW"
+"WWWWWWWWWWWWWWWWWWWW"
+"WWWWWWWWWWWWWWWWWWWW"
+"WWWWWWWWWWWWWWWWWWWW"
+;
+
 Sandbox2D::Sandbox2D()
 	:Layer("Sandbox2D"), m_CameraController(1280.0f / 720.0f, true)
 {
@@ -21,6 +45,14 @@ void Sandbox2D::OnAttach()
 	m_TextureBarrel = Alternate::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 9, 2 }, { 128, 128 });
 	m_TextureTree = Alternate::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 4, 1 }, { 128, 128 }, { 1, 2 });
 
+	m_MapWidth = s_MathWidth;
+	m_MapHeight = uint32_t(strlen(s_MapTiles) / m_MapWidth);
+	s_TextureMap['D'] = Alternate::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 6, 11 }, { 128, 128 });
+	s_TextureMap['W'] = Alternate::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 11, 11 }, { 128, 128 });
+
+
+
+
 	m_Particle.ColorBegin = { 0 / 255.0f, 127 / 255.0f, 255 / 255.0f, 1.0f };
 	m_Particle.ColorEnd = { 142 / 255.0f, 182 / 255.0f, 255 / 255.0f, 1.0f };
 	m_Particle.SizeBegin = 0.5f, m_Particle.SizeVariation = 0.3f, m_Particle.SizeEnd = 0.0f;
@@ -28,6 +60,8 @@ void Sandbox2D::OnAttach()
 	m_Particle.Velocity = { 0.0f, 0.0f };
 	m_Particle.VelocityVariation = { 3.0f, 1.0f };
 	m_Particle.Position = { 0.0f, 0.0f };
+
+	m_CameraController.SetZoomLevel(5.0f);
 }
 
 void Sandbox2D::OnDetach()
@@ -92,9 +126,29 @@ void Sandbox2D::OnUpdate(Alternate::Timestep ts)
 	m_ParticleSystem.OnRender(m_CameraController.GetCamera());
 
 	Alternate::Renderer2D::BeginScene(m_CameraController.GetCamera());
-	Alternate::Renderer2D::DrawQuad({ 0.0f, 0.0f}, { 1.0f, 1.0f }, m_TextureStairs);
-	Alternate::Renderer2D::DrawQuad({ 0.0f, 1.0f}, { 1.0f, 1.0f }, m_TextureBarrel);
-	Alternate::Renderer2D::DrawQuad({ 1.0f, 0.0f }, { 1.0f, 2.0f }, m_TextureTree);
+
+	for (uint32_t y = 0; y < m_MapHeight; y++)
+	{
+		for (uint32_t x = 0; x < m_MapWidth; x++)
+		{
+			char tileType = s_MapTiles[x + y * m_MapWidth];
+			Alternate::Ref<Alternate::SubTexture2D> texture;
+			if (s_TextureMap.find(tileType) != s_TextureMap.end())
+			{
+				texture = s_TextureMap[tileType];
+			}
+			else
+			{
+				texture = m_TextureBarrel;
+			}
+			
+			Alternate::Renderer2D::DrawQuad({ x - (m_MapWidth * 0.5f), m_MapHeight - y - (m_MapHeight *0.5f) }, { 1.0f, 1.0f }, texture);
+		}
+	}
+
+	//Alternate::Renderer2D::DrawQuad({ 0.0f, 0.0f}, { 1.0f, 1.0f }, m_TextureStairs);
+	//Alternate::Renderer2D::DrawQuad({ 0.0f, 1.0f}, { 1.0f, 1.0f }, m_TextureBarrel);
+	//Alternate::Renderer2D::DrawQuad({ 1.0f, 0.0f }, { 1.0f, 2.0f }, m_TextureTree);
 	Alternate::Renderer2D::EndScene();
 }
 
