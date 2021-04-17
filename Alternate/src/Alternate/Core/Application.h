@@ -26,10 +26,13 @@ namespace Alternate
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
 
-		inline static Application& Get() { return *s_instance;  }
-		inline Window& GetWindow() { return *m_Window; }
+		
 
 		void Close();
+
+		static Application& Get() { return *s_instance; }
+		inline Window& GetWindow() { return *m_Window; }
+		ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }	
 
 	private:
 		bool OnWindowClosed(WindowCloseEvent& e);

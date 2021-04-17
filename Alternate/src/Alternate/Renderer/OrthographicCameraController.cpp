@@ -16,15 +16,15 @@ namespace Alternate
 		ALT_PROFILE_FUNCTION();
 
 		m_CameraTranslationSpeed = m_ZoomLevel;
-		if (Input::IsKeyPressed(ALT_KEY_W)) { m_CameraPostion.y += m_CameraTranslationSpeed * ts; }
-		if (Input::IsKeyPressed(ALT_KEY_S)) { m_CameraPostion.y -= m_CameraTranslationSpeed * ts; }
-		if (Input::IsKeyPressed(ALT_KEY_A)) { m_CameraPostion.x -= m_CameraTranslationSpeed * ts; }
-		if (Input::IsKeyPressed(ALT_KEY_D)) { m_CameraPostion.x += m_CameraTranslationSpeed * ts; }
+		if (Input::IsKeyPressed(Alternate::Key::ALT_KEY_W)) { m_CameraPostion.y += m_CameraTranslationSpeed * ts; }
+		if (Input::IsKeyPressed(Alternate::Key::ALT_KEY_S)) { m_CameraPostion.y -= m_CameraTranslationSpeed * ts; }
+		if (Input::IsKeyPressed(Alternate::Key::ALT_KEY_A)) { m_CameraPostion.x -= m_CameraTranslationSpeed * ts; }
+		if (Input::IsKeyPressed(Alternate::Key::ALT_KEY_D)) { m_CameraPostion.x += m_CameraTranslationSpeed * ts; }
 
 		if (m_Rotation == true)
 		{
-			if (Input::IsKeyPressed(ALT_KEY_Q)) { m_CameraRotation += m_CameraRotationSpeed * ts; }
-			if (Input::IsKeyPressed(ALT_KEY_E)) { m_CameraRotation -= m_CameraRotationSpeed * ts; }
+			if (Input::IsKeyPressed(Alternate::Key::ALT_KEY_Q)) { m_CameraRotation += m_CameraRotationSpeed * ts; }
+			if (Input::IsKeyPressed(Alternate::Key::ALT_KEY_E)) { m_CameraRotation -= m_CameraRotationSpeed * ts; }
 			m_Camera.SetRotation(m_CameraRotation);
 		}
 
@@ -67,7 +67,7 @@ namespace Alternate
 	{
 		ALT_PROFILE_FUNCTION();
 
-		OnResize(e.GetWidth(), e.GetHeight());
+		OnResize((float)e.GetWidth(), (float)e.GetHeight());
 		
 		return false;
 	}

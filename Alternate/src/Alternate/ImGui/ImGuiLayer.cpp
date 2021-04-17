@@ -70,13 +70,6 @@ namespace Alternate
 
 	void ImGuiLayer::OnEvent(Event& e)
 	{
-		//if (m_BlockEvents)
-		//{
-		//	ImGuiIO& io = ImGui::GetIO();
-		//	event.Handled |= event.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
-		//	event.Handled |= event.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
-		//}
-
 		EventDispatcher dispatcher(e);
 
 		dispatcher.Dispatch<TextInputEvent>(ALT_BIND_EVENT_FN(ImGuiLayer::OnTextInputEvent));
@@ -91,6 +84,13 @@ namespace Alternate
 		dispatcher.Dispatch<MouseScrolledEvent>(ALT_BIND_EVENT_FN(ImGuiLayer::OnMouseScrolledEvent));
 
 		dispatcher.Dispatch<WindowResizeEvent>(ALT_BIND_EVENT_FN(ImGuiLayer::OnWindowResizeEvent));
+
+		if (m_BlockEvents)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			e.Handled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+			e.Handled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+		}
 	}
 
 	bool ImGuiLayer::OnTextInputEvent(TextInputEvent& e)

@@ -111,7 +111,7 @@ namespace Alternate
 
 	bool Application::OnKeyPressedEvent(KeyPressedEvent& e)
 	{
-		if (e.GetKeyCode() == ALT_KEY_ESCAPE) { Close(); }
+		if (e.GetKeyCode() == Alternate::Key::ALT_KEY_ESCAPE) { Close(); }
 		return true;
 	}
 
