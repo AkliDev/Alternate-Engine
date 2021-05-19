@@ -5,6 +5,8 @@
 
 namespace Alternate
 {
+	static const uint32_t s_MaxFramebufferSize = 8192;
+
 	OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferSpecification& spec)
 		:m_Specification(spec)
 	{
@@ -62,6 +64,12 @@ namespace Alternate
 
 	void OpenGLFrameBuffer::Resize(const uint32_t width, const uint32_t height)
 	{
+
+		if (width == 0 || height == 0 || width > s_MaxFramebufferSize || height == s_MaxFramebufferSize)
+		{
+			ALT_CORE_WARN("Attempted to resize framebuffer to {}1,{2}", width,height);
+			return;
+		}
 		m_Specification.Width = width;
 		m_Specification.Height = height;
 		

@@ -10,6 +10,7 @@
 	#define ALT_ENABLE_ASSERTS
 #endif
 
+//TODO: Make this macro able to take no arguments
 #ifdef ALT_ENABLE_ASSERTS
 	#define ALT_ASSERT(x, ...) { if (!(x)) { ALT_ERROR("Assertion failed: {0}", __VA_ARGS__); __debugbreak(); } }
 	#define ALT_CORE_ASSERT(x, ...) { if (!(x)) { ALT_CORE_ERROR("Assertion failed: {0}", __VA_ARGS__); __debugbreak(); } }
