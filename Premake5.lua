@@ -21,6 +21,7 @@ IncludeDir["Glad"] = "Alternate/vendor/Glad/include"
 IncludeDir["ImGui"] = "Alternate/vendor/imgui"
 IncludeDir["glm"] = "Alternate/vendor/glm"
 IncludeDir["stb_image"] = "Alternate/vendor/stb_image"
+IncludeDir["entt"] = "Alternate/vendor/entt/include"
 
 group "Dependencies"
 	include "Alternate/vendor/Glad"
@@ -64,7 +65,8 @@ project "Alternate"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.entt}"
 	}
 
 	libdirs 
@@ -131,7 +133,8 @@ project "Sandbox"
 		"Alternate/vendor/spdlog/include",
 		"Alternate/src",
 		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.entt}"
 	}
 
 	links
@@ -183,7 +186,8 @@ project "Alternate-Editor"
 		"Alternate/vendor/spdlog/include",
 		"Alternate/src",
 		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.entt}"
 	}
 
 	links

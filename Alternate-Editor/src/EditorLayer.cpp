@@ -41,25 +41,34 @@ namespace Alternate
 	{
 		ALT_PROFILE_FUNCTION();
 
-		Alternate::FrameBufferSpecification fbSpec;
+		FrameBufferSpecification fbSpec;
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
-		m_FrameBuffer = Alternate::FrameBuffer::Create(fbSpec);
+		m_FrameBuffer = FrameBuffer::Create(fbSpec);
 
-		m_CheckerBoardTexture = Alternate::Texture2D::Create("assets/textures/Test.png");
-		m_TransparantTexture = Alternate::Texture2D::Create("assets/textures/Goombah.png");
-		m_SpriteSheet = Alternate::Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png");
+		m_CheckerBoardTexture = Texture2D::Create("assets/textures/Test.png");
+		m_TransparantTexture = Texture2D::Create("assets/textures/Goombah.png");
+		m_SpriteSheet = Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png");
 
-		m_TextureStairs = Alternate::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 7, 6 }, { 128, 128 });
-		m_TextureBarrel = Alternate::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 9, 2 }, { 128, 128 });
-		m_TextureTree = Alternate::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 4, 1 }, { 128, 128 }, { 1, 2 });
+		m_TextureStairs = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 7, 6 }, { 128, 128 });
+		m_TextureBarrel = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 9, 2 }, { 128, 128 });
+		m_TextureTree = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 4, 1 }, { 128, 128 }, { 1, 2 });
 
 		m_MapWidth = s_MathWidth;
 		m_MapHeight = uint32_t(strlen(s_MapTiles) / m_MapWidth);
-		s_TextureMap['D'] = Alternate::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 6, 11 }, { 128, 128 });
-		s_TextureMap['W'] = Alternate::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 11, 11 }, { 128, 128 });
+		s_TextureMap['D'] = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 6, 11 }, { 128, 128 });
+		s_TextureMap['W'] = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 11, 11 }, { 128, 128 });
 
-		m_CameraController.SetZoomLevel(5.0f);
+
+		m_ActiveScene = CreateRef<Scene>();
+
+		//Entity
+		auto square = m_ActiveScene->CreateEntity("Square");
+		
+		square.AddComponent<SpriteRendererComponent>(glm::vec4{ 0,1,0,1 });
+
+		m_SquareEntity = square;
+		m_CameraController.SetZoomLevel(1.0f);
 	}
 
 	void EditorLayer::OnDetach()
@@ -67,7 +76,7 @@ namespace Alternate
 		ALT_PROFILE_FUNCTION();
 	}
 
-	void EditorLayer::OnUpdate(Alternate::Timestep ts)
+	void EditorLayer::OnUpdate(Timestep ts)
 	{
 		ALT_PROFILE_FUNCTION();
 
@@ -76,66 +85,21 @@ namespace Alternate
 			m_CameraController.OnUpdate(ts);
 		}
 
-		Alternate::Renderer2D::ResetStats();
-		{
-			ALT_PROFILE_SCOPE("Render Prep");
-			m_FrameBuffer->Bind();
-			Alternate::RenderCommand::SetClearColor({ 0.1, 0.1, 0.1, 1 });
-			Alternate::RenderCommand::Clear();
-		}
 
-#if 1
-		{
-			static float rotation = 0.0f;
-			rotation += ts * 500.0f;
-			ALT_PROFILE_SCOPE("Render Draw");
-			Alternate::Renderer2D::BeginScene(m_CameraController.GetCamera());
-			Alternate::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 20.0f, 20.0f }, m_CheckerBoardTexture, 10.0f);
-			Alternate::Renderer2D::DrawRotatedQuad({ 0.0f, -2.0f , 0.15f }, { 1.0f, 1.5f }, glm::radians(45.0f), m_Square2Color);
-			Alternate::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f , 0.15f }, { 2.0f, 0.5f }, glm::radians(20.0f), m_SquareColor);
-			// quad with other shader
-			Alternate::Renderer2D::DrawRotatedQuad({ 2.0f, 2.5f, 0.15f }, { 3.0f, 3.0f }, glm::radians(rotation), m_TransparantTexture);
-			Alternate::Renderer2D::DrawRotatedQuad({ -2.0f, 2.5f , 0.15f }, { 3.0f, 3.0f }, glm::radians(-rotation), m_TransparantTexture);
-			Alternate::Renderer2D::EndScene();
+		Renderer2D::ResetStats();
+		m_FrameBuffer->Bind();
+		RenderCommand::SetClearColor({ 0.1, 0.1, 0.1, 1 });
+		RenderCommand::Clear();
+		
+		Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-			Alternate::Renderer2D::BeginScene(m_CameraController.GetCamera());
-			for (float y = -5.0f; y < 5.0f; y += 0.5f)
-			{
-				for (float x = -5.0f; x < 5.0f; x += 0.5f)
-				{
-					glm::vec4 color = { (x + 5.0f) / 10, 0.4f, (y + 5.0f) / 10, 0.75f };
-					Alternate::Renderer2D::DrawQuad({ x, y , 0.1f }, { 0.45f, 0.45f }, color);
-				}
-			}
-			Alternate::Renderer2D::EndScene();
-		}
-#endif
-		Alternate::Renderer2D::BeginScene(m_CameraController.GetCamera());
+		//update scene
+		m_ActiveScene->OnUpdate(ts);
 
-		for (uint32_t y = 0; y < m_MapHeight; y++)
-		{
-			for (uint32_t x = 0; x < m_MapWidth; x++)
-			{
-				char tileType = s_MapTiles[x + y * m_MapWidth];
-				Alternate::Ref<Alternate::SubTexture2D> texture;
-				if (s_TextureMap.find(tileType) != s_TextureMap.end())
-				{
-					texture = s_TextureMap[tileType];
-				}
-				else
-				{
-					texture = m_TextureBarrel;
-				}
+		Renderer2D::EndScene();
 
-				Alternate::Renderer2D::DrawQuad({ x - (m_MapWidth * 0.5f), m_MapHeight - y - (m_MapHeight * 0.5f) }, { 1.0f, 1.0f }, texture);
-			}
-		}
-
-		//Alternate::Renderer2D::DrawQuad({ 0.0f, 0.0f}, { 1.0f, 1.0f }, m_TextureStairs);
-		//Alternate::Renderer2D::DrawQuad({ 0.0f, 1.0f}, { 1.0f, 1.0f }, m_TextureBarrel);
-		//Alternate::Renderer2D::DrawQuad({ 1.0f, 0.0f }, { 1.0f, 2.0f }, m_TextureTree);
-		Alternate::Renderer2D::EndScene();
 		m_FrameBuffer->Unbind();
+
 	}
 
 	void EditorLayer::OnImGuiRender()
@@ -203,7 +167,7 @@ namespace Alternate
 				ImGui::MenuItem("Padding", NULL, &opt_padding);
 				ImGui::Separator();
 
-				if (ImGui::MenuItem("Exit")) Alternate::Application::Get().Close();
+				if (ImGui::MenuItem("Exit")) Application::Get().Close();
 				ImGui::Separator();
 
 				if (ImGui::MenuItem("Close", NULL, false))
@@ -215,16 +179,24 @@ namespace Alternate
 		}
 
 		ImGui::Begin("Settings");
-		auto stats = Alternate::Renderer2D::GetStats();
+		auto stats = Renderer2D::GetStats();
 		ImGui::Text("Renderer2D Stats:");
 		ImGui::Text("Draw Calls: %d", stats.DrawCalls);
 		ImGui::Text("Quad Count: %d", stats.QuadCount);
 		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 
-		ImGui::ColorEdit4("Square Color2D", glm::value_ptr(m_SquareColor));
-		ImGui::ColorEdit4("Square2 Color2D", glm::value_ptr(m_Square2Color));
+		if (m_SquareEntity)
+		{
+			ImGui::Separator();
+			ImGui::Text("%s", m_SquareEntity.GetComponent<TagComponent>().Tag.c_str());
 
+			auto& squareColor = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
+			ImGui::ColorEdit4("Square Color2D", glm::value_ptr(squareColor));
+			ImGui::ColorEdit4("Square2 Color2D", glm::value_ptr(m_Square2Color));
+			ImGui::Separator();
+		}
+		
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
@@ -251,7 +223,7 @@ namespace Alternate
 		ImGui::End();
 	}
 
-	void EditorLayer::OnEvent(Alternate::Event& e)
+	void EditorLayer::OnEvent(Event& e)
 	{
 		m_CameraController.OnEvent(e);
 	}

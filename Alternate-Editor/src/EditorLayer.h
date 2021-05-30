@@ -24,6 +24,9 @@ namespace Alternate
 		Ref<Shader> m_FlatColorShader;
 		Ref<FrameBuffer> m_FrameBuffer;
 
+		Ref<Scene> m_ActiveScene;
+		Entity m_SquareEntity;
+
 		glm::vec2 m_ViewPortSize;
 
 		glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };

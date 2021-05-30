@@ -14,6 +14,10 @@
 
 #include "Alternate/ImGui/ImGuiLayer.h"
 
+#include "Alternate/Scene/Scene.h"
+#include "Alternate/Scene/Components.h"
+#include "Alternate/Scene/Entity.h"
+
 //Renderer
 #include "Alternate/Renderer/Renderer.h"
 #include "Alternate/Renderer/Renderer2D.h"
