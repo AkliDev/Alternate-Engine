@@ -4,6 +4,20 @@
 
 namespace Alternate
 {
+	class Camera
+	{
+	public:
+		Camera() = default;
+		Camera(const glm::mat4 projection)
+			: m_Projection(projection) {}
+
+		virtual ~Camera() = default;
+
+		const glm::mat4 GetProjection() const { return m_Projection; }
+	protected:
+		glm::mat4 m_Projection = glm::mat4(1.0f);
+	};
+
 	class OrthographicCamera
 	{
 	public:
@@ -14,7 +28,7 @@ namespace Alternate
 		const glm::vec3 GetPosition() const { return m_Postion; }
 		void SetPosition(const glm::vec3 postion) { m_Postion = postion; RecalcualteViewMatrix(); }
 
-		const float GetRotation() const { return m_Rotation; }		
+		const float GetRotation() const { return m_Rotation; }
 		void SetRotation(const float rotation) { m_Rotation = rotation; RecalcualteViewMatrix(); }
 
 		const glm::mat4 GetProjectionMatrix() const { return m_ProjectionMatrix; }
@@ -23,7 +37,7 @@ namespace Alternate
 
 	private:
 		void RecalcualteViewMatrix();
-		
+
 	private:
 		glm::mat4 m_ProjectionMatrix;
 		glm::mat4 m_ViewMatrix;

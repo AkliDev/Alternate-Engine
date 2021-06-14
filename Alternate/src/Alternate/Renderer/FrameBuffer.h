@@ -4,7 +4,7 @@
 
 namespace Alternate
 {
-	struct FrameBufferSpecification
+	struct FramebufferSpecification
 	{
 		uint32_t Width, Height;
 		uint32_t Samples = 1;
@@ -16,6 +16,7 @@ namespace Alternate
 	{
 	public:
 		virtual ~FrameBuffer()  = default;
+
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
 
@@ -23,9 +24,9 @@ namespace Alternate
 
 		virtual uint32_t GetColorAttachmentRendererID() const = 0;
 
-		virtual const FrameBufferSpecification& GetSpecifivation() const = 0;
+		virtual const FramebufferSpecification& GetSpecification() const = 0;
 
-		static Ref<FrameBuffer> Create(const FrameBufferSpecification& spec);
+		static Ref<FrameBuffer> Create(const FramebufferSpecification& spec);
 
 	};
 }

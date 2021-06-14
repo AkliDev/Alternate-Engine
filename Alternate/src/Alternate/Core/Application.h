@@ -25,9 +25,6 @@ namespace Alternate
 
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
-
-		
-
 		void Close();
 
 		static Application& Get() { return *s_instance; }

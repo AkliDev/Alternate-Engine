@@ -6,30 +6,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-static const uint32_t s_MathWidth = 20;
-static const char* s_MapTiles =
-"WDWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWWWAWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWW"
-;
-
 namespace Alternate
 {
 	EditorLayer::EditorLayer()
@@ -41,34 +17,24 @@ namespace Alternate
 	{
 		ALT_PROFILE_FUNCTION();
 
-		FrameBufferSpecification fbSpec;
+		FramebufferSpecification fbSpec;
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
-		m_FrameBuffer = FrameBuffer::Create(fbSpec);
+		m_Framebuffer = FrameBuffer::Create(fbSpec);
 
 		m_CheckerBoardTexture = Texture2D::Create("assets/textures/Test.png");
 		m_TransparantTexture = Texture2D::Create("assets/textures/Goombah.png");
-		m_SpriteSheet = Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png");
 
-		m_TextureStairs = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 7, 6 }, { 128, 128 });
-		m_TextureBarrel = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 9, 2 }, { 128, 128 });
-		m_TextureTree = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 4, 1 }, { 128, 128 }, { 1, 2 });
-
-		m_MapWidth = s_MathWidth;
-		m_MapHeight = uint32_t(strlen(s_MapTiles) / m_MapWidth);
-		s_TextureMap['D'] = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 6, 11 }, { 128, 128 });
-		s_TextureMap['W'] = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 11, 11 }, { 128, 128 });
-
+		m_CameraController.SetZoomLevel(1.0f);
 
 		m_ActiveScene = CreateRef<Scene>();
 
 		//Entity
-		auto square = m_ActiveScene->CreateEntity("Square");
-		
-		square.AddComponent<SpriteRendererComponent>(glm::vec4{ 0,1,0,1 });
+		m_SquareEntity = m_ActiveScene->CreateEntity("Square");	
+		m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{0, 1, 0, 1});
 
-		m_SquareEntity = square;
-		m_CameraController.SetZoomLevel(1.0f);
+		m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
+		m_CameraEntity.AddComponent<CameraComponent>();		
 	}
 
 	void EditorLayer::OnDetach()
@@ -80,26 +46,34 @@ namespace Alternate
 	{
 		ALT_PROFILE_FUNCTION();
 
+		// Resize
+		if (FramebufferSpecification spec = m_Framebuffer->GetSpecification();
+			m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
+			(spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
+		{
+			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
+			m_ActiveScene->OnViewportResize(m_ViewportSize.x, m_ViewportSize.y);
+		}
+
+
 		if (m_ViewportFocussed)
 		{
 			m_CameraController.OnUpdate(ts);
 		}
 
-
 		Renderer2D::ResetStats();
-		m_FrameBuffer->Bind();
+		m_Framebuffer->Bind();
 		RenderCommand::SetClearColor({ 0.1, 0.1, 0.1, 1 });
 		RenderCommand::Clear();
 		
-		Renderer2D::BeginScene(m_CameraController.GetCamera());
-
+		//Renderer2D::BeginScene(m_CameraController.GetCamera());
 		//update scene
 		m_ActiveScene->OnUpdate(ts);
 
-		Renderer2D::EndScene();
+		//Renderer2D::EndScene();
 
-		m_FrameBuffer->Unbind();
-
+		m_Framebuffer->Unbind();
 	}
 
 	void EditorLayer::OnImGuiRender()
@@ -196,6 +170,8 @@ namespace Alternate
 			ImGui::ColorEdit4("Square2 Color2D", glm::value_ptr(m_Square2Color));
 			ImGui::Separator();
 		}
+
+		ImGui::DragFloat3("Camera Transform", glm::value_ptr(m_CameraEntity.GetComponent<TransformComponent>().Transform[3]));
 		
 		ImGui::End();
 
@@ -208,15 +184,11 @@ namespace Alternate
 		Application::Get().GetImGuiLayer()->SetBlockEvents(!m_ViewportFocussed || !m_ViewportHovered);
 		
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-		if (m_ViewPortSize != *((glm::vec2*)&viewportPanelSize) && viewportPanelSize.x > 0 && viewportPanelSize.y > 0)
-		{
-			m_FrameBuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
-			m_ViewPortSize = { viewportPanelSize.x, viewportPanelSize.y };
-
-			m_CameraController.OnResize(viewportPanelSize.x, viewportPanelSize.y);
-		}
-		uint32_t textureID = m_FrameBuffer->GetColorAttachmentRendererID();
-		ImGui::Image((void*)textureID, ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+		
+		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
+	
+		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+		ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 		ImGui::End();
 		ImGui::PopStyleVar();
 

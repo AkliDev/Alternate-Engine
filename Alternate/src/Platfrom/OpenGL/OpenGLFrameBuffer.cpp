@@ -7,7 +7,7 @@ namespace Alternate
 {
 	static const uint32_t s_MaxFramebufferSize = 8192;
 
-	OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferSpecification& spec)
+	OpenGLFrameBuffer::OpenGLFrameBuffer(const FramebufferSpecification& spec)
 		:m_Specification(spec)
 	{
 		Invalidate();

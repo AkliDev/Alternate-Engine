@@ -7,7 +7,7 @@
 
 namespace Alternate
 {
-	Ref<Alternate::FrameBuffer> FrameBuffer::Create(const FrameBufferSpecification& spec)
+	Ref<Alternate::FrameBuffer> FrameBuffer::Create(const FramebufferSpecification& spec)
 	{
 		switch (Renderer::GetAPI())
 		{
