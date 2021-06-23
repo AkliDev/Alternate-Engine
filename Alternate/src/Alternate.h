@@ -17,6 +17,7 @@
 #include "Alternate/Scene/Scene.h"
 #include "Alternate/Scene/Components.h"
 #include "Alternate/Scene/Entity.h"
+#include "Alternate/Scene/ScriptableEntity.h"
 
 //Renderer
 #include "Alternate/Renderer/Renderer.h"

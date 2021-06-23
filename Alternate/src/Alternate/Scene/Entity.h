@@ -43,4 +43,5 @@ namespace Alternate
 		entt::entity m_EntityHandle{ entt::null };
 		Scene* m_Scene = nullptr;
 	};
+
 }
