@@ -33,8 +33,12 @@ namespace Alternate
 		m_SquareEntity = m_ActiveScene->CreateEntity("Square");	
 		m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{0, 1, 0, 1});
 
-		m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
+		m_CameraEntity = m_ActiveScene->CreateEntity("Camera A");
 		m_CameraEntity.AddComponent<CameraComponent>();		
+
+		m_SecondCamera = m_ActiveScene->CreateEntity("Camera B");
+		auto& cc = m_SecondCamera.AddComponent<CameraComponent>();
+		cc.Primary = false;
 
 		class CameraController : public ScriptableEntity
 		{
@@ -62,6 +66,18 @@ namespace Alternate
 		};
 
 		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+
+		m_SceneHierarchyPanel.SetContex(m_ActiveScene);
+
+		// Resize
+		if (FramebufferSpecification spec = m_Framebuffer->GetSpecification();
+			m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
+			(spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
+		{
+			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
+			m_ActiveScene->OnViewportResize(m_ViewportSize.x, m_ViewportSize.y);
+		}
 	}
 
 	void EditorLayer::OnDetach()
@@ -94,7 +110,33 @@ namespace Alternate
 		RenderCommand::SetClearColor({ 0.1, 0.1, 0.1, 1 });
 		RenderCommand::Clear();
 		
-		//Renderer2D::BeginScene(m_CameraController.GetCamera());
+#if 1
+		{
+			Alternate::Renderer2D::BeginScene(m_CameraEntity.GetComponent<CameraComponent>().Camera, m_CameraEntity.GetComponent<TransformComponent>());
+			for (float y = -5.0f; y < 5.0f; y += 0.5f)
+			{
+				for (float x = -5.0f; x < 5.0f; x += 0.5f)
+				{
+					glm::vec4 color = { (x + 5.0f) / 10, 0.4f, (y + 5.0f) / 10, 0.75f };
+					Alternate::Renderer2D::DrawQuad({ x, y , 5.0f }, { 0.45f, 0.45f }, color);
+				}
+			}
+			Alternate::Renderer2D::EndScene();
+
+			static float rotation = 0.0f;
+			rotation += ts * 500.0f;
+			ALT_PROFILE_SCOPE("Render Draw");
+			Alternate::Renderer2D::BeginScene(m_CameraEntity.GetComponent<CameraComponent>().Camera, m_CameraEntity.GetComponent<TransformComponent>());
+			//Alternate::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 20.0f, 20.0f }, m_CheckerBoardTexture, 10.0f);
+			Alternate::Renderer2D::DrawRotatedQuad({ 0.0f, -2.0f , 7.0f }, { 1.0f, 1.5f }, glm::radians(45.0f), m_Square2Color);
+			Alternate::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f , 7.0f }, { 2.0f, 0.5f }, glm::radians(20.0f), m_SquareColor);
+			Alternate::Renderer2D::DrawRotatedQuad({ 2.0f, 2.5f, 10.0f }, { 3.0f, 3.0f }, glm::radians(rotation), m_TransparantTexture);
+			Alternate::Renderer2D::DrawRotatedQuad({ -2.0f, 2.5f , 10.0f }, { 3.0f, 3.0f }, glm::radians(-rotation), m_TransparantTexture);
+			Alternate::Renderer2D::EndScene();
+
+			
+		}
+#endif
 		//update scene
 		m_ActiveScene->OnUpdate(ts);
 
@@ -178,6 +220,8 @@ namespace Alternate
 
 			ImGui::EndMenuBar();
 		}
+
+		m_SceneHierarchyPanel.OnImGuiRender();
 
 		ImGui::Begin("Settings");
 		auto stats = Renderer2D::GetStats();

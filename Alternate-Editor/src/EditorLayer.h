@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Alternate.h"
+#include "Panels/SceneHierarchyPanel.h"
 
 namespace Alternate
 {
@@ -27,6 +28,7 @@ namespace Alternate
 		Ref<Scene> m_ActiveScene;
 		Entity m_SquareEntity;
 		Entity m_CameraEntity;
+		Entity m_SecondCamera;
 
 		glm::vec2 m_ViewportSize = {0.0f, 0.0f};
 
@@ -35,5 +37,8 @@ namespace Alternate
 
 		Ref<Texture2D> m_CheckerBoardTexture;
 		Ref<Texture2D> m_TransparantTexture;
+
+		//Panels
+		SceneHierarchyPanel m_SceneHierarchyPanel;
 	};
 }
