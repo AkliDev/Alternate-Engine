@@ -34,7 +34,8 @@ namespace Alternate
 		m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{0, 1, 0, 1});
 
 		m_CameraEntity = m_ActiveScene->CreateEntity("Camera A");
-		m_CameraEntity.AddComponent<CameraComponent>();		
+		m_CameraEntity.AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Perspective);
+		m_CameraEntity.GetComponent<TransformComponent>().Translatioin.z = 30;
 
 		m_SecondCamera = m_ActiveScene->CreateEntity("Camera B");
 		auto& cc = m_SecondCamera.AddComponent<CameraComponent>();
@@ -45,7 +46,7 @@ namespace Alternate
 		public:
 			void OnCreate()
 			{
-			
+
 			}
 
 			void OnDestroy()
@@ -55,29 +56,19 @@ namespace Alternate
 
 			void OnUpdate(Timestep ts)
 			{
-				auto& transform = GetComponent<TransformComponent>().Transform;
+				auto& translation = GetComponent<TransformComponent>().Translatioin;
 				float speed = 5.0f;
 
-				if (Input::IsKeyPressed(Key::ALT_KEY_W)) { transform[3][1] += speed * ts; }
-				if (Input::IsKeyPressed(Key::ALT_KEY_S)) { transform[3][1] -= speed * ts; }
-				if (Input::IsKeyPressed(Key::ALT_KEY_A)) { transform[3][0] -= speed * ts; }
-				if (Input::IsKeyPressed(Key::ALT_KEY_D)) { transform[3][0] += speed * ts; }
+				if (Input::IsKeyPressed(Key::ALT_KEY_W)) { translation.y += speed * ts; }
+				if (Input::IsKeyPressed(Key::ALT_KEY_S)) { translation.y -= speed * ts; }
+				if (Input::IsKeyPressed(Key::ALT_KEY_A)) { translation.x -= speed * ts; }
+				if (Input::IsKeyPressed(Key::ALT_KEY_D)) { translation.x += speed * ts; }
 			}
 		};
 
 		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 
 		m_SceneHierarchyPanel.SetContex(m_ActiveScene);
-
-		// Resize
-		if (FramebufferSpecification spec = m_Framebuffer->GetSpecification();
-			m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
-			(spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
-		{
-			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-			m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
-			m_ActiveScene->OnViewportResize(m_ViewportSize.x, m_ViewportSize.y);
-		}
 	}
 
 	void EditorLayer::OnDetach()
@@ -110,31 +101,31 @@ namespace Alternate
 		RenderCommand::SetClearColor({ 0.1, 0.1, 0.1, 1 });
 		RenderCommand::Clear();
 		
-#if 1
+#if 0
 		{
-			Alternate::Renderer2D::BeginScene(m_CameraEntity.GetComponent<CameraComponent>().Camera, m_CameraEntity.GetComponent<TransformComponent>());
+			static float wave = 0.5f;
+
+			Alternate::Renderer2D::BeginScene(m_CameraEntity.GetComponent<CameraComponent>().Camera, m_CameraEntity.GetComponent<TransformComponent>().GetTransform());
 			for (float y = -5.0f; y < 5.0f; y += 0.5f)
 			{
 				for (float x = -5.0f; x < 5.0f; x += 0.5f)
 				{
 					glm::vec4 color = { (x + 5.0f) / 10, 0.4f, (y + 5.0f) / 10, 0.75f };
-					Alternate::Renderer2D::DrawQuad({ x, y , 5.0f }, { 0.45f, 0.45f }, color);
+					Alternate::Renderer2D::DrawQuad({ x, y , 5.0f - wave * y + wave * x }, { 0.45f, 0.45f }, color);
 				}
 			}
 			Alternate::Renderer2D::EndScene();
 
 			static float rotation = 0.0f;
-			rotation += ts * 500.0f;
+			rotation += ts * 100.0f;
 			ALT_PROFILE_SCOPE("Render Draw");
-			Alternate::Renderer2D::BeginScene(m_CameraEntity.GetComponent<CameraComponent>().Camera, m_CameraEntity.GetComponent<TransformComponent>());
+			Alternate::Renderer2D::BeginScene(m_CameraEntity.GetComponent<CameraComponent>().Camera, m_CameraEntity.GetComponent<TransformComponent>().GetTransform());
 			//Alternate::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 20.0f, 20.0f }, m_CheckerBoardTexture, 10.0f);
 			Alternate::Renderer2D::DrawRotatedQuad({ 0.0f, -2.0f , 7.0f }, { 1.0f, 1.5f }, glm::radians(45.0f), m_Square2Color);
 			Alternate::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f , 7.0f }, { 2.0f, 0.5f }, glm::radians(20.0f), m_SquareColor);
 			Alternate::Renderer2D::DrawRotatedQuad({ 2.0f, 2.5f, 10.0f }, { 3.0f, 3.0f }, glm::radians(rotation), m_TransparantTexture);
 			Alternate::Renderer2D::DrawRotatedQuad({ -2.0f, 2.5f , 10.0f }, { 3.0f, 3.0f }, glm::radians(-rotation), m_TransparantTexture);
-			Alternate::Renderer2D::EndScene();
-
-			
+			Alternate::Renderer2D::EndScene();			
 		}
 #endif
 		//update scene
@@ -204,7 +195,7 @@ namespace Alternate
 		{
 			if (ImGui::BeginMenu("File"))
 			{
-				// Disabling fullscreen would allow the window to be moved to the front of other windows,
+				// Disabling full screen would allow the window to be moved to the front of other windows,
 				// which we can't undo at the moment without finer window depth/z control.
 				ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen);
 				ImGui::MenuItem("Padding", NULL, &opt_padding);
@@ -223,27 +214,13 @@ namespace Alternate
 
 		m_SceneHierarchyPanel.OnImGuiRender();
 
-		ImGui::Begin("Settings");
+		ImGui::Begin("Stats");
 		auto stats = Renderer2D::GetStats();
 		ImGui::Text("Renderer2D Stats:");
 		ImGui::Text("Draw Calls: %d", stats.DrawCalls);
 		ImGui::Text("Quad Count: %d", stats.QuadCount);
 		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
-		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
-
-		if (m_SquareEntity)
-		{
-			ImGui::Separator();
-			ImGui::Text("%s", m_SquareEntity.GetComponent<TagComponent>().Tag.c_str());
-
-			auto& squareColor = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
-			ImGui::ColorEdit4("Square Color2D", glm::value_ptr(squareColor));
-			ImGui::ColorEdit4("Square2 Color2D", glm::value_ptr(m_Square2Color));
-			ImGui::Separator();
-		}
-
-		ImGui::DragFloat3("Camera Transform", glm::value_ptr(m_CameraEntity.GetComponent<TransformComponent>().Transform[3]));
-		
+		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());		
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
