@@ -24,8 +24,8 @@ namespace Alternate
 
 		void SetBlockEvents(bool block) { m_BlockEvents = block; };
 
+		void SetDarkThemeColors();
 	private:
-
 		bool OnTextInputEvent(TextInputEvent& e);
 
 		bool OnKeyPressedEvent(KeyPressedEvent& e);
