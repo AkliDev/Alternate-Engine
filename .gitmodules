@@ -14,3 +14,6 @@
 	path = Alternate/vendor/glm
 	url = https://github.com/g-truc/glm.git
 	branch = master
+[submodule "Alternate/vendor/yaml-cpp"]
+	path = Alternate/vendor/yaml-cpp
+	url = https://github.com/AkliDev/yaml-cpp.git
