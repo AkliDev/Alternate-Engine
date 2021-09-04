@@ -38,8 +38,8 @@ namespace Alternate
 		//io.ConfigViewportsNoAutoMerge = true;
 		//io.ConfigViewportsNoTaskBarIcon = true;
 		
-		io.Fonts->AddFontFromFileTTF("assets/fonts/opensans/OpenSans-Bold.ttf", 18.0f);
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/opensans/OpenSans-Regular.ttf", 18.0f);
+		io.Fonts->AddFontFromFileTTF("assets/fonts/chivo/Chivo-Bold.ttf", 18.0f);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/chivo/Chivo-Regular.ttf", 18.0f);
 
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();
@@ -209,6 +209,7 @@ namespace Alternate
 
 	void ImGuiLayer::SetDarkThemeColors()
 	{
+		//ImGui::GetStyle().WindowBorderSize = 10.0f;
 		auto& colors = ImGui::GetStyle().Colors;
 		colors[ImGuiCol_WindowBg] = ImVec4{ 0.1f, 0.105f, 0.11f, 1.0f };
 
@@ -238,6 +239,14 @@ namespace Alternate
 		colors[ImGuiCol_TitleBg] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 		colors[ImGuiCol_TitleBgActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 		colors[ImGuiCol_TitleBgCollapsed] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
+
+		// Separator
+		colors[ImGuiCol_Separator] = ImVec4{ 0.0f, 0.0f, 1.151f, 1.0f };
+		colors[ImGuiCol_SeparatorHovered] = ImVec4{ 0.0f, 1.1505f, 0.0f, 1.0f };
+		colors[ImGuiCol_SeparatorActive] = ImVec4{ 1.15f, 0.0f, 0.0f, 1.0f };
+
+		
+		colors[ImGuiCol_CheckMark] = ImVec4{ 1.15f, 0.0f, 1.0f, 1.0f };
 	}
 
 	void ImGuiLayer::OnImGuiRender()
