@@ -1,6 +1,6 @@
 workspace "Alternate"
 	architecture "x64"
-	startproject "Sandbox"
+	startproject "Alternate-Editor"
 
 	configurations
 	{
@@ -22,10 +22,12 @@ IncludeDir["ImGui"] = "Alternate/vendor/imgui"
 IncludeDir["glm"] = "Alternate/vendor/glm"
 IncludeDir["stb_image"] = "Alternate/vendor/stb_image"
 IncludeDir["entt"] = "Alternate/vendor/entt/include"
+IncludeDir["yaml_cpp"] = "Alternate/vendor/yaml-cpp/include"
 
 group "Dependencies"
 	include "Alternate/vendor/Glad"
 	include	"Alternate/vendor/imgui"
+	include "Alternate/vendor/yaml-cpp"
 group ""
 
 project "Alternate"
@@ -66,7 +68,8 @@ project "Alternate"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
-		"%{IncludeDir.entt}"
+		"%{IncludeDir.entt}",
+		"%{IncludeDir.yaml_cpp}"
 	}
 
 	libdirs 
@@ -76,9 +79,10 @@ project "Alternate"
 
 	links
 	{
+		"SDL2.lib",
 		"Glad",
 		"ImGui",
-		"SDL2.lib",
+		"yaml-cpp"
 		--"opengl32.lib"
 	}
 
