@@ -225,6 +225,12 @@ namespace Alternate
 
 		if (ImGui::BeginPopup("AddComponent"))
 		{
+			if (ImGui::MenuItem("Transform"))
+			{
+				m_SelectionContext.AddComponent<TransformComponent>();
+				ImGui::CloseCurrentPopup();
+			}
+
 			if (ImGui::MenuItem("Camera"))
 			{
 				m_SelectionContext.AddComponent<CameraComponent>();

@@ -241,12 +241,12 @@ namespace Alternate
 		colors[ImGuiCol_TitleBgCollapsed] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 
 		// Separator
-		colors[ImGuiCol_Separator] = ImVec4{ 0.0f, 0.0f, 1.151f, 1.0f };
-		colors[ImGuiCol_SeparatorHovered] = ImVec4{ 0.0f, 1.1505f, 0.0f, 1.0f };
-		colors[ImGuiCol_SeparatorActive] = ImVec4{ 1.15f, 0.0f, 0.0f, 1.0f };
+		colors[ImGuiCol_Separator] = ImVec4{ 0.12f, 0.77f, 0.71f, 1.0f };
+		colors[ImGuiCol_SeparatorHovered] = ImVec4{ 0.22f, 0.87f, 0.81f, 1.0f };
+		colors[ImGuiCol_SeparatorActive] = ImVec4{ 0.07f, 0.72f, 0.64f, 1.0f };
 
 		
-		colors[ImGuiCol_CheckMark] = ImVec4{ 1.15f, 0.0f, 1.0f, 1.0f };
+		colors[ImGuiCol_CheckMark] = ImVec4{ 0.12f, 0.77f, 0.71f, 1.0f };
 	}
 
 	void ImGuiLayer::OnImGuiRender()

@@ -101,7 +101,7 @@ namespace Alternate
 		RenderCommand::SetClearColor({ 0.1, 0.1, 0.1, 1 });
 		RenderCommand::Clear();
 		
-#if 0
+#if 1
 		{
 			static float wave = 0.5f;
 
@@ -117,7 +117,7 @@ namespace Alternate
 			Alternate::Renderer2D::EndScene();
 
 			static float rotation = 0.0f;
-			rotation += ts * 100.0f;
+			//rotation += ts * 100.0f;
 			ALT_PROFILE_SCOPE("Render Draw");
 			Alternate::Renderer2D::BeginScene(m_CameraEntity.GetComponent<CameraComponent>().Camera, m_CameraEntity.GetComponent<TransformComponent>().GetTransform());
 			//Alternate::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 20.0f, 20.0f }, m_CheckerBoardTexture, 10.0f);
