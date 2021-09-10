@@ -22,8 +22,10 @@ namespace Alternate
 		fbSpec.Height = 720;
 		m_Framebuffer = FrameBuffer::Create(fbSpec);
 
-		m_CheckerBoardTexture = Texture2D::Create("assets/textures/Test.png");
-		m_TransparantTexture = Texture2D::Create("assets/textures/Goombah.png");
+		//m_CheckerBoardTexture = Texture2D::Create("assets/textures/Test.png");
+		//m_TransparantTexture = Texture2D::Create("assets/textures/Goombah.png");
+		m_WolfTexture = Texture2D::Create("assets/textures/Fillia.png");
+		m_PaletteTexture = Texture2D::Create("assets/textures/filia_1p.png");
 
 		m_CameraController.SetZoomLevel(1.0f);
 
@@ -34,8 +36,9 @@ namespace Alternate
 		m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{0, 1, 0, 1});
 
 		m_CameraEntity = m_ActiveScene->CreateEntity("Camera A");
-		m_CameraEntity.AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Perspective);
-		m_CameraEntity.GetComponent<TransformComponent>().Translatioin.z = 30;
+		m_CameraEntity.AddComponent<CameraComponent>();
+		//m_CameraEntity.GetComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Perspective);
+		//m_CameraEntity.GetComponent<TransformComponent>().Translatioin.z = 30;
 
 		m_SecondCamera = m_ActiveScene->CreateEntity("Camera B");
 		auto& cc = m_SecondCamera.AddComponent<CameraComponent>();
@@ -103,33 +106,34 @@ namespace Alternate
 		
 #if 1
 		{
-			static float wave = 0.5f;
-
-			Alternate::Renderer2D::BeginScene(m_CameraEntity.GetComponent<CameraComponent>().Camera, m_CameraEntity.GetComponent<TransformComponent>().GetTransform());
-			for (float y = -5.0f; y < 5.0f; y += 0.5f)
-			{
-				for (float x = -5.0f; x < 5.0f; x += 0.5f)
-				{
-					glm::vec4 color = { (x + 5.0f) / 10, 0.4f, (y + 5.0f) / 10, 0.75f };
-					Alternate::Renderer2D::DrawQuad({ x, y , 5.0f - wave * y + wave * x }, { 0.45f, 0.45f }, color);
-				}
-			}
-			Alternate::Renderer2D::EndScene();
-
+			//static float wave = 0.5f;
+			//
+			//Alternate::Renderer2D::BeginScene(m_CameraEntity.GetComponent<CameraComponent>().Camera, m_CameraEntity.GetComponent<TransformComponent>().GetTransform());
+			//for (float y = -5.0f; y < 5.0f; y += 0.5f)
+			//{
+			//	for (float x = -5.0f; x < 5.0f; x += 0.5f)
+			//	{
+			//		glm::vec4 color = { (x + 5.0f) / 10, 0.4f, (y + 5.0f) / 10, 0.75f };
+			//		Alternate::Renderer2D::DrawQuad({ x, y , 5.0f - wave * y + wave * x }, { 0.45f, 0.45f }, color);
+			//	}
+			//}
+			//Alternate::Renderer2D::EndScene();
+			//
 			static float rotation = 0.0f;
-			//rotation += ts * 100.0f;
+			////rotation += ts * 100.0f;
 			ALT_PROFILE_SCOPE("Render Draw");
 			Alternate::Renderer2D::BeginScene(m_CameraEntity.GetComponent<CameraComponent>().Camera, m_CameraEntity.GetComponent<TransformComponent>().GetTransform());
 			//Alternate::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 20.0f, 20.0f }, m_CheckerBoardTexture, 10.0f);
-			Alternate::Renderer2D::DrawRotatedQuad({ 0.0f, -2.0f , 7.0f }, { 1.0f, 1.5f }, glm::radians(45.0f), m_Square2Color);
-			Alternate::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f , 7.0f }, { 2.0f, 0.5f }, glm::radians(20.0f), m_SquareColor);
-			Alternate::Renderer2D::DrawRotatedQuad({ 2.0f, 2.5f, 10.0f }, { 3.0f, 3.0f }, glm::radians(rotation), m_TransparantTexture);
-			Alternate::Renderer2D::DrawRotatedQuad({ -2.0f, 2.5f , 10.0f }, { 3.0f, 3.0f }, glm::radians(-rotation), m_TransparantTexture);
+			//Alternate::Renderer2D::DrawRotatedQuad({ 0.0f, -2.0f , 7.0f }, { 1.0f, 1.5f }, glm::radians(45.0f), m_Square2Color);
+			//Alternate::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f , 7.0f }, { 2.0f, 0.5f }, glm::radians(20.0f), m_SquareColor);
+			Alternate::Renderer2D::DrawQuad({ 2.0f, 2.5f, 0.0f }, { 3.0f, 3.0f }, m_WolfTexture, m_PaletteTexture);
+			//Alternate::Renderer2D::DrawRotatedQuad({ -2.0f, 2.5f , 10.0f }, { 3.0f, 3.0f }, glm::radians(-rotation), m_TransparantTexture);
 			Alternate::Renderer2D::EndScene();			
 		}
 #endif
 		//update scene
 		m_ActiveScene->OnUpdate(ts);
+		m_ActiveScene->OnRender();
 
 		//Renderer2D::EndScene();
 

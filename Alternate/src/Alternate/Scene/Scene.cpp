@@ -47,13 +47,15 @@ namespace Alternate
 
 				nsc.Instance->OnUpdate(ts);
 			});
-		}
+		}	
+	}
 
-		//Render 2D
+	void Scene::OnRender()
+	{
 		Camera* mainCamera = nullptr;
 		glm::mat4 cameraTransform;
 		{
-			auto view = m_Registry.view<TransformComponent , CameraComponent>();
+			auto view = m_Registry.view<TransformComponent, CameraComponent>();
 			for (auto entity : view)
 			{
 				auto [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);

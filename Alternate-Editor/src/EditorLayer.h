@@ -23,6 +23,7 @@ namespace Alternate
 
 		Ref<VertexArray> m_SquareVA;
 		Ref<Shader> m_FlatColorShader;
+		Ref<Shader> m_PaletteShader;
 		Ref<FrameBuffer> m_Framebuffer;
 
 		Ref<Scene> m_ActiveScene;
@@ -35,8 +36,10 @@ namespace Alternate
 		glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 		glm::vec4 m_Square2Color = { 0.8f, 0.3f, 0.2f, 1.0f };
 
-		Ref<Texture2D> m_CheckerBoardTexture;
-		Ref<Texture2D> m_TransparantTexture;
+		//Ref<Texture2D> m_CheckerBoardTexture;
+		//Ref<Texture2D> m_TransparantTexture;
+		Ref<Texture2D> m_WolfTexture;
+		Ref<Texture2D> m_PaletteTexture;
 
 		//Panels
 		SceneHierarchyPanel m_SceneHierarchyPanel;

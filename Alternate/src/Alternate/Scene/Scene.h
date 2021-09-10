@@ -17,6 +17,7 @@ namespace Alternate
 		void DestroyEntity(Entity entity);
 
 		void OnUpdate(Timestep ts);
+		void OnRender();
 		void OnViewportResize(uint32_t width, uint32_t height);
 	private:
 		template<typename T>
