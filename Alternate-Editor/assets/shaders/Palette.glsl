@@ -5,15 +5,15 @@ layout (location = 0) in vec3   a_Position;
 layout (location = 1) in vec4   a_Color;
 layout (location = 2) in vec2   a_TexCoord;
 layout (location = 3) in float  a_TexIndex;
-layout (location = 3) in float  a_TexIndex2;
-layout (location = 4) in float  a_TilingFactor;
+layout (location = 4) in float  a_TexIndex2;
+layout (location = 5) in float  a_TilingFactor;
 
 uniform mat4 u_ViewProjection;
 
 out vec4    v_Color;
 out vec2    v_TexCoord;
-out float   v_TexIndex;
-out float   v_TexIndex2;
+out flat float   v_TexIndex;
+out flat float   v_TexIndex2;
 out float   v_TilingFactor;
 
 void main()
@@ -33,8 +33,8 @@ layout(location = 0) out vec4 color;
 
 in vec4 v_Color;
 in vec2 v_TexCoord;
-in float v_TexIndex;
-in float v_TexIndex2;
+in flat float v_TexIndex;
+in flat float v_TexIndex2;
 in float v_TilingFactor;
 
 uniform vec4 u_Color;
@@ -54,11 +54,8 @@ vec3 rgb2hsv(vec4 c)
 }
 
 void main()
-{
-    
-    vec4 spriteCol = texture(u_Textures[1], v_TexCoord);
-    vec3 hsv = rgb2hsv(texture(u_Textures[1],  v_TexCoord));
-    vec4 palleteCol = texture(u_Textures[2],  vec2(1- hsv.x, 1-hsv.z));
-	color = vec4(palleteCol.x,palleteCol.y,palleteCol.z,spriteCol.w);
-
+{  
+    vec4 spriteCol = texture(u_Textures[int(v_TexIndex)], v_TexCoord);
+    vec4 palleteCol = texture(u_Textures[int(v_TexIndex2)],  vec2(spriteCol.z, 1 -spriteCol.y));
+	color = palleteCol;
 }

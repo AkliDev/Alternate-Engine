@@ -5,9 +5,21 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
+#include <iostream>
 namespace Alternate
 {
+	glm::vec4 gNormalMirrorFlipParams = glm::vec4(2.0f, 2.0f, -1.0f, -1.0f);
+	glm::vec3 ReconstituteNormal(glm::vec2 normalIn)
+	{
+		glm::vec3 toReturn;
+		// negative UV scales mean flip the normal for that component as well...
+		toReturn.x = gNormalMirrorFlipParams.x * normalIn.x + gNormalMirrorFlipParams.z;
+		toReturn.y = gNormalMirrorFlipParams.y * normalIn.y + gNormalMirrorFlipParams.w;
+		toReturn.z = float(sqrt(1 - glm::clamp(glm::dot(glm::vec2(toReturn.x, toReturn.y), glm::vec2(toReturn.x, toReturn.y)), 0.0f, 1.0f)));
+
+		return toReturn;
+	}
+
 	EditorLayer::EditorLayer()
 		:Layer("EditorLayer"), m_CameraController(1280.0f / 720.0f, true)
 	{
@@ -24,7 +36,7 @@ namespace Alternate
 
 		//m_CheckerBoardTexture = Texture2D::Create("assets/textures/Test.png");
 		//m_TransparantTexture = Texture2D::Create("assets/textures/Goombah.png");
-		m_WolfTexture = Texture2D::Create("assets/textures/Fillia.png");
+		m_WolfTexture = Texture2D::Create("assets/textures/character_select_filia.png");
 		m_PaletteTexture = Texture2D::Create("assets/textures/filia_1p.png");
 
 		m_CameraController.SetZoomLevel(1.0f);
@@ -72,6 +84,21 @@ namespace Alternate
 		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 
 		m_SceneHierarchyPanel.SetContex(m_ActiveScene);
+		
+		float angle = 255;
+		// okay so, we can use just ONE lerp if we combine the gradient pixel, black pixel, and lighting pixel into one half3
+		float vals;
+
+		// NORMAL TEXEL GROUP
+		// normal byte, diffuse texture 1, BGRA byte R
+		vals = (angle * 255.0f + 0.5f) / 16.0f;  // x is now ipart, y is fpart
+		vals = 33.0f;
+		float result = glm::clamp(16 * glm::modf(vals, vals) / 15, 0.0f, 1.0f); // y coord
+		vals /= 15; // x coord
+
+		glm::vec3 normal = glm::normalize(ReconstituteNormal(glm::vec2(vals, result)));
+
+		std::cout << glm::modf(vals, vals) << " " << normal.y << " " << normal.z << std::endl;
 	}
 
 	void EditorLayer::OnDetach()
@@ -126,7 +153,7 @@ namespace Alternate
 			//Alternate::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 20.0f, 20.0f }, m_CheckerBoardTexture, 10.0f);
 			//Alternate::Renderer2D::DrawRotatedQuad({ 0.0f, -2.0f , 7.0f }, { 1.0f, 1.5f }, glm::radians(45.0f), m_Square2Color);
 			//Alternate::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f , 7.0f }, { 2.0f, 0.5f }, glm::radians(20.0f), m_SquareColor);
-			Alternate::Renderer2D::DrawQuad({ 2.0f, 2.5f, 0.0f }, { 3.0f, 3.0f }, m_WolfTexture, m_PaletteTexture);
+			Alternate::Renderer2D::DrawQuad({ 2.0f, 2.5f, 0.0f }, { 3.0f, 6.0f }, m_WolfTexture, m_PaletteTexture);
 			//Alternate::Renderer2D::DrawRotatedQuad({ -2.0f, 2.5f , 10.0f }, { 3.0f, 3.0f }, glm::radians(-rotation), m_TransparantTexture);
 			Alternate::Renderer2D::EndScene();			
 		}
