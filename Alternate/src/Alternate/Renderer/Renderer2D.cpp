@@ -52,11 +52,11 @@ namespace Alternate
 
 		s_Data.QuadVertexBuffer = VertexBuffer::Create(s_Data.MaxVertices * sizeof(QuadVertex));
 		s_Data.QuadVertexBuffer->SetLayout({
-			{ ShaderDataType::Float3, "a_Position" },
-			{ ShaderDataType::Float4, "a_Color" },
-			{ ShaderDataType::Float2, "a_TexCoord" },
-			{ ShaderDataType::Float, "a_TexIndex" },
-			{ ShaderDataType::Float, "a_TilingFactor" },
+			{ ShaderDataType::Float3,	"a_Position" },
+			{ ShaderDataType::Float4,	"a_Color" },
+			{ ShaderDataType::Float2,	"a_TexCoord" },
+			{ ShaderDataType::Float,	"a_TexIndex" },
+			{ ShaderDataType::Float,	"a_TilingFactor" },
 			});
 		s_Data.QuadVertexArray->AddVertexBuffer(s_Data.QuadVertexBuffer);
 
@@ -112,7 +112,7 @@ namespace Alternate
 		delete[] s_Data.QuadVertexBufferBase;
 	}
 
-	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4 transform)
+	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform)
 	{
 		ALT_PROFILE_FUNCTION();
 

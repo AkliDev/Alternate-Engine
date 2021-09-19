@@ -6,6 +6,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Alternate/Scene/SceneSerializer.h"
+
 namespace Alternate
 {
 	EditorLayer::EditorLayer()
@@ -29,13 +31,14 @@ namespace Alternate
 
 		m_ActiveScene = CreateRef<Scene>();
 
+#if 0
 		//Entity
 		m_SquareEntity = m_ActiveScene->CreateEntity("Square");	
 		m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{0, 1, 0, 1});
 
 		m_CameraEntity = m_ActiveScene->CreateEntity("Camera A");
 		m_CameraEntity.AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Perspective);
-		m_CameraEntity.GetComponent<TransformComponent>().Translatioin.z = 30;
+		m_CameraEntity.GetComponent<TransformComponent>().Translation.z = 30;
 
 		m_SecondCamera = m_ActiveScene->CreateEntity("Camera B");
 		auto& cc = m_SecondCamera.AddComponent<CameraComponent>();
@@ -56,7 +59,7 @@ namespace Alternate
 
 			void OnUpdate(Timestep ts)
 			{
-				auto& translation = GetComponent<TransformComponent>().Translatioin;
+				auto& translation = GetComponent<TransformComponent>().Translation;
 				float speed = 5.0f;
 
 				if (Input::IsKeyPressed(Key::ALT_KEY_W)) { translation.y += speed * ts; }
@@ -67,8 +70,10 @@ namespace Alternate
 		};
 
 		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-
+#endif
 		m_SceneHierarchyPanel.SetContex(m_ActiveScene);
+
+		SceneSerializer serializer(m_ActiveScene);
 	}
 
 	void EditorLayer::OnDetach()
@@ -101,7 +106,7 @@ namespace Alternate
 		RenderCommand::SetClearColor({ 0.1, 0.1, 0.1, 1 });
 		RenderCommand::Clear();
 		
-#if 1
+#if 0
 		{
 			static float wave = 0.5f;
 
@@ -202,15 +207,23 @@ namespace Alternate
 			{
 				// Disabling full screen would allow the window to be moved to the front of other windows,
 				// which we can't undo at the moment without finer window depth/z control.
-				ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen);
-				ImGui::MenuItem("Padding", NULL, &opt_padding);
-				ImGui::Separator();
+
+
+				if (ImGui::MenuItem("Serialize"))
+				{
+					SceneSerializer serializer(m_ActiveScene);
+					serializer.Serialize("assets/scenes/Example.alt");
+				}
+
+				if (ImGui::MenuItem("Deserialize"))
+				{
+					SceneSerializer serializer(m_ActiveScene);
+					serializer.Deserialize("assets/scenes/Example.alt");
+				}
 
 				if (ImGui::MenuItem("Exit")) Application::Get().Close();
 				ImGui::Separator();
 
-				if (ImGui::MenuItem("Close", NULL, false))
-					dockspaceOpen = false;
 				ImGui::EndMenu();
 			}
 

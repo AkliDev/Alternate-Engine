@@ -250,7 +250,7 @@ namespace Alternate
 		
 		DrawComponent<TransformComponent>("Transform", entity, [](auto& component)
 			{
-				DrawVec3Control("Translation", component.Translatioin);
+				DrawVec3Control("Translation", component.Translation);
 				glm::vec3 rotation = glm::degrees(component.Rotation);
 				DrawVec3Control("Rotation", rotation);
 				component.Rotation = glm::radians(rotation);
@@ -288,14 +288,14 @@ namespace Alternate
 
 				if (camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
 				{
-					float verticalFOV = glm::degrees(camera.GetPerspectiveVerticalFOV());
-					if (ImGui::DragFloat("VerticalFov", &verticalFOV)) { camera.SetPerspectiveVerticalFOV(glm::radians(verticalFOV)); }
+					float perspictiveVerticalFOV = glm::degrees(camera.GetPerspectiveVerticalFOV());
+					if (ImGui::DragFloat("VerticalFov", &perspictiveVerticalFOV)) { camera.SetPerspectiveVerticalFOV(glm::radians(perspictiveVerticalFOV)); }
 
-					float nearClip = camera.GetPerspectiveNearClip();
-					if (ImGui::DragFloat("Near", &nearClip, 0.01f)) { camera.SetPerspectiveNearClip(nearClip); }
+					float perspictiveNear = camera.GetPerspectiveNearClip();
+					if (ImGui::DragFloat("Near", &perspictiveNear, 0.01f)) { camera.SetPerspectiveNearClip(perspictiveNear); }
 
-					float farClip = camera.GetPerspectiveFarClip();
-					if (ImGui::DragFloat("Far", &farClip, 10)) { camera.SetPerspectiveFarClip(farClip); }
+					float perspictiveFar = camera.GetPerspectiveFarClip();
+					if (ImGui::DragFloat("Far", &perspictiveFar, 10)) { camera.SetPerspectiveFarClip(perspictiveFar); }
 				}
 
 				if (camera.GetProjectionType() == SceneCamera::ProjectionType::Orhtographic)

@@ -6,7 +6,8 @@ namespace Alternate
 {
 	struct FramebufferSpecification
 	{
-		uint32_t Width, Height = 0;
+		uint32_t Width = 0; 
+		uint32_t Height = 0;
 		uint32_t Samples = 1;
 
 		bool SwapChainTarget = false;

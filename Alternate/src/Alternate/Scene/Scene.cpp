@@ -51,7 +51,7 @@ namespace Alternate
 
 		//Render 2D
 		Camera* mainCamera = nullptr;
-		glm::mat4 cameraTransform;
+		glm::mat4* cameraTransform;
 		{
 			auto view = m_Registry.view<TransformComponent , CameraComponent>();
 			for (auto entity : view)
@@ -60,7 +60,7 @@ namespace Alternate
 				if (camera.Primary)
 				{
 					mainCamera = &camera.Camera;
-					cameraTransform = transform.GetTransform();
+					cameraTransform = &transform.GetTransform();
 					break;
 				}
 			}
@@ -68,7 +68,7 @@ namespace Alternate
 
 		if (mainCamera)
 		{
-			Renderer2D::BeginScene(*mainCamera, cameraTransform);
+			Renderer2D::BeginScene(*mainCamera, *cameraTransform);
 
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group)

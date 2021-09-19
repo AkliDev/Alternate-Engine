@@ -1,4 +1,5 @@
 # Binaries
+!vendor/bin/premake/
 **/bin/
 bin-int/
 
