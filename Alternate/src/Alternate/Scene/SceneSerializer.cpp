@@ -205,7 +205,7 @@ namespace Alternate
 		{
 			for (auto entity : entities)
 			{
-				uint64_t uuid = entity["Entity"].as<uint64_t>(); // TODO
+				uint64_t uuid = entity["Entity"].as<uint64_t>(); // TODO assign id to created entity
 
 				std::string name;
 				auto tagComponent = entity["TagComponent"];

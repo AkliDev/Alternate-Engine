@@ -112,7 +112,7 @@ namespace Alternate
 	bool Application::OnKeyPressedEvent(KeyPressedEvent& e)
 	{
 		if (e.GetKeyCode() == Alternate::Key::ALT_KEY_ESCAPE) { Close(); }
-		return true;
+		return false;
 	}
 
 	bool Application::OnWindowResized(WindowResizeEvent& e)

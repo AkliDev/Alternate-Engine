@@ -14,6 +14,7 @@ namespace Alternate
 	void SceneHierarchyPanel::SetContex(const Ref<Scene>& context)
 	{
 		m_Context = context;
+		m_SelectionContext = {};
 	}
 
 	void SceneHierarchyPanel::OnImGuiRender()

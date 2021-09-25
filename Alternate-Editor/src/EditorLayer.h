@@ -18,6 +18,11 @@ namespace Alternate
 		virtual void OnImGuiRender() override;
 		void OnEvent(Event& e) override;
 	private:
+		bool OnKeyPressed(KeyPressedEvent& e);
+		void NewScene();
+		void OpenScene();
+		void SaveSceneAs();
+	private:
 		bool m_ViewportFocussed = false, m_ViewportHovered = false;
 		OrthographicCameraController m_CameraController;
 

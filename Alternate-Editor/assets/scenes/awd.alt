@@ -26,7 +26,7 @@ Entities:
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     SpriteRendererComponent:
-      Color: [0, 1.39215684, 0, 1]
+      Color: [0.462260813, 0, 1.39215684, 1]
   - Entity: 12837192831273
     TagComponent:
       Tag: Red Square
@@ -35,4 +35,4 @@ Entities:
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     SpriteRendererComponent:
-      Color: [1, 0, 0, 1]
+      Color: [1, 0.370656371, 0, 1]

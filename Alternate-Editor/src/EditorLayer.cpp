@@ -8,6 +8,8 @@
 
 #include "Alternate/Scene/SceneSerializer.h"
 
+#include "Alternate/Utils/PlatformUtils.h"
+
 namespace Alternate
 {
 	EditorLayer::EditorLayer()
@@ -31,10 +33,10 @@ namespace Alternate
 
 		m_ActiveScene = CreateRef<Scene>();
 
-#if 0
+#if 1
 		//Entity
-		m_SquareEntity = m_ActiveScene->CreateEntity("Square");	
-		m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{0, 1, 0, 1});
+		m_SquareEntity = m_ActiveScene->CreateEntity("Square");
+		m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 0, 1, 0, 1 });
 
 		m_CameraEntity = m_ActiveScene->CreateEntity("Camera A");
 		m_CameraEntity.AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Perspective);
@@ -90,9 +92,9 @@ namespace Alternate
 			m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
 			(spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
 		{
-			m_Framebuffer->Resize(m_ViewportSize.x, m_ViewportSize.y);
-			m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
-			m_ActiveScene->OnViewportResize(m_ViewportSize.x, m_ViewportSize.y);
+			m_Framebuffer->Resize((int32_t)m_ViewportSize.x, (int32_t)m_ViewportSize.y);
+			m_CameraController.OnResize((int32_t)m_ViewportSize.x, (int32_t)m_ViewportSize.y);
+			m_ActiveScene->OnViewportResize((int32_t)m_ViewportSize.x, (int32_t)m_ViewportSize.y);
 		}
 
 
@@ -105,7 +107,7 @@ namespace Alternate
 		m_Framebuffer->Bind();
 		RenderCommand::SetClearColor({ 0.1, 0.1, 0.1, 1 });
 		RenderCommand::Clear();
-		
+
 #if 0
 		{
 			static float wave = 0.5f;
@@ -130,7 +132,7 @@ namespace Alternate
 			Alternate::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f , 7.0f }, { 2.0f, 0.5f }, glm::radians(20.0f), m_SquareColor);
 			Alternate::Renderer2D::DrawRotatedQuad({ 2.0f, 2.5f, 10.0f }, { 3.0f, 3.0f }, glm::radians(rotation), m_TransparantTexture);
 			Alternate::Renderer2D::DrawRotatedQuad({ -2.0f, 2.5f , 10.0f }, { 3.0f, 3.0f }, glm::radians(-rotation), m_TransparantTexture);
-			Alternate::Renderer2D::EndScene();			
+			Alternate::Renderer2D::EndScene();
 		}
 #endif
 		//update scene
@@ -190,7 +192,7 @@ namespace Alternate
 
 		// DockSpace
 		ImGuiIO& io = ImGui::GetIO();
-		ImGuiStyle& style = ImGui::GetStyle();		
+		ImGuiStyle& style = ImGui::GetStyle();
 		float minWindSizeX = style.WindowMinSize.x;
 		style.WindowMinSize.x = 370.0f;
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
@@ -207,18 +209,19 @@ namespace Alternate
 			{
 				// Disabling full screen would allow the window to be moved to the front of other windows,
 				// which we can't undo at the moment without finer window depth/z control.
-
-
-				if (ImGui::MenuItem("Serialize"))
+				if (ImGui::MenuItem("New", "Ctr+N"))
 				{
-					SceneSerializer serializer(m_ActiveScene);
-					serializer.Serialize("assets/scenes/Example.alt");
+					NewScene();
 				}
 
-				if (ImGui::MenuItem("Deserialize"))
+				if (ImGui::MenuItem("Open...", "Ctr+O"))
 				{
-					SceneSerializer serializer(m_ActiveScene);
-					serializer.Deserialize("assets/scenes/Example.alt");
+					OpenScene();
+				}
+
+				if (ImGui::MenuItem("Save As...", "Ctr+Shift+S"))
+				{
+					SaveSceneAs();
 				}
 
 				if (ImGui::MenuItem("Exit")) Application::Get().Close();
@@ -238,7 +241,7 @@ namespace Alternate
 		ImGui::Text("Draw Calls: %d", stats.DrawCalls);
 		ImGui::Text("Quad Count: %d", stats.QuadCount);
 		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
-		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());		
+		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
@@ -246,13 +249,13 @@ namespace Alternate
 
 		m_ViewportFocussed = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();
-		
+
 		Application::Get().GetImGuiLayer()->SetBlockEvents(!m_ViewportFocussed || !m_ViewportHovered);
-		
+
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-		
+
 		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
-	
+
 		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 		ImGui::End();
@@ -264,5 +267,79 @@ namespace Alternate
 	void EditorLayer::OnEvent(Event& e)
 	{
 		m_CameraController.OnEvent(e);
+
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<KeyPressedEvent>(ALT_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
+	}
+
+	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e)
+	{
+		//Shortcuts
+		if (e.GetRepeatCount() > 0)
+		{
+			return false;
+		}
+
+		
+		bool control = Input::IsKeyPressed(Key::ALT_KEY_LCTRL) || Input::IsKeyPressed(Key::ALT_KEY_RCTRL);
+		bool shift = Input::IsKeyPressed(Key::ALT_KEY_LSHIFT) || Input::IsKeyPressed(Key::ALT_KEY_RSHIFT);
+		switch (e.GetKeyCode())
+		{
+			case Key::ALT_KEY_N:
+			{
+				if (control)
+				{
+					NewScene();
+				}
+				break;
+			}
+			case Key::ALT_KEY_O:
+			{
+				if (control)
+				{
+					OpenScene();
+				}
+				break;
+			}
+			case Key::ALT_KEY_S:
+			{
+				if (control && shift)
+				{
+					SaveSceneAs();
+				}
+				break;
+			}
+		}
+	}
+
+	void EditorLayer::NewScene()
+	{
+		m_ActiveScene = CreateRef<Scene>();
+		m_ActiveScene->OnViewportResize((int32_t)m_ViewportSize.x, (int32_t)m_ViewportSize.y);
+		m_SceneHierarchyPanel.SetContex(m_ActiveScene);
+	}
+
+	void EditorLayer::OpenScene()
+	{
+		std::string filepath = FileDialogs::OpenFile("Alternate Scene (*.alt)\0*.alt\0");
+		if (!filepath.empty())
+		{
+			m_ActiveScene = CreateRef<Scene>();
+			m_ActiveScene->OnViewportResize((int32_t)m_ViewportSize.x, (int32_t)m_ViewportSize.y);
+			m_SceneHierarchyPanel.SetContex(m_ActiveScene);
+
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.Deserialize(filepath);
+		}
+	}
+
+	void EditorLayer::SaveSceneAs()
+	{
+		std::string filepath = FileDialogs::SaveFile("Alternate Scene (*.alt)\0*.alt\0");
+		if (!filepath.empty())
+		{
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.Serialize(filepath);
+		}
 	}
 }
