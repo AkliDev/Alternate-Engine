@@ -10,7 +10,7 @@
 #include <SDL.h>
 #include <glad/glad.h>
 
-
+#include "ImGuizmo.h"
 
 namespace Alternate
 {
@@ -183,6 +183,7 @@ namespace Alternate
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplSDL2_NewFrame(static_cast<SDL_Window*>(Application::Get().GetWindow().GetNativeWindow()));
 		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
 	}
 
 	void ImGuiLayer::End()

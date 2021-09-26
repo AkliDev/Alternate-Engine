@@ -43,6 +43,8 @@ namespace Alternate
 		Ref<Texture2D> m_CheckerBoardTexture;
 		Ref<Texture2D> m_TransparantTexture;
 
+		int m_GizmoType = -1;
+
 		//Panels
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 	};
