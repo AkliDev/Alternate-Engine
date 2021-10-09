@@ -38,18 +38,6 @@ namespace Alternate
 		m_ActiveScene = CreateRef<Scene>();
 
 #if 1
-		//Entity
-		m_SquareEntity = m_ActiveScene->CreateEntity("Square");
-		m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 0, 1, 0, 1 });
-
-		m_CameraEntity = m_ActiveScene->CreateEntity("Camera A");
-		m_CameraEntity.AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Perspective);
-		m_CameraEntity.GetComponent<TransformComponent>().Translation.z = 30;
-
-		m_SecondCamera = m_ActiveScene->CreateEntity("Camera B");
-		auto& cc = m_SecondCamera.AddComponent<CameraComponent>();
-		cc.Primary = false;
-
 		class CameraController : public ScriptableEntity
 		{
 		public:
@@ -74,8 +62,6 @@ namespace Alternate
 				if (Input::IsKeyPressed(Key::ALT_KEY_D)) { translation.x += speed * ts; }
 			}
 		};
-
-		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 #endif
 		m_SceneHierarchyPanel.SetContex(m_ActiveScene);
 
