@@ -37,6 +37,8 @@ namespace Alternate
 
 		m_ActiveScene = CreateRef<Scene>();
 
+		m_EditorCamera = EditorCamera(30.0f, 1.77777777778, 0.1f, 1000.0f);
+
 #if 1
 		class CameraController : public ScriptableEntity
 		{
@@ -56,10 +58,10 @@ namespace Alternate
 				auto& translation = GetComponent<TransformComponent>().Translation;
 				float speed = 5.0f;
 
-				if (Input::IsKeyPressed(Key::ALT_KEY_W)) { translation.y += speed * ts; }
-				if (Input::IsKeyPressed(Key::ALT_KEY_S)) { translation.y -= speed * ts; }
-				if (Input::IsKeyPressed(Key::ALT_KEY_A)) { translation.x -= speed * ts; }
-				if (Input::IsKeyPressed(Key::ALT_KEY_D)) { translation.x += speed * ts; }
+				if (Input::IsKeyPressed(Key::KEY_W)) { translation.y += speed * ts; }
+				if (Input::IsKeyPressed(Key::KEY_S)) { translation.y -= speed * ts; }
+				if (Input::IsKeyPressed(Key::KEY_A)) { translation.x -= speed * ts; }
+				if (Input::IsKeyPressed(Key::KEY_D)) { translation.x += speed * ts; }
 			}
 		};
 #endif
@@ -83,15 +85,16 @@ namespace Alternate
 			(spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
 		{
 			m_Framebuffer->Resize((int32_t)m_ViewportSize.x, (int32_t)m_ViewportSize.y);
-			m_CameraController.OnResize((int32_t)m_ViewportSize.x, (int32_t)m_ViewportSize.y);
+			m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
+			m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
 			m_ActiveScene->OnViewportResize((int32_t)m_ViewportSize.x, (int32_t)m_ViewportSize.y);
 		}
 
-
 		if (m_ViewportFocussed)
 		{
-			m_CameraController.OnUpdate(ts);
+			m_CameraController.OnUpdate(ts);		
 		}
+		m_EditorCamera.OnUpdate(ts);
 
 		Renderer2D::ResetStats();
 		m_Framebuffer->Bind();
@@ -126,7 +129,7 @@ namespace Alternate
 		}
 #endif
 		//update scene
-		m_ActiveScene->OnUpdate(ts);
+		m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
 
 		//Renderer2D::EndScene();
 
@@ -261,17 +264,23 @@ namespace Alternate
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
 			//Camera
-			auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
-			const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
-			const glm::mat4& cameraProjection = camera.GetProjection();
-			glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+			
+			//Runtime camera form entity
+			//auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
+			//const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
+			//const glm::mat4& cameraProjection = camera.GetProjection();
+			//glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+
+			//Editor Camera
+			const glm::mat4& cameraProjection = m_EditorCamera.GetProjection();
+			glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
 
 			//Entity Transform
 			auto& tc = selectedEntity.GetComponent<TransformComponent>();
 			glm::mat4 transform = tc.GetTransform();
 			
 			//Snapping
-			bool snap = Input::IsKeyPressed(Key::ALT_KEY_LCTRL);
+			bool snap = Input::IsKeyPressed(Key::KEY_LCTRL);
 			float snapValue = m_GizmoType == ImGuizmo::OPERATION::ROTATE ? 45.0f : 0.5f;
 
 			float snapValues[3]{ snapValue, snapValue, snapValue };
@@ -299,6 +308,7 @@ namespace Alternate
 	void EditorLayer::OnEvent(Event& e)
 	{
 		m_CameraController.OnEvent(e);
+		m_EditorCamera.OnEvent(e);
 
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<KeyPressedEvent>(ALT_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
@@ -312,12 +322,11 @@ namespace Alternate
 			return false;
 		}
 
-		
-		bool control = Input::IsKeyPressed(Key::ALT_KEY_LCTRL) || Input::IsKeyPressed(Key::ALT_KEY_RCTRL);
-		bool shift = Input::IsKeyPressed(Key::ALT_KEY_LSHIFT) || Input::IsKeyPressed(Key::ALT_KEY_RSHIFT);
+		bool control = Input::IsKeyPressed(Key::KEY_LCTRL) || Input::IsKeyPressed(Key::KEY_RCTRL);
+		bool shift = Input::IsKeyPressed(Key::KEY_LSHIFT) || Input::IsKeyPressed(Key::KEY_RSHIFT);
 		switch (e.GetKeyCode())
 		{
-			case Key::ALT_KEY_N:
+			case Key::KEY_N:
 			{
 				if (control)
 				{
@@ -325,7 +334,7 @@ namespace Alternate
 				}
 				break;
 			}
-			case Key::ALT_KEY_O:
+			case Key::KEY_O:
 			{
 				if (control)
 				{
@@ -333,7 +342,7 @@ namespace Alternate
 				}
 				break;
 			}
-			case Key::ALT_KEY_S:
+			case Key::KEY_S:
 			{
 				if (control && shift)
 				{
@@ -343,22 +352,22 @@ namespace Alternate
 			}
 
 			// Gizmos
-			case Key::ALT_KEY_Q:
+			case Key::KEY_Q:
 			{
 				m_GizmoType = -1;
 				break;
 			}
-			case Key::ALT_KEY_W:
+			case Key::KEY_W:
 			{
 				m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
 				break;
 			}
-			case Key::ALT_KEY_E:
+			case Key::KEY_E:
 			{
 				m_GizmoType = ImGuizmo::OPERATION::ROTATE;
 				break;
 			}
-			case Key::ALT_KEY_R:
+			case Key::KEY_R:
 			{
 				m_GizmoType = ImGuizmo::OPERATION::SCALE;
 				break;

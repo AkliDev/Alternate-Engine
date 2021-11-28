@@ -12,7 +12,7 @@ namespace Alternate
 		return state[key];
 	}
 
-	bool Input::IsMouseButtonPressed(MouseButtonCode button)
+	bool Input::IsMouseButtonPressed(MouseCode button)
 	{
 		return SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(button);
 	}

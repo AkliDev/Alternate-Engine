@@ -2,7 +2,7 @@
 
 #include "Alternate/Core/Base.h"
 #include "Alternate/Core/KeyCodes.h"
-#include "Alternate/Core/MouseButtonCodes.h"
+#include "Alternate/Core/MouseCodes.h"
 
 namespace Alternate
 {
@@ -11,7 +11,7 @@ namespace Alternate
 	public:
 		static bool IsKeyPressed(KeyCode key);
 
-		static bool IsMouseButtonPressed(MouseButtonCode button);
+		static bool IsMouseButtonPressed(MouseCode button);
 		static std::pair<float, float> GetMousePosition();
 		static float  GetMouseX();
 		static float GetMouseY();

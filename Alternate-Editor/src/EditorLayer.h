@@ -3,6 +3,8 @@
 #include "Alternate.h"
 #include "Panels/SceneHierarchyPanel.h"
 
+#include "Alternate/Renderer/EditorCamera.h"
+
 namespace Alternate
 {
 	class EditorLayer : public Layer
@@ -31,6 +33,8 @@ namespace Alternate
 		Ref<FrameBuffer> m_Framebuffer;
 
 		Ref<Scene> m_ActiveScene;
+
+		EditorCamera m_EditorCamera;
 
 		glm::vec2 m_ViewportSize = {0.0f, 0.0f};
 

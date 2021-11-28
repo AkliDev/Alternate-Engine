@@ -2,6 +2,7 @@
 #include "Renderer2D.h"
 
 #include "Alternate/Renderer/Camera.h"
+#include "Alternate/Renderer/EditorCamera.h"
 
 #include "Alternate/Renderer/Texture.h"
 #include "Alternate/Renderer/SubTexture2D.h"
@@ -15,6 +16,7 @@ namespace Alternate
 		static void ShutDown();
 
 		static void BeginScene(const Camera& camera, const glm::mat4& transform);
+		static void BeginScene(const EditorCamera& camera);
 		static void BeginScene(const OrthographicCamera& camera);
 		static void EndScene();
 		static void Flush();
