@@ -1,23 +1,24 @@
 #pragma once
 #include <memory>
 
-#ifdef ALT_PLATFORM_WINDOWS
-#else
-	#error Alternate only supports Windows!
-#endif
+#include "Alternate/Core/PlatformDetection.h"
 
 #ifdef ALT_DEBUG
+	#if defined(ALT_PLATFORM_WINDOWS)
+		#define ALT_DEBUGBREAK() __debugbreak()
+	#elif defined(ALT_PLATFORM_LINUX)
+		#include <signal.h>
+		#define ALT_DEBUGBREAK() raise(SIGTRAP)
+	#else
+		#error "Platform doesn't support debugbreak yet!"
+	#endif
 	#define ALT_ENABLE_ASSERTS
+#else
+	#define ALT_DEBUGBREAK()
 #endif
 
-//TODO: Make this macro able to take no arguments
-#ifdef ALT_ENABLE_ASSERTS
-	#define ALT_ASSERT(x, ...) { if (!(x)) { ALT_ERROR("Assertion failed: {0}", __VA_ARGS__); __debugbreak(); } }
-	#define ALT_CORE_ASSERT(x, ...) { if (!(x)) { ALT_CORE_ERROR("Assertion failed: {0}", __VA_ARGS__); __debugbreak(); } }
-#else
-	#define ALT_ASSERT(x, ...)
-	#define ALT_CORE_ASSERT(x, ...)
-#endif
+#define ALT_EXPAND_MACRO(x) x
+#define ALT_STRINGIFY_MACRO(x) #x
 
 #define BIT(x) (1 << x)
 
@@ -41,3 +42,6 @@ namespace Alternate
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
 }
+
+#include "Alternate/Core/Log.h"
+#include "Alternate/Core/Assert.h"

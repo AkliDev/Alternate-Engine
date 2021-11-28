@@ -1,4 +1,3 @@
-
 #include "EditorLayer.h"
 
 #include <imgui.h>
@@ -37,7 +36,7 @@ namespace Alternate
 
 		m_ActiveScene = CreateRef<Scene>();
 
-		m_EditorCamera = EditorCamera(30.0f, 1.77777777778, 0.1f, 1000.0f);
+		m_EditorCamera = EditorCamera(30.0f, 1.77777777778f, 0.1f, 1000.0f);
 
 #if 1
 		class CameraController : public ScriptableEntity
@@ -249,8 +248,8 @@ namespace Alternate
 
 		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
-		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
-		ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+		uint64_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+		ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
 		//Gizmos
 		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();

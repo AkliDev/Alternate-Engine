@@ -40,7 +40,7 @@ namespace Alternate
         ALT_CORE_INFO("  Renderer:  {0}", glGetString(GL_RENDERER));
         ALT_CORE_INFO("  Version:   {0}", glGetString(GL_VERSION));
 
-        ALT_CORE_ASSERT(GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 5), "Alternate requires at least OpenGL version 4.5!");
+        ALT_CORE_ASSERT(GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 6), "Alternate requires at least OpenGL version 4.6!");
     }
 
     void OpenGLContext::SwapBuffer()

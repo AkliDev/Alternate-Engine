@@ -1,6 +1,5 @@
 #pragma once
 #include "Alternate/Core/Base.h"
-#include "Alternate/Core/Log.h"
 #include "Alternate/Scene/Scene.h"
 #include "Alternate/Scene/Entity.h"
 namespace Alternate

@@ -1,6 +1,7 @@
 #pragma once
-#include "altpch.h"
+#include <functional>
 
+#include "Alternate/Debug/Instrumentor.h"
 #include "Alternate/Core/Base.h"
 
 namespace Alternate

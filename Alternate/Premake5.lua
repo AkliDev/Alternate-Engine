@@ -63,8 +63,6 @@ project "Alternate"
 
 		defines
 		{
-			"ALT_PLATFORM_WINDOWS",
-			"ALT_BUILD_DLL"
 		}
 
 		postbuildcommands
