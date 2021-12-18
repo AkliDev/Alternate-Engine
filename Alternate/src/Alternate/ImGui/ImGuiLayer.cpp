@@ -57,7 +57,7 @@ namespace Alternate
 
 		Application& app = Application::Get();
 		SDL_Window* window = static_cast<SDL_Window*>(app.GetWindow().GetNativeWindow());
-		void* gl_context = app.GetWindow().GetGLContext();
+		void* gl_context = app.GetWindow().GetRenderContext();
 		
 		// Setup Platform/Renderer backends
 		ImGui_ImplSDL2_InitForOpenGL(window, gl_context);

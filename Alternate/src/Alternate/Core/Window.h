@@ -40,7 +40,7 @@ namespace Alternate
 		virtual bool IsVSync() const = 0;
 
 		virtual void* GetNativeWindow() const = 0;
-		virtual void* GetGLContext() const = 0;
+		virtual void* GetRenderContext() const = 0;
 
 		static Scope<Window> Create(const WindowProps& props = WindowProps());
 	};

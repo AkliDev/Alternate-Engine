@@ -25,7 +25,7 @@ namespace Alternate {
 		bool IsVSync() const override;
 
 		virtual void* GetNativeWindow() const { return m_Window; }
-		virtual void* GetGLContext() const { return m_Context->GetRenderContext(); }
+		virtual void* GetRenderContext() const { return m_Context->GetRenderContext(); }
 	private:
 		virtual void Init(const WindowProps& props);
 		virtual void Shutdown();

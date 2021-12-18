@@ -8,8 +8,7 @@
 #include "Alternate/Events/MouseEvent.h"
 
 #include "Alternate/Renderer/Renderer.h"
-
-#include "Platfrom/OpenGL/OpenGLContext.h"
+#include "Alternate/Renderer/GraphicsContext.h"
 
 namespace Alternate {
 
@@ -62,7 +61,7 @@ namespace Alternate {
 			++s_SDLWindowCount;
 		}
 
-		m_Context = CreateScope<OpenGLContext>(m_Window);
+		m_Context = GraphicsContext::Create(m_Window);
 		m_Context->Init();
 
 		SDL_SetWindowData(m_Window, "data", &m_Data);

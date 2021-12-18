@@ -11,5 +11,7 @@ namespace Alternate
         virtual void SwapBuffer() = 0;
         virtual void* GetRenderContext() = 0;
         virtual void DeleteRenderContext() = 0;
+
+		static Scope<GraphicsContext> Create(void* window);
     };
 }
