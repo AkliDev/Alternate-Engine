@@ -3,7 +3,7 @@
 
 #include "Renderer.h"
 
-#include "Platfrom/OpenGL/OpenGLBuffer.h"
+#include "Platform/OpenGL/OpenGLBuffer.h"
 
 namespace Alternate
 {

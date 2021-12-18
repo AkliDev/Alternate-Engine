@@ -2,7 +2,7 @@
 #include "Texture.h"
 
 #include "Renderer.h"
-#include "Platfrom/OpenGL/OpenGLTexture.h"
+#include "Platform/OpenGL/OpenGLTexture.h"
 
 
 namespace Alternate

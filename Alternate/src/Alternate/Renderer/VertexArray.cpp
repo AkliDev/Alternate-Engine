@@ -3,7 +3,7 @@
 
 #include "Renderer.h"
 
-#include "Platfrom/OpenGL/OpenGLVertexArray.h"
+#include "Platform/OpenGL/OpenGLVertexArray.h"
 
 namespace Alternate
 {

@@ -1,7 +1,7 @@
 #include "altpch.h"
 #include "RenderCommand.h"
 
-#include "Platfrom/OpenGL/OpenGLRendererAPI.h"
+#include "Platform/OpenGL/OpenGLRendererAPI.h"
 
 namespace Alternate
 {

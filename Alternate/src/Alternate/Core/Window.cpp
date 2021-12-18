@@ -2,7 +2,7 @@
 #include "Window.h"
 
 #ifdef ALT_PLATFORM_WINDOWS
-#include "Platfrom/Windows/WindowsWindow.h"
+#include "Platform/Windows/WindowsWindow.h"
 #endif
 
 namespace Alternate

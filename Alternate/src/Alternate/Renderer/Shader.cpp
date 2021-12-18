@@ -2,7 +2,7 @@
 #include "Shader.h"
 
 #include "Renderer.h"
-#include "Platfrom/OpenGL/OpenGLShader.h"
+#include "Platform/OpenGL/OpenGLShader.h"
 namespace Alternate
 {
 	Ref<Shader> Shader::Create(const std::string& filePath)

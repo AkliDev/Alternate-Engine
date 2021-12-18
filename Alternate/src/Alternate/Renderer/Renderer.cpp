@@ -3,7 +3,7 @@
 
 #include "Alternate/Renderer/Renderer2D.h"
 
-#include "Platfrom/OpenGL/OpenGLShader.h"
+#include "Platform/OpenGL/OpenGLShader.h"
 
 namespace Alternate
 {

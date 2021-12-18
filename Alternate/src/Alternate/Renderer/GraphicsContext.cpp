@@ -2,7 +2,7 @@
 #include "GraphicsContext.h"
 
 #include "Renderer.h"
-#include "Platfrom/OpenGL/OpenGLContext.h"
+#include "Platform/OpenGL/OpenGLContext.h"
 
 namespace Alternate {
 

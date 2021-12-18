@@ -3,7 +3,7 @@
 #include "FrameBuffer.h"
 #include "Renderer.h"
 
-#include "Platfrom/OpenGL/OpenGLFrameBuffer.h"
+#include "Platform/OpenGL/OpenGLFrameBuffer.h"
 
 namespace Alternate
 {

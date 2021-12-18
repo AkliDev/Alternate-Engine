@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Alternate/Core/Window.h"
-
 #include <SDL.h>
 
+#include "Alternate/Core/Window.h"
 #include "Alternate/Renderer/GraphicsContext.h"
 
 namespace Alternate {
