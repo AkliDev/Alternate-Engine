@@ -50,12 +50,6 @@ namespace Alternate {
 
 		{
 			ALT_PROFILE_SCOPE("SDLCreateWindow");
-#if defined(ALT_DEBUG)
-			if (Renderer::GetAPI() == RendererAPI::API::OpenGL)
-			{
-				SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
-			}
-#endif
 			m_Window = SDL_CreateWindow(props.Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, props.Width, props.Height, SDL_WINDOW_OPENGL);
 			SDL_SetWindowResizable(m_Window, SDL_TRUE);
 			++s_SDLWindowCount;

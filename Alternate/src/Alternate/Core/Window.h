@@ -1,7 +1,5 @@
 #pragma once
 
-#include "altpch.h"
-
 #include "Alternate/Core/Base.h"
 #include "Alternate/Events/Event.h"
 

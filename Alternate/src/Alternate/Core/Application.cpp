@@ -14,7 +14,7 @@ namespace Alternate
 	{
 		ALT_PROFILE_FUNCTION();
 
-		ALT_CORE_ASSERT(!s_instance, "Appliaction already exisits!");
+		ALT_CORE_ASSERT(!s_instance, "Application already exisits!");
 		s_instance = this;
 
 		m_Window = Window::Create(WindowProps(name));
@@ -111,7 +111,7 @@ namespace Alternate
 
 	bool Application::OnKeyPressedEvent(KeyPressedEvent& e)
 	{
-		if (e.GetKeyCode() == Alternate::Key::KEY_ESCAPE) { Close(); }
+		if (e.GetKeyCode() == Key::KEY_ESCAPE) { Close(); }
 		return false;
 	}
 

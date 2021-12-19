@@ -23,7 +23,7 @@ namespace Alternate
 	void EditorLayer::OnAttach()
 	{
 		ALT_PROFILE_FUNCTION();
-
+		
 		FramebufferSpecification fbSpec;
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;

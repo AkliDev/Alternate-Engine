@@ -26,8 +26,11 @@ namespace Alternate
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
         SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-        //enable debug context
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+        
+#if defined(ALT_DEBUG)
+		//enable debug context
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+#endif
 
         m_Context = SDL_GL_CreateContext(m_WindowHandle);
         SDL_GL_MakeCurrent(m_WindowHandle, m_Context);
