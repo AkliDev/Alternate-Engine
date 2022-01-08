@@ -25,13 +25,17 @@ namespace Alternate
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
 		if (GetCurrentDirectoryA(256, currentDir))
+		{
 			ofn.lpstrInitialDir = currentDir;
+		}
 		ofn.lpstrFilter = filter;
 		ofn.nFilterIndex = 1;
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
 		if (GetOpenFileNameA(&ofn) == TRUE)
+		{
 			return ofn.lpstrFile;
+		}
 
 		return std::string();
 	}
@@ -53,7 +57,9 @@ namespace Alternate
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
 		if (GetCurrentDirectoryA(256, currentDir))
+		{
 			ofn.lpstrInitialDir = currentDir;
+		}
 		ofn.lpstrFilter = filter;
 		ofn.nFilterIndex = 1;
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
@@ -62,7 +68,9 @@ namespace Alternate
 		ofn.lpstrDefExt = strchr(filter, '\0') + 1;
 
 		if (GetSaveFileNameA(&ofn) == TRUE)
+		{
 			return ofn.lpstrFile;
+		}
 
 		return std::string();
 	}

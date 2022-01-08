@@ -231,7 +231,8 @@ namespace Alternate
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
-		ImGui::Begin("Viewport"); auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
+		ImGui::Begin("Viewport"); 
+		auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
 		auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
 		auto viewportOffset = ImGui::GetWindowPos();
 		m_ViewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
@@ -254,9 +255,7 @@ namespace Alternate
 			ImGuizmo::SetOrthographic(false);
 			ImGuizmo::SetDrawlist();
 
-			float windowWidth = (float)ImGui::GetWindowWidth();
-			float windowHeight = (float)ImGui::GetWindowHeight();
-			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+			ImGuizmo::SetRect(m_ViewportBounds[0].x, m_ViewportBounds[0].y, m_ViewportBounds[1].x - m_ViewportBounds[0].x, m_ViewportBounds[1].y - m_ViewportBounds[0].y);
 
 			//Camera
 			
@@ -350,22 +349,34 @@ namespace Alternate
 			// Gizmos
 			case Key::KEY_Q:
 			{
-				m_GizmoType = -1;
+				if (!ImGuizmo::IsUsing())
+				{
+					m_GizmoType = -1;
+				}
 				break;
 			}
 			case Key::KEY_W:
 			{
-				m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+				if (!ImGuizmo::IsUsing())
+				{
+					m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+				}
 				break;
 			}
 			case Key::KEY_E:
 			{
-				m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+				if (!ImGuizmo::IsUsing())
+				{
+					m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+				}
 				break;
 			}
 			case Key::KEY_R:
 			{
-				m_GizmoType = ImGuizmo::OPERATION::SCALE;
+				if (!ImGuizmo::IsUsing())
+				{
+					m_GizmoType = ImGuizmo::OPERATION::SCALE;
+				}
 				break;
 			}
 		}
