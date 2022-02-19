@@ -201,7 +201,7 @@ namespace Alternate
 
 		if (width == 0 || height == 0 || width > s_MaxFramebufferSize || height == s_MaxFramebufferSize)
 		{
-			ALT_CORE_WARN("Attempted to resize framebuffer to {}1,{2}", width,height);
+			ALT_CORE_WARN("Attempted to resize framebuffer to {1},{2}", width,height);
 			return;
 		}
 		m_Specification.Width = width;
