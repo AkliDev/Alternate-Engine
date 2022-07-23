@@ -3,21 +3,24 @@
 
 #include "Sandbox2D.h"
 
-class Sandbox : public Alternate::Application
+namespace Alternate
 {
-public:
-	Sandbox()
-		: Application("Sandbox")
+	class AlternateEditor : public Application
 	{
-		PushLayer(new Sandbox2D());
-	}
+	public:
+		AlternateEditor(ApplicationCommandLineArgs args)
+			: Application("Sandbox2D", args)
+		{
+			PushLayer(new Sandbox2D());
+		}
 
-	~Sandbox()
+		~AlternateEditor()
+		{
+		}
+	};
+
+	Application* CreateApplication(ApplicationCommandLineArgs args)
 	{
+		return new AlternateEditor(args);
 	}
-};
-
-Alternate::Application* Alternate::CreateApplication()
-{
-	return new Sandbox();
 }

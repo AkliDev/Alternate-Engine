@@ -37,7 +37,15 @@ namespace Alternate
 
 		m_ActiveScene = CreateRef<Scene>();
 
-		m_EditorCamera = EditorCamera(30.0f, 1.77777777778f, 0.1f, 1000.0f);
+		auto commandLineArgs = Application::Get().GetCommandLineArgs();
+		if (commandLineArgs.Count > 1)
+		{
+			auto sceneFilePath = commandLineArgs[1];
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.Deserialize(sceneFilePath);
+		}
+
+		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 
 #if 1
 		class CameraController : public ScriptableEntity
@@ -106,6 +114,13 @@ namespace Alternate
 
 		//update scene
 		m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
+
+		Renderer2D::BeginScene(m_EditorCamera);
+
+		Renderer2D::DrawQuad({ 1.0f, 0.0f}, { 2.0f, 2.0f }, m_TransparantTexture);
+		Renderer2D::DrawQuad({ 2.0f, 0.0f,1.0f }, { 2.0f, 2.0f }, { 0.5f, 0.5f, 1.0f ,1.0f});
+
+		Renderer2D::EndScene();
 
 		auto [mx, my] = ImGui::GetMousePos();
 		mx -= m_ViewportBounds[0].x;
