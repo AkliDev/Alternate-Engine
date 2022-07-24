@@ -117,10 +117,17 @@ namespace Alternate
 
 		Renderer2D::BeginScene(m_EditorCamera);
 
-		Renderer2D::DrawQuad({ 1.0f, 0.0f}, { 2.0f, 2.0f }, m_TransparantTexture);
-		Renderer2D::DrawQuad({ 2.0f, 0.0f,1.0f }, { 2.0f, 2.0f }, { 0.5f, 0.5f, 1.0f ,1.0f});
+		Renderer2D::DrawQuad({ 2.0f, 0.0f,-1.0f }, { 2.0f, 2.0f }, m_CheckerBoardTexture);
 
 		Renderer2D::EndScene();
+
+		Renderer2D::BeginScene(m_EditorCamera);
+
+		Renderer2D::DrawQuad({ 1.0f, 0.0f}, { 2.0f, 2.0f }, m_TransparantTexture);
+
+		Renderer2D::EndScene();
+
+
 
 		auto [mx, my] = ImGui::GetMousePos();
 		mx -= m_ViewportBounds[0].x;
