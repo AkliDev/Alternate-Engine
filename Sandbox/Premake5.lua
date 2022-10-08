@@ -18,8 +18,10 @@ project "Sandbox"
 		"%{wks.location}/Alternate/vendor/spdlog/include",
 		"%{wks.location}/Alternate/src",
 		"%{wks.location}/Alternate/vendor",
+		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.entt}"
+		"%{IncludeDir.entt}",
+		"%{IncludeDir.ImGuizmo}"
 	}
 
 	links

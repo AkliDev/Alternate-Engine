@@ -127,8 +127,6 @@ namespace Alternate
 
 		Renderer2D::EndScene();
 
-
-
 		auto [mx, my] = ImGui::GetMousePos();
 		mx -= m_ViewportBounds[0].x;
 		my -= m_ViewportBounds[0].y;
