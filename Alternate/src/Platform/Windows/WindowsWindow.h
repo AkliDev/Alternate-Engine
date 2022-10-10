@@ -45,6 +45,4 @@ namespace Alternate {
 
 		void HandleEvents();
 	};
-
 }
-

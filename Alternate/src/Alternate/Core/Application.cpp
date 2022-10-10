@@ -53,7 +53,6 @@ namespace Alternate
 
 					for (Layer* layer : m_LayerStack) { layer->OnUpdate(timestep); }
 				}
-
 				m_ImGuiLayer->Begin();
 				{
 					ALT_PROFILE_SCOPE("LayerStack OnImGuiRender");
@@ -140,5 +139,4 @@ namespace Alternate
 	{
 		m_Running = false;
 	}
-
 }
