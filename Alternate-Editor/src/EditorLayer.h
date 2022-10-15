@@ -2,7 +2,7 @@
 
 #include "Alternate.h"
 #include "Panels/SceneHierarchyPanel.h"
-
+#include "Panels/ContentBrowserPanel.h"
 #include "Alternate/Renderer/EditorCamera.h"
 
 namespace Alternate
@@ -53,5 +53,6 @@ namespace Alternate
 
 		//Panels
 		SceneHierarchyPanel m_SceneHierarchyPanel;
+		ContentBrowserPanel m_ContentBrowserPanel;
 	};
 }

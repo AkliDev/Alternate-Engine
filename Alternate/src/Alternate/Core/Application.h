@@ -67,4 +67,3 @@ namespace Alternate
 	// To be defined in CLIENT
 	Application* CreateApplication(ApplicationCommandLineArgs args);
 }
-

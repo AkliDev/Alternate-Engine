@@ -234,8 +234,6 @@ namespace Alternate
 			ImGui::EndMenuBar();
 		}
 
-		m_SceneHierarchyPanel.OnImGuiRender();
-
 		ImGui::Begin("Stats");
 
 		std::string name = "None";
@@ -249,6 +247,9 @@ namespace Alternate
 		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 		ImGui::End();
+
+		m_SceneHierarchyPanel.OnImGuiRender();
+		m_ContentBrowserPanel.OnImGuiRender();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport"); 
