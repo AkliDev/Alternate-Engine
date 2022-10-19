@@ -20,3 +20,6 @@
 [submodule "Alternate/vendor/ImGuizmo"]
 	path = Alternate/vendor/ImGuizmo
 	url = https://github.com/AkliDev/ImGuizmo.git
+[submodule "Alternate/vendor/Box2D"]
+	path = Alternate/vendor/Box2D
+	url = https://github.com/AkliDev/box2d.git
