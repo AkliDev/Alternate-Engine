@@ -211,7 +211,6 @@ namespace Alternate
 
 	void ImGuiLayer::SetDarkThemeColors()
 	{
-		//ImGui::GetStyle().WindowBorderSize = 10.0f;
 		auto& colors = ImGui::GetStyle().Colors;
 		colors[ImGuiCol_WindowBg] = ImVec4{ 0.1f, 0.105f, 0.11f, 1.0f };
 
@@ -219,7 +218,7 @@ namespace Alternate
 		colors[ImGuiCol_Header] = ImVec4{ 0.2f, 0.205f, 0.21f, 1.0f };
 		colors[ImGuiCol_HeaderHovered] = ImVec4{ 0.3f, 0.305f, 0.31f, 1.0f };
 		colors[ImGuiCol_HeaderActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
-
+		
 		// Buttons
 		colors[ImGuiCol_Button] = ImVec4{ 0.2f, 0.205f, 0.21f, 1.0f };
 		colors[ImGuiCol_ButtonHovered] = ImVec4{ 0.3f, 0.305f, 0.31f, 1.0f };
@@ -241,19 +240,11 @@ namespace Alternate
 		colors[ImGuiCol_TitleBg] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 		colors[ImGuiCol_TitleBgActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 		colors[ImGuiCol_TitleBgCollapsed] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
-
-		// Separator
-		colors[ImGuiCol_Separator] = ImVec4{ 0.12f, 0.77f, 0.71f, 1.0f };
-		colors[ImGuiCol_SeparatorHovered] = ImVec4{ 0.22f, 0.87f, 0.81f, 1.0f };
-		colors[ImGuiCol_SeparatorActive] = ImVec4{ 0.07f, 0.72f, 0.64f, 1.0f };
-
-		
-		colors[ImGuiCol_CheckMark] = ImVec4{ 0.12f, 0.77f, 0.71f, 1.0f };
 	}
 
 	void ImGuiLayer::OnImGuiRender()
 	{
-		//static bool show = true;
+		//static bool show = false;
 		//ImGui::ShowDemoWindow(&show);
 	}
 }

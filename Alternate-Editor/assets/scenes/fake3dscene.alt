@@ -8,7 +8,7 @@ Entities:
       Rotation: [1.57079637, 0.785398185, 0]
       Scale: [1, 1, 1]
     SpriteRendererComponent:
-      Color: [0.876447856, 0, 0.834712803, 1]
+      Color: [0.891891897, 0.891882956, 0.891891479, 1]
   - Entity: 12837192831273
     TagComponent:
       Tag: Camera
@@ -35,7 +35,7 @@ Entities:
       Rotation: [0, 0.785398185, 0]
       Scale: [1, 1, 1]
     SpriteRendererComponent:
-      Color: [0.54842025, 0, 0.586872578, 1]
+      Color: [0.64830488, 0.643639743, 0.64864862, 1]
   - Entity: 12837192831273
     TagComponent:
       Tag: Left
@@ -44,4 +44,4 @@ Entities:
       Rotation: [0, -0.785398185, 0]
       Scale: [1, 1, 1]
     SpriteRendererComponent:
-      Color: [1, 0, 0.949807167, 1]
+      Color: [1, 0.999989986, 0.999999523, 1]

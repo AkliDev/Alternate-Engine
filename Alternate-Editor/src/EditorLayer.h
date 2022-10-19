@@ -25,9 +25,16 @@ namespace Alternate
 		
 		void NewScene();
 		void OpenScene();
+		void OpenScene(const std::filesystem::path& path);
 		void SaveSceneAs();
+
+		void OnScenePlay();
+		void OnSceneStop();
+
+		//UI Panels
+		void UI_Toolbar();
 	private:
-		bool m_ViewportFocussed = false, m_ViewportHovered = false;
+		bool m_ViewportFocused = false, m_ViewportHovered = false;
 		OrthographicCameraController m_CameraController;
 
 		Ref<VertexArray> m_SquareVA;
@@ -46,13 +53,20 @@ namespace Alternate
 		glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 		glm::vec4 m_Square2Color = { 0.8f, 0.3f, 0.2f, 1.0f };
 
-		Ref<Texture2D> m_CheckerBoardTexture;
-		Ref<Texture2D> m_TransparantTexture;
+		enum class SceneState
+		{
+			Edit = 0,
+			Play = 1
+		};
+
+		SceneState m_SceneState = SceneState::Edit;
+
+		Ref<Texture2D> m_IconPlay, m_IconStop;
 	
 		int m_GizmoType = -1;
 
 		//Panels
 		SceneHierarchyPanel m_SceneHierarchyPanel;
-		ContentBrowserPanel m_ContentBrowserPanel;
+		ContentBrowserPanel m_ContentBrowserPanel;	
 	};
 }

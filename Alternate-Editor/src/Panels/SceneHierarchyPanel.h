@@ -10,7 +10,7 @@ namespace Alternate
 		SceneHierarchyPanel() = default;
 		SceneHierarchyPanel(const Ref<Scene>& scene);
 
-		void SetContex(const Ref<Scene>& context);
+		void SetContext(const Ref<Scene>& context);
 
 		void OnImGuiRender();
 	

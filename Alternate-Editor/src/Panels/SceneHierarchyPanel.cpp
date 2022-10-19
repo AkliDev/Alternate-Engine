@@ -17,12 +17,14 @@
 
 namespace Alternate
 {
+	extern const std::filesystem::path g_AssetPath;
+
 	SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene>& scene)
 	{
-		SetContex(scene);
+		SetContext(scene);
 	}
 
-	void SceneHierarchyPanel::SetContex(const Ref<Scene>& context)
+	void SceneHierarchyPanel::SetContext(const Ref<Scene>& context)
 	{
 		m_Context = context;
 		m_SelectionContext = {};
@@ -331,8 +333,24 @@ namespace Alternate
 			});
 
 		DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](auto& component)
+		{
+			ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+			ImGui::Button("Texture", ImVec2{ 100.0f,0.0f });
+			if (ImGui::BeginDragDropTarget())
 			{
-				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
-			});
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+				{
+					const wchar_t* path = (const wchar_t*)payload->Data;
+					std::filesystem::path texturePath = std::filesystem::path(g_AssetPath) / path;
+					Ref<Texture2D> texture = Texture2D::Create(texturePath.string());
+					if (texture->IsLoaded())
+						component.Texture = texture;
+					else
+						ALT_WARN("Could not load texture {0}", texturePath.filename().string());
+				}
+				ImGui::EndDragDropTarget();
+			}
+			ImGui::DragFloat("TilingFactor", &component.TilingFactor, 0.1f, 0.0f, 100.0f);
+		});
 	}
 }
