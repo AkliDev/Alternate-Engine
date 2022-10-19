@@ -117,12 +117,12 @@ namespace Alternate
 					m_CameraController.OnUpdate(ts);
 				}
 				m_EditorCamera.OnUpdate(ts);
-				m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
+				m_ActiveScene->OnEditorUpdate(ts, m_EditorCamera);
 				break;
 			}
 			case SceneState::Play:
 			{
-				m_ActiveScene->OnUpdateRuntime(ts);
+				m_ActiveScene->OnRuntimeUpdate(ts);
 				break;
 			}
 		}
@@ -472,11 +472,13 @@ namespace Alternate
 	void EditorLayer::OnScenePlay()
 	{
 		m_SceneState = SceneState::Play;
+		m_ActiveScene->OnRuntimeStart();
 	}
 
 	void EditorLayer::OnSceneStop()
-	{
+	{		
 		m_SceneState = SceneState::Edit;
+		m_ActiveScene->OnRuntimeStop();
 	}
 
 	void EditorLayer::UI_Toolbar()

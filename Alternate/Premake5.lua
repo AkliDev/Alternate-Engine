@@ -32,6 +32,7 @@ project "Alternate"
 		"src",
 		"vendor/spdlog/include",
 		"vendor/SDL2/include",	
+		"%{IncludeDir.Box2D}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
@@ -49,6 +50,7 @@ project "Alternate"
 
 	links
 	{
+		"Box2D",
 		"SDL2.lib",
 		"Glad",
 		"ImGui",

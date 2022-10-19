@@ -26,6 +26,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 group "Dependencies"
 	include "vendor/premake"
+	include "Alternate/vendor/Box2D"
 	include "Alternate/vendor/Glad"
 	include	"Alternate/vendor/imgui"
 	include "Alternate/vendor/yaml-cpp"

@@ -5,8 +5,28 @@
 #include "Alternate/Renderer/Renderer2D.h"
 
 #include "Entity.h"
+
+//Box2D
+#include "box2d/b2_world.h"
+#include "box2d/b2_body.h"
+#include "box2d/b2_fixture.h"
+#include "box2d/b2_polygon_shape.h"
+
 namespace Alternate
 {
+	static b2BodyType Rigidbody2DtoBox2D(Rigidbody2DComponent::BodyType bodyType)
+	{
+		switch (bodyType)
+		{
+			case Rigidbody2DComponent::BodyType::Static: return b2BodyType::b2_staticBody;
+			case Rigidbody2DComponent::BodyType::Kinematic: return b2BodyType::b2_kinematicBody;
+			case Rigidbody2DComponent::BodyType::Dynamic: return b2BodyType::b2_dynamicBody;
+		}
+
+		ALT_CORE_ASSERT(false, "Unknown Body type");
+		return b2_staticBody;
+	}
+
 	Scene::Scene()
 	{
 		
@@ -31,7 +51,7 @@ namespace Alternate
 		m_Registry.destroy(entity);
 	}
 
-	void Scene::OnUpdateEditor(Timestep ts, EditorCamera& camera)
+	void Scene::OnEditorUpdate(Timestep ts, EditorCamera& camera)
 	{
 		Renderer2D::BeginScene(camera);
 
@@ -46,7 +66,52 @@ namespace Alternate
 		Renderer2D::EndScene();
 	}
 
-	void Scene::OnUpdateRuntime(Timestep ts)
+	void Scene::OnRuntimeStart()
+	{
+		m_PhysicsWorld2D = new b2World({ 0.0f, -8.9f });
+
+		auto view = m_Registry.view<Rigidbody2DComponent>();
+		for (auto e : view)
+		{
+			Entity entity = { e, this };
+			auto& transform = entity.GetComponent<TransformComponent>();
+			auto& rb2d = entity.GetComponent<Rigidbody2DComponent>();
+
+			b2BodyDef bodyDef;
+			bodyDef.type = Rigidbody2DtoBox2D(rb2d.Type);
+			bodyDef.position.Set(transform.Translation.x, transform.Translation.y);
+			bodyDef.angle = transform.Rotation.z;
+
+			b2Body* body = m_PhysicsWorld2D->CreateBody(&bodyDef);
+			body->SetFixedRotation(rb2d.FixedRotation);
+			rb2d.RuntimeBody = body;
+
+			if (entity.HasComponent<BoxCollider2DComponent>())
+			{
+				auto& bc2d = entity.GetComponent<BoxCollider2DComponent>();
+
+				b2PolygonShape boxShape;
+				boxShape.SetAsBox(bc2d.Size.x * transform.Scale.x, bc2d.Size.y * transform.Scale.y);
+
+				b2FixtureDef fixtureDef;
+				fixtureDef.shape = &boxShape;
+				fixtureDef.density = bc2d.Density;
+				fixtureDef.friction = bc2d.Friction;
+				fixtureDef.restitution = bc2d.Restitution;
+				fixtureDef.restitutionThreshold = bc2d.RestitutionThreshold;
+				body->CreateFixture(&fixtureDef);
+			}
+
+		}
+	}
+
+	void Scene::OnRuntimeStop()
+	{
+		delete m_PhysicsWorld2D;
+		m_PhysicsWorld2D = nullptr;
+	}
+
+	void Scene::OnRuntimeUpdate(Timestep ts)
 	{
 		//script update
 		{
@@ -63,6 +128,29 @@ namespace Alternate
 				nsc.Instance->OnUpdate(ts);
 			});
 		}
+
+		// Physics
+		{
+			const int32_t velocityIterations = 6;
+			const int32_t positionIterations = 2;
+			m_PhysicsWorld2D->Step(ts, velocityIterations, positionIterations);
+
+			// Retrieve transform from Box2D
+			auto view = m_Registry.view<Rigidbody2DComponent>();
+			for (auto e : view)
+			{
+				Entity entity = { e, this };
+				auto& transform = entity.GetComponent<TransformComponent>();
+				auto& rb2d = entity.GetComponent<Rigidbody2DComponent>();
+
+				b2Body* body = (b2Body*)rb2d.RuntimeBody;
+				const auto& position = body->GetPosition();
+				transform.Translation.x = position.x;
+				transform.Translation.y = position.y;
+				transform.Rotation.z = body->GetAngle();
+			}
+		}
+
 
 		//Render 2D
 		Camera* mainCamera = nullptr;
@@ -166,5 +254,15 @@ namespace Alternate
 	void Scene::OnComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent& component)
 	{
 
+	}
+
+	template<>
+	void Scene::OnComponentAdded<Rigidbody2DComponent>(Entity entity, Rigidbody2DComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<BoxCollider2DComponent>(Entity entity, BoxCollider2DComponent& component)
+	{
 	}
 }
