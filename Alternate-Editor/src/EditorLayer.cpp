@@ -37,19 +37,20 @@ namespace Alternate
 
 		m_CameraController.SetZoomLevel(1.0f);
 
-		m_ActiveScene = CreateRef<Scene>();
+		m_EditorScene = CreateRef<Scene>();
+		m_ActiveScene = m_EditorScene;
 
 		auto commandLineArgs = Application::Get().GetCommandLineArgs();
 		if (commandLineArgs.Count > 1)
 		{
 			auto sceneFilePath = commandLineArgs[1];
-			SceneSerializer serializer(m_ActiveScene);
+			SceneSerializer serializer(m_EditorScene);
 			serializer.Deserialize(sceneFilePath);
 		}
 
 		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 
-#if 1
+#if 0
 		class CameraController : public ScriptableEntity
 		{
 		public:
@@ -75,9 +76,6 @@ namespace Alternate
 			}
 		};
 #endif
-		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
-
-		SceneSerializer serializer(m_ActiveScene);
 	}
 
 	void EditorLayer::OnDetach()
@@ -373,9 +371,25 @@ namespace Alternate
 			}
 			case Key::KEY_S:
 			{
-				if (control && shift)
+				if (control)
 				{
-					SaveSceneAs();
+					if (shift)
+					{
+						SaveSceneAs();
+					}
+					else
+					{
+						SaveScene();
+					}
+				}
+				break;
+			}
+			//Scene Commands
+			case Key::KEY_D:
+			{
+				if (control)
+				{
+					OnDuplicateEntity();
 				}
 				break;
 			}
@@ -420,7 +434,10 @@ namespace Alternate
 	{
 		if (e.GetMouseButton() == Mouse::BUTTON_LEFT && ImGuizmo::IsOver() == false && Input::IsKeyPressed(Key::KEY_LALT) == false)
 		{
-			if(m_ViewportHovered) m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
+			if (m_ViewportHovered)
+			{
+				m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
+			}
 		}
 		return false;
 	}
@@ -430,6 +447,7 @@ namespace Alternate
 		m_ActiveScene = CreateRef<Scene>();
 		m_ActiveScene->OnViewportResize((int32_t)m_ViewportSize.x, (int32_t)m_ViewportSize.y);
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+		m_EditorScenePath = std::filesystem::path();
 	}
 
 	void EditorLayer::OpenScene()
@@ -443,6 +461,11 @@ namespace Alternate
 
 	void EditorLayer::OpenScene(const std::filesystem::path& path)
 	{
+		if (m_SceneState != SceneState::Edit)
+		{
+			OnSceneStop();
+		}
+
 		if (path.extension().string() != ".alt")
 		{
 			ALT_WARN("Could not load {0} - not a scene file", path.filename().string());
@@ -453,9 +476,24 @@ namespace Alternate
 		SceneSerializer serializer(newScene);
 		if (serializer.Deserialize(path.string()))
 		{
-			m_ActiveScene = newScene;
-			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-			m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+			m_EditorScene = newScene;
+			m_EditorScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_SceneHierarchyPanel.SetContext(m_EditorScene);
+			
+			m_ActiveScene = m_EditorScene;
+			m_EditorScenePath = path.string();
+		}
+	}
+
+	void EditorLayer::SaveScene()
+	{
+		if (m_EditorScenePath.empty() == false)
+		{
+			SerialzeScene(m_ActiveScene, m_EditorScenePath.string());			
+		}
+		else
+		{
+			SaveSceneAs();
 		}
 	}
 
@@ -464,21 +502,43 @@ namespace Alternate
 		std::string filepath = FileDialogs::SaveFile("Alternate Scene (*.alt)\0*.alt\0");
 		if (!filepath.empty())
 		{
-			SceneSerializer serializer(m_ActiveScene);
-			serializer.Serialize(filepath);
+			SerialzeScene(m_ActiveScene, filepath);
+			m_EditorScenePath = filepath;
 		}
+	}
+
+	void EditorLayer::SerialzeScene(Ref<Scene> scene, const std::filesystem::path& path)
+	{
+		SceneSerializer serializer(scene);
+		serializer.Serialize(path.string());
 	}
 
 	void EditorLayer::OnScenePlay()
 	{
 		m_SceneState = SceneState::Play;
+		m_ActiveScene = Scene::Copy(m_EditorScene);
 		m_ActiveScene->OnRuntimeStart();
+
+		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 	}
 
 	void EditorLayer::OnSceneStop()
 	{		
 		m_SceneState = SceneState::Edit;
 		m_ActiveScene->OnRuntimeStop();
+		m_ActiveScene = m_EditorScene;
+
+		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+	}
+
+	void EditorLayer::OnDuplicateEntity()
+	{
+		if (m_SceneState != SceneState::Edit) { return; }
+
+		if (Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity())
+		{
+			m_EditorScene->DuplicateEntity(selectedEntity);
+		}
 	}
 
 	void EditorLayer::UI_Toolbar()

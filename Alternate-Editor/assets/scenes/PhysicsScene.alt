@@ -1,6 +1,25 @@
 Scene: Untitled
 Entities:
-  - Entity: 12837192831273
+  - Entity: 11590786514403170466
+    TagComponent:
+      Tag: Box
+    TransformComponent:
+      Translation: [-3.08012295, 2.25950313, 0]
+      Rotation: [0, -1.51339918e-08, 0]
+      Scale: [1, 0.999988973, 0.999997258]
+    SpriteRendererComponent:
+      Color: [1, 1, 1, 1]
+    Rigidbody2DComponent:
+      BodyType: Dynamic
+      FixedRotation: false
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
+      Density: 1
+      Friction: 1
+      Restitution: 1
+      RestitutionThreshold: 0
+  - Entity: 11228555306531456709
     TagComponent:
       Tag: Floor
     TransformComponent:
@@ -8,7 +27,7 @@ Entities:
       Rotation: [0, 0, 0]
       Scale: [354.290771, 0.999999881, 1]
     SpriteRendererComponent:
-      Color: [1, 1, 1, 1]
+      Color: [0, 0.538662255, 0.783783793, 1]
     Rigidbody2DComponent:
       BodyType: Static
       FixedRotation: false
@@ -19,11 +38,11 @@ Entities:
       Friction: 0.5
       Restitution: 0
       RestitutionThreshold: 0.5
-  - Entity: 12837192831273
+  - Entity: 16328664054600074898
     TagComponent:
       Tag: Camera
     TransformComponent:
-      Translation: [0, 0, 34.3699989]
+      Translation: [0, 0, 10]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     CameraComponent:
@@ -37,15 +56,36 @@ Entities:
         OrthographicFar: 1
       Primary: true
       FixedAspectRatio: false
-  - Entity: 12837192831273
+  - Entity: 8305123652344691888
     TagComponent:
       Tag: Box
     TransformComponent:
-      Translation: [-4.50354242, 2.28368735, 0]
+      Translation: [-0.672682047, 2.2185998, 0]
       Rotation: [0, 0, 3.12460399]
-      Scale: [6.67825985, 0.999966502, 0.999996901]
+      Scale: [1, 0.999971628, 0.999996901]
     SpriteRendererComponent:
       Color: [1, 1, 1, 1]
+    Rigidbody2DComponent:
+      BodyType: Dynamic
+      FixedRotation: false
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
+      Density: 1
+      Friction: 1
+      Restitution: 1
+      RestitutionThreshold: 0
+  - Entity: 4433893028052350091
+    TagComponent:
+      Tag: Circle
+    TransformComponent:
+      Translation: [-1.74034786, 3.40181041, 0]
+      Rotation: [0, 0, 3.12460399]
+      Scale: [1, 0.999971628, 0.999996901]
+    CircleRendererComponent:
+      Color: [0.99227798, 0, 0, 1]
+      Thickness: 1
+      Fade: 0.00499999989
     Rigidbody2DComponent:
       BodyType: Dynamic
       FixedRotation: false

@@ -33,26 +33,29 @@ namespace Alternate
 	void SceneHierarchyPanel::OnImGuiRender()
 	{
 		ImGui::Begin("Scene Hierarchy");
-		m_Context->m_Registry.each([&](auto entityID)
-			{
-				Entity entity{ entityID ,m_Context.get() };
-				DrawEntityNode(entity);
-
-			});
-
-		if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
+		if (m_Context)
 		{
-			m_SelectionContext = {};
-		}
+			m_Context->m_Registry.each([&](auto entityID)
+				{
+					Entity entity{ entityID ,m_Context.get() };
+					DrawEntityNode(entity);
 
-		//Right-click on black space
-		if (ImGui::BeginPopupContextWindow(0, 1, false))
-		{
-			if (ImGui::MenuItem("Create Empty Entity"))
+				});
+
+			if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
 			{
-				m_Context->CreateEntity("Empty Entity");
+				m_SelectionContext = {};
 			}
-			ImGui::EndPopup();
+
+			//Right-click on black space
+			if (ImGui::BeginPopupContextWindow(0, 1, false))
+			{
+				if (ImGui::MenuItem("Create Empty Entity"))
+				{
+					m_Context->CreateEntity("Empty Entity");
+				}
+				ImGui::EndPopup();
+			}
 		}
 
 		ImGui::End();
@@ -62,6 +65,7 @@ namespace Alternate
 		{
 			DrawComponents(m_SelectionContext);
 		}
+		
 		ImGui::End();
 	}
 
@@ -246,7 +250,7 @@ namespace Alternate
 		{
 			DisplayAddComponentEntry<CameraComponent>("Camera");
 			DisplayAddComponentEntry<SpriteRendererComponent>("Sprite Renderer");
-			//DisplayAddComponentEntry<CircleRendererComponent>("Circle Renderer");
+			DisplayAddComponentEntry<CircleRendererComponent>("Circle Renderer");
 			DisplayAddComponentEntry<Rigidbody2DComponent>("Rigidbody 2D");
 			DisplayAddComponentEntry<BoxCollider2DComponent>("Box Collider 2D");
 			//DisplayAddComponentEntry<CircleCollider2DComponent>("Circle Collider 2D");
@@ -340,6 +344,13 @@ namespace Alternate
 				ImGui::EndDragDropTarget();
 			}
 			ImGui::DragFloat("TilingFactor", &component.TilingFactor, 0.1f, 0.0f, 100.0f);
+		});
+
+		DrawComponent<CircleRendererComponent>("Circle Renderer", entity, [](auto& component)
+		{
+			ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+			ImGui::DragFloat("Thickness", &component.Thickness, 0.025f, 0.0f, 1.0f);
+			ImGui::DragFloat("Fade", &component.Fade, 0.00025f, 0.0f, 1.0f);
 		});
 
 		DrawComponent<Rigidbody2DComponent>("Rigidbody 2D", entity, [](auto& component)
