@@ -151,12 +151,12 @@ namespace Alternate {
 
 				if (event.key.repeat != 0)
 				{
-					KeyPressedEvent ALT_event(event.key.keysym.scancode, event.key.repeat);
+					KeyPressedEvent ALT_event(event.key.keysym.scancode, true);
 					data.EventCallback(ALT_event);
 				}
 				else
 				{
-					KeyPressedEvent ALT_event(event.key.keysym.scancode, 0);
+					KeyPressedEvent ALT_event(event.key.keysym.scancode, false);
 					data.EventCallback(ALT_event);
 				}
 

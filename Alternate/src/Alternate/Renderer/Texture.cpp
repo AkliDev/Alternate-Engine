@@ -19,6 +19,7 @@ namespace Alternate
 		return nullptr;
 	}
 
+	//TODO add something like a texture library and return an already existing texture if the requested texture is the same.
 	Ref<Texture2D> Texture2D::Create(const std::string& path)
 	{
 		switch (Renderer::GetAPI())

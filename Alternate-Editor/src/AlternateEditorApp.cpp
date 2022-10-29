@@ -8,8 +8,8 @@ namespace Alternate
 	class AlternateEditor : public Application
 	{
 	public:
-		AlternateEditor(ApplicationCommandLineArgs args)
-			: Application("Alternate Editor", args)
+		AlternateEditor(const ApplicationSpecification& spec)
+			: Application(spec)
 		{
 			PushLayer(new EditorLayer());
 		}
@@ -21,6 +21,10 @@ namespace Alternate
 
 	Application* CreateApplication(ApplicationCommandLineArgs args)
 	{
-		return new AlternateEditor(args);
+		ApplicationSpecification spec;
+		spec.Name = "Alternate Editor";
+		spec.CommandLineArgs = args;
+
+		return new AlternateEditor(spec);
 	}
 }

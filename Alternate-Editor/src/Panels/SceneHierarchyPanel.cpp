@@ -36,11 +36,11 @@ namespace Alternate
 		if (m_Context)
 		{
 			m_Context->m_Registry.each([&](auto entityID)
-				{
-					Entity entity{ entityID ,m_Context.get() };
-					DrawEntityNode(entity);
+			{
+				Entity entity{ entityID ,m_Context.get() };
+				DrawEntityNode(entity);
 
-				});
+			});
 
 			if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
 			{
@@ -253,7 +253,7 @@ namespace Alternate
 			DisplayAddComponentEntry<CircleRendererComponent>("Circle Renderer");
 			DisplayAddComponentEntry<Rigidbody2DComponent>("Rigidbody 2D");
 			DisplayAddComponentEntry<BoxCollider2DComponent>("Box Collider 2D");
-			//DisplayAddComponentEntry<CircleCollider2DComponent>("Circle Collider 2D");
+			DisplayAddComponentEntry<CircleCollider2DComponent>("Circle Collider 2D");
 
 			ImGui::EndPopup();
 		}
@@ -387,6 +387,16 @@ namespace Alternate
 			ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
 			ImGui::DragFloat("Restitution Threshold", &component.RestitutionThreshold, 0.01f, 0.0f);
 		});
+
+		DrawComponent<CircleCollider2DComponent>("Circle Collider 2D", entity, [](auto& component)
+			{
+				ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset));
+				ImGui::DragFloat("Radius", &component.Radius);
+				ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Restitution Threshold", &component.RestitutionThreshold, 0.01f, 0.0f);
+			});
 	}
 
 	template<typename T>

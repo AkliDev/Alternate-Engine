@@ -23,22 +23,33 @@ namespace Alternate
 		Entity CreateEntityWithUUID(UUID uuid, const std::string& name = std::string());
 		void DestroyEntity(Entity entity);
 
-		void OnEditorUpdate(Timestep ts, EditorCamera& camera);
-
 		void OnRuntimeStart();
 		void OnRuntimeStop();	
-		void OnRuntimeUpdate(Timestep ts);
+		void OnSimulationStart();
+		void OnSimulationStop();
 
+		void OnEditorUpdate(Timestep ts, EditorCamera& camera);
+		void OnSimulationUpdate(Timestep ts, EditorCamera& camera);
+		void OnRuntimeUpdate(Timestep ts);
+			
 		void DuplicateEntity(Entity entity);
 
 		void OnViewportResize(uint32_t width, uint32_t height);
 
 		Entity GetPrimaryCameraEntity();
-	private:
-		template<typename T>
-		void OnComponentAdded(Entity entity, T& component);
 
+		template<typename... Components>
+		auto GetAllEntitiesWith()
+		{
+			return m_Registry.view<Components...>();
+		}
+	private:
+		void OnPhysics2DStart();
+		void OnPhysics2DStop();
 		void RenderScene(EditorCamera& camera);
+
+		template<typename T>
+		void OnComponentAdded(Entity entity, T& component);	
 	private:
 		entt::registry m_Registry;
 		uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;

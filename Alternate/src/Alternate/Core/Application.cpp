@@ -10,15 +10,21 @@ namespace Alternate
 {
 	Application* Application::s_instance = nullptr;
 
-	Application::Application(const std::string& name, ApplicationCommandLineArgs args)
-		: m_CommandLineArgs(args)
+	Application::Application(const ApplicationSpecification& specification)
+		: m_Specification(specification)
 	{
 		ALT_PROFILE_FUNCTION();
 
 		ALT_CORE_ASSERT(!s_instance, "Application already exisits!");
 		s_instance = this;
 
-		m_Window = Window::Create(WindowProps(name));
+		// Set working directory here
+		if (!m_Specification.WorkingDirectory.empty())
+		{
+			std::filesystem::current_path(m_Specification.WorkingDirectory);
+		}
+
+		m_Window = Window::Create(WindowProps(m_Specification.Name));
 		m_Window->SetEventCallback(ALT_BIND_EVENT_FN(Application::OnEvent));
 		m_Window->SetVSync(false);
 

@@ -11,6 +11,7 @@
 #include "box2d/b2_body.h"
 #include "box2d/b2_fixture.h"
 #include "box2d/b2_polygon_shape.h"
+#include "box2d/b2_circle_shape.h"
 
 namespace Alternate
 {
@@ -27,27 +28,44 @@ namespace Alternate
 		return b2_staticBody;
 	}
 
-	template<typename Component>
+	template<typename... Component>
 	static void CopyComponent(entt::registry& dst, entt::registry& src, const std::unordered_map<UUID, entt::entity>& enttMap)
 	{
-		auto view = src.view<Component>();
-		for (auto e : view)
+		([&]()
 		{
-			UUID uuid = src.get<IDComponent>(e).ID;
-			ALT_CORE_ASSERT(enttMap.find(uuid) != enttMap.end());
-			entt::entity dstEnttID = enttMap.at(uuid);
-			auto& component = src.get<Component>(e);
-			dst.emplace_or_replace<Component>(dstEnttID, component);
-		}
+			auto view = src.view<Component>();
+			for (auto srcEntity : view)
+			{
+				entt::entity dstEntity = enttMap.at(src.get<IDComponent>(srcEntity).ID);
+
+				auto& srcComponent = src.get<Component>(srcEntity);
+				dst.emplace_or_replace<Component>(dstEntity, srcComponent);
+			}
+		}(), ...);
 	}
 
-	template<typename Component>
+	template<typename... Component>
+	static void CopyComponent(ComponentGroup<Component...>, entt::registry& dst, entt::registry& src, const std::unordered_map<UUID, entt::entity>& enttMap)
+	{
+		CopyComponent<Component...>(dst, src, enttMap);
+	}
+
+	template<typename... Component>
 	static void CopyComponentIfExists(Entity dst, Entity src)
 	{
-		if (src.HasComponent<Component>())
+		([&]()
 		{
-			dst.AddOrReplaceComponent<Component>(src.GetComponent<Component>());
-		}
+			if (src.HasComponent<Component>())
+			{
+				dst.AddOrReplaceComponent<Component>(src.GetComponent<Component>());
+			}
+		}(), ...);
+	}
+
+	template<typename... Component>
+	static void CopyComponentIfExists(ComponentGroup<Component...>, Entity dst, Entity src)
+	{
+		CopyComponentIfExists<Component...>(dst, src);
 	}
 
 	Ref<Scene> Scene::Copy(Ref<Scene> other)
@@ -71,15 +89,8 @@ namespace Alternate
 			enttMap[uuid] = (entt::entity)newEntity;
 		}
 
-		// Copy components (except IDComponent and TagComponent)
-		CopyComponent<TransformComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-		CopyComponent<SpriteRendererComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-		CopyComponent<CircleRendererComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-		CopyComponent<CameraComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-		CopyComponent<NativeScriptComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-		CopyComponent<Rigidbody2DComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-		CopyComponent<BoxCollider2DComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-		CopyComponent<CircleCollider2DComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
+		// Copy components(except IDComponent and TagComponent)
+		CopyComponent(AllComponents{}, dstSceneRegistry, srcSceneRegistry, enttMap);
 
 		return newScene;
 	}
@@ -91,7 +102,7 @@ namespace Alternate
 
 	Scene::~Scene()
 	{
-
+		delete m_PhysicsWorld2D;
 	}
 
 	Entity Scene::CreateEntity(const std::string& name)
@@ -114,13 +125,29 @@ namespace Alternate
 		m_Registry.destroy(entity);
 	}
 
-	void Scene::OnEditorUpdate(Timestep ts, EditorCamera& camera)
-	{
-		// Render
-		RenderScene(camera);
-	}
+	
 
 	void Scene::OnRuntimeStart()
+	{
+		OnPhysics2DStart();
+	}
+
+	void Scene::OnRuntimeStop()
+	{
+		OnPhysics2DStop();
+	}
+
+	void Scene::OnSimulationStart()
+	{
+		OnPhysics2DStart();
+	}
+
+	void Scene::OnSimulationStop()
+	{
+		OnPhysics2DStop();
+	}
+
+	void Scene::OnPhysics2DStart()
 	{
 		m_PhysicsWorld2D = new b2World({ 0.0f, -8.9f });
 
@@ -155,13 +182,93 @@ namespace Alternate
 				fixtureDef.restitutionThreshold = bc2d.RestitutionThreshold;
 				body->CreateFixture(&fixtureDef);
 			}
+
+			if (entity.HasComponent<CircleCollider2DComponent>())
+			{
+				auto& cc2d = entity.GetComponent<CircleCollider2DComponent>();
+
+				b2CircleShape circleShape;
+				circleShape.m_p.Set(cc2d.Offset.x, cc2d.Offset.y);
+				circleShape.m_radius = transform.Scale.x * cc2d.Radius;
+
+				b2FixtureDef fixtureDef;
+				fixtureDef.shape = &circleShape;
+				fixtureDef.density = cc2d.Density;
+				fixtureDef.friction = cc2d.Friction;
+				fixtureDef.restitution = cc2d.Restitution;
+				fixtureDef.restitutionThreshold = cc2d.RestitutionThreshold;
+				body->CreateFixture(&fixtureDef);
+			}
 		}
 	}
 
-	void Scene::OnRuntimeStop()
+	void Scene::OnPhysics2DStop()
 	{
 		delete m_PhysicsWorld2D;
 		m_PhysicsWorld2D = nullptr;
+	}
+
+	void Scene::RenderScene(EditorCamera& camera)
+	{
+		Renderer2D::BeginScene(camera);
+
+		// Draw sprites
+		{
+			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+			for (auto entity : group)
+			{
+				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+
+				Renderer2D::DrawSprite(transform.GetTransform(), sprite, (int)entity);
+			}
+		}
+
+		// Draw circles
+		{
+			auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
+			for (auto entity : view)
+			{
+				auto [transform, circle] = view.get<TransformComponent, CircleRendererComponent>(entity);
+
+				Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade, (int)entity);
+			}
+		}
+
+		Renderer2D::EndScene();
+	}
+
+	void Scene::OnEditorUpdate(Timestep ts, EditorCamera& camera)
+	{
+		// Render
+		RenderScene(camera);
+	}
+
+	void Scene::OnSimulationUpdate(Timestep ts, EditorCamera& camera)
+	{
+		// Physics
+		{
+			const int32_t velocityIterations = 6;
+			const int32_t positionIterations = 2;
+			m_PhysicsWorld2D->Step(ts, velocityIterations, positionIterations);
+
+			// Retrieve transform from Box2D
+			auto view = m_Registry.view<Rigidbody2DComponent>();
+			for (auto e : view)
+			{
+				Entity entity = { e, this };
+				auto& transform = entity.GetComponent<TransformComponent>();
+				auto& rb2d = entity.GetComponent<Rigidbody2DComponent>();
+
+				b2Body* body = (b2Body*)rb2d.RuntimeBody;
+				const auto& position = body->GetPosition();
+				transform.Translation.x = position.x;
+				transform.Translation.y = position.y;
+				transform.Rotation.z = body->GetAngle();
+			}
+		}
+
+		// Render
+		RenderScene(camera);
 	}
 
 	void Scene::OnRuntimeUpdate(Timestep ts)
@@ -203,7 +310,6 @@ namespace Alternate
 				transform.Rotation.z = body->GetAngle();
 			}
 		}
-
 
 		//Render 2D
 		Camera* mainCamera = nullptr;
@@ -252,48 +358,10 @@ namespace Alternate
 		}
 	}
 
-	void Scene::RenderScene(EditorCamera& camera)
-	{
-		Renderer2D::BeginScene(camera);
-
-		// Draw sprites
-		{
-			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-			for (auto entity : group)
-			{
-				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-
-				Renderer2D::DrawSprite(transform.GetTransform(), sprite, (int)entity);
-			}
-		}
-
-		// Draw circles
-		{
-			auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
-			for (auto entity : view)
-			{
-				auto [transform, circle] = view.get<TransformComponent, CircleRendererComponent>(entity);
-
-				Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade, (int)entity);
-			}
-		}
-
-		Renderer2D::EndScene();
-	}
-
 	void Scene::DuplicateEntity(Entity entity)
 	{
-		std::string name = entity.GetName();
-		Entity newEntity = CreateEntity(name);
-
-		CopyComponentIfExists<TransformComponent>(newEntity, entity);
-		CopyComponentIfExists<SpriteRendererComponent>(newEntity, entity);
-		CopyComponentIfExists<CircleRendererComponent>(newEntity, entity);
-		CopyComponentIfExists<CameraComponent>(newEntity, entity);
-		CopyComponentIfExists<NativeScriptComponent>(newEntity, entity);
-		CopyComponentIfExists<Rigidbody2DComponent>(newEntity, entity);
-		CopyComponentIfExists<BoxCollider2DComponent>(newEntity, entity);
-		//CopyComponentIfExists<CircleCollider2DComponent>(newEntity, entity);
+		Entity newEntity = CreateEntity(entity.GetName());
+		CopyComponentIfExists(AllComponents{}, newEntity, entity);
 	}
 
 	void Scene::OnViewportResize(uint32_t width, uint32_t height)
@@ -338,19 +406,16 @@ namespace Alternate
 	template<>
 	void Scene::OnComponentAdded<IDComponent>(Entity entity, IDComponent& component)
 	{
-
 	}
 
 	template<>
 	void Scene::OnComponentAdded<TagComponent>(Entity entity, TagComponent& component)
 	{
-
 	}
 
 	template<>
 	void Scene::OnComponentAdded<TransformComponent>(Entity entity, TransformComponent& component)
-	{
-		
+	{	
 	}
 
 	template<>
@@ -365,19 +430,16 @@ namespace Alternate
 	template<>
 	void Scene::OnComponentAdded<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component)
 	{
-
 	}
 
 	template<>
 	void Scene::OnComponentAdded<CircleRendererComponent>(Entity entity, CircleRendererComponent& component)
 	{
-
 	}
 
 	template<>
 	void Scene::OnComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent& component)
 	{
-
 	}
 
 	template<>
@@ -387,6 +449,11 @@ namespace Alternate
 
 	template<>
 	void Scene::OnComponentAdded<BoxCollider2DComponent>(Entity entity, BoxCollider2DComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<CircleCollider2DComponent>(Entity entity, CircleCollider2DComponent& component)
 	{
 	}
 }

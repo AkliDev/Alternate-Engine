@@ -32,7 +32,9 @@ namespace Alternate
 		float panelWidth = ImGui::GetContentRegionAvail().x;
 		int columnCount = (int)(panelWidth / cellSize);
 		if (columnCount < 1)
+		{
 			columnCount = 1;
+		}
 
 		ImGui::Columns(columnCount, 0, false);
 
@@ -40,10 +42,11 @@ namespace Alternate
 		{
 			const auto& path = directoryEntry.path();
 			std::string filenameString = path.filename().string();
+
 			ImGui::PushID(filenameString.c_str());
 			Ref<Texture2D> icon = directoryEntry.is_directory() ? m_DirectoryIcon : m_FileIcon;
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-			ImGui::ImageButton((ImTextureID)icon->GetRenderID(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+			ImGui::ImageButton((ImTextureID)icon->GetRendererID(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
 
 			if (ImGui::BeginDragDropSource())
 			{

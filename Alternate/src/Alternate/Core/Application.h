@@ -11,24 +11,31 @@
 
 #include "Alternate/ImGui/ImGuiLayer.h"
 
-struct ApplicationCommandLineArgs
-{
-	int Count = 0;
-	char** Args = nullptr;
-
-	const char* operator[](int index) const
-	{
-		ALT_CORE_ASSERT(index < Count);
-		return Args[index];
-	}
-};
-
 namespace Alternate 
 {
+	struct ApplicationCommandLineArgs
+	{
+		int Count = 0;
+		char** Args = nullptr;
+
+		const char* operator[](int index) const
+		{
+			ALT_CORE_ASSERT(index < Count);
+			return Args[index];
+		}
+	};
+
+	struct ApplicationSpecification
+	{
+		std::string Name = "Alternate Application";
+		std::string WorkingDirectory;
+		ApplicationCommandLineArgs CommandLineArgs;
+	};
+
 	class Application
 	{
 	public:
-		Application(const std::string& name = "Alternate app", ApplicationCommandLineArgs args = ApplicationCommandLineArgs());
+		Application(const ApplicationSpecification& specification);
 		virtual ~Application();
 
 		void Run();
@@ -43,7 +50,7 @@ namespace Alternate
 		inline Window& GetWindow() { return *m_Window; }
 		ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }	
 
-		ApplicationCommandLineArgs GetCommandLineArgs() const { return m_CommandLineArgs; }
+		const ApplicationSpecification& GetSpecification() const { return m_Specification; }
 	private:
 		bool OnWindowClosed(WindowCloseEvent& e);
 		bool OnKeyPressedEvent(KeyPressedEvent& e);
@@ -52,7 +59,7 @@ namespace Alternate
 		bool OnWindowRestored(WindowRestoredEvent& e);
 
 	private:
-		ApplicationCommandLineArgs m_CommandLineArgs;
+		ApplicationSpecification m_Specification;
 		Scope<Window> m_Window;
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;

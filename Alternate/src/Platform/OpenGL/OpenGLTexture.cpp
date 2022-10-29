@@ -79,7 +79,6 @@ namespace Alternate
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
 		ALT_PROFILE_FUNCTION();
-
 		glDeleteTextures(1, &m_RendererID);
 	}
 
