@@ -33,6 +33,5 @@ namespace Alternate
 
 		std::vector<uint32_t> m_ColorAttachments;
 		uint32_t m_DepthAttachment;
-
 	};
 }

@@ -146,7 +146,6 @@ namespace Alternate {
 			}
 			case SDL_KEYDOWN:
 			{
-
 				WindowData& data = *(WindowData*)SDL_GetWindowData(m_Window, "data");
 
 				if (event.key.repeat != 0)

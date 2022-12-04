@@ -40,6 +40,7 @@ namespace Alternate
 
 		//UI Panels
 		void UI_Toolbar();
+
 	private:
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
 		OrthographicCameraController m_CameraController;

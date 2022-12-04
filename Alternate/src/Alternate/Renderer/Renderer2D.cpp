@@ -99,8 +99,8 @@ namespace Alternate
 	{
 		ALT_PROFILE_FUNCTION();
 
+		//Quad
 		s_Data.QuadVertexArray = VertexArray::Create();
-
 		s_Data.QuadVertexBuffer = VertexBuffer::Create(s_Data.MaxVertices * sizeof(QuadVertex));
 		s_Data.QuadVertexBuffer->SetLayout({
 			{ ShaderDataType::Float3,	"a_Position" },
@@ -136,7 +136,6 @@ namespace Alternate
 
 		// Circles
 		s_Data.CircleVertexArray = VertexArray::Create();
-
 		s_Data.CircleVertexBuffer = VertexBuffer::Create(s_Data.MaxVertices * sizeof(CircleVertex));
 		s_Data.CircleVertexBuffer->SetLayout({
 			{ ShaderDataType::Float3, "a_WorldPosition" },
@@ -152,7 +151,6 @@ namespace Alternate
 
 		// Lines
 		s_Data.LineVertexArray = VertexArray::Create();
-
 		s_Data.LineVertexBuffer = VertexBuffer::Create(s_Data.MaxVertices * sizeof(LineVertex));
 		s_Data.LineVertexBuffer->SetLayout({
 			{ ShaderDataType::Float3, "a_Position" },
@@ -193,6 +191,8 @@ namespace Alternate
 		ALT_PROFILE_FUNCTION();
 
 		delete[] s_Data.QuadVertexBufferBase;
+		delete[] s_Data.CircleVertexBufferBase;
+		delete[] s_Data.LineVertexBufferBase;
 	}
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
@@ -255,7 +255,9 @@ namespace Alternate
 
 			// Bind textures
 			for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
+			{
 				s_Data.TextureSlots[i]->Bind(i);
+			}
 
 			s_Data.QuadShader->Bind();
 			RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCount);
@@ -345,7 +347,9 @@ namespace Alternate
 		const float tilingFactor = 1.0f;
 
 		if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
+		{
 			NextBatch();
+		}
 
 		for (size_t i = 0; i < quadVertexCount; i++)
 		{
@@ -371,7 +375,9 @@ namespace Alternate
 		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 
 		if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
+		{
 			NextBatch();
+		}
 
 		float textureIndex = 0.0f;
 		for (uint32_t i = 1; i < s_Data.TextureSlotIndex; i++)
@@ -386,7 +392,9 @@ namespace Alternate
 		if (textureIndex == 0.0f)
 		{
 			if (s_Data.TextureSlotIndex >= Renderer2DData::MaxTextureSlots)
+			{
 				NextBatch();
+			}
 
 			textureIndex = (float)s_Data.TextureSlotIndex;
 			s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
@@ -418,7 +426,9 @@ namespace Alternate
 		const Ref<Texture2D> texture = subTexture->GetTexture();
 
 		if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
+		{
 			NextBatch();
+		}
 
 		float textureIndex = 0.0f;
 		for (uint32_t i = 1; i < s_Data.TextureSlotIndex; i++)
@@ -433,7 +443,9 @@ namespace Alternate
 		if (textureIndex == 0.0f)
 		{
 			if (s_Data.TextureSlotIndex >= Renderer2DData::MaxTextureSlots)
+			{
 				NextBatch();
+			}
 
 			textureIndex = (float)s_Data.TextureSlotIndex;
 			s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;

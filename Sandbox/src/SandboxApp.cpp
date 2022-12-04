@@ -8,8 +8,8 @@ namespace Alternate
 	class AlternateEditor : public Application
 	{
 	public:
-		AlternateEditor(ApplicationCommandLineArgs args)
-			: Application("Sandbox2D", args)
+		AlternateEditor(const ApplicationSpecification& spec)
+			: Application(spec)
 		{
 			PushLayer(new Sandbox2D());
 		}
@@ -21,6 +21,10 @@ namespace Alternate
 
 	Application* CreateApplication(ApplicationCommandLineArgs args)
 	{
-		return new AlternateEditor(args);
+		ApplicationSpecification spec;
+		spec.Name = "Sandbox";
+		spec.CommandLineArgs = args;
+
+		return new AlternateEditor(spec);
 	}
 }

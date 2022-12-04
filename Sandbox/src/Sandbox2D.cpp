@@ -327,7 +327,7 @@ namespace Alternate
 	bool Sandbox2D::OnKeyPressed(KeyPressedEvent& e)
 	{
 		//Shortcuts
-		if (e.GetRepeatCount() > 0)
+		if (e.IsRepeat() == true)
 		{
 			return false;
 		}

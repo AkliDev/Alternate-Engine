@@ -19,10 +19,6 @@ namespace Alternate
 	{
 	}
 
-	ImGuiLayer::~ImGuiLayer()
-	{
-	}
-
 	void ImGuiLayer::OnAttach()
 	{
 		ALT_PROFILE_FUNCTION();
@@ -79,17 +75,17 @@ namespace Alternate
 		EventDispatcher dispatcher(e);
 
 		dispatcher.Dispatch<TextInputEvent>(ALT_BIND_EVENT_FN(ImGuiLayer::OnTextInputEvent));
-
+		
 		dispatcher.Dispatch<KeyPressedEvent>(ALT_BIND_EVENT_FN(ImGuiLayer::OnKeyPressedEvent));
 		dispatcher.Dispatch<KeyReleasedEvent>(ALT_BIND_EVENT_FN(ImGuiLayer::OnKeyReleasedEvent));
 		//dispatcher.Dispatch<KeyTypedEvent>(ALT_BIND_EVENT_FN(ImGuiLayer::OnKeyTypedEvent));
-
-		dispatcher.Dispatch<MouseButtonPressedEvent>(ALT_BIND_EVENT_FN(ImGuiLayer::OnMouseButtonPressedEvent));
-		dispatcher.Dispatch<MouseButtonReleasedEvent>(ALT_BIND_EVENT_FN(ImGuiLayer::OnMouseButtonReleasedEvent));
-		dispatcher.Dispatch<MouseMovedEvent>(ALT_BIND_EVENT_FN(ImGuiLayer::OnMouseMovedEvent));
+		
+		//dispatcher.Dispatch<MouseButtonPressedEvent>(ALT_BIND_EVENT_FN(ImGuiLayer::OnMouseButtonPressedEvent));
+		//dispatcher.Dispatch<MouseButtonReleasedEvent>(ALT_BIND_EVENT_FN(ImGuiLayer::OnMouseButtonReleasedEvent));
+		//dispatcher.Dispatch<MouseMovedEvent>(ALT_BIND_EVENT_FN(ImGuiLayer::OnMouseMovedEvent));
 		dispatcher.Dispatch<MouseScrolledEvent>(ALT_BIND_EVENT_FN(ImGuiLayer::OnMouseScrolledEvent));
-
-		dispatcher.Dispatch<WindowResizeEvent>(ALT_BIND_EVENT_FN(ImGuiLayer::OnWindowResizeEvent));
+		
+		//dispatcher.Dispatch<WindowResizeEvent>(ALT_BIND_EVENT_FN(ImGuiLayer::OnWindowResizeEvent));
 
 		if (m_BlockEvents)
 		{
@@ -153,6 +149,7 @@ namespace Alternate
 
 	bool ImGuiLayer::OnMouseMovedEvent(MouseMovedEvent& e)
 	{
+		ALT_WARN(e);
 		ImGuiIO& io = ImGui::GetIO();
 		io.MousePos = ImVec2(e.GetX(), e.GetY());
 
